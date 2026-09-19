@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#grad)" />
+  <!-- Shield outline -->
+  <path d="M256 96 C330 96 384 130 384 130 C384 270 320 370 256 416 C192 370 128 270 128 130 C128 130 182 96 256 96 Z" fill="#ffffff" fill-opacity="0.12" stroke="#ffffff" stroke-width="8" stroke-linejoin="round" />
+  <!-- Graduation Cap -->
+  <path d="M256 160 L360 215 L256 270 L152 215 Z" fill="url(#accent)" />
+  <path d="M190 245 L190 305 C190 325 219 340 256 340 C293 340 322 325 322 305 L322 245" fill="none" stroke="url(#accent)" stroke-width="12" stroke-linecap="round" />
+  <path d="M344 225 L344 290" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" />
+  <circle cx="344" cy="296" r="8" fill="#f59e0b" />
+  <!-- Open Book Symbol -->
+  <path d="M256 360 C235 348 200 345 170 355 L170 395 C200 385 235 388 256 400 C277 388 312 385 342 395 L342 355 C312 345 277 348 256 360 Z" fill="#ffffff" fill-opacity="0.9" />
+  <line x1="256" y1="360" x2="256" y2="400" stroke="#1e3a8a" stroke-width="4" />
+</svg>

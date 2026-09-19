@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-luxe-crimson: #8B0000;
+  --color-luxe-burgundy: #5B0202;
+  --color-luxe-gold: #D4AF37;
+  --color-luxe-cream: #EDE7C7;
+  --color-luxe-sand: #FAF8F2;
+  --color-luxe-dark: #200E01;
+  --font-cormorant: 'Cormorant Garamond', serif;
+  --font-cinzel: 'Cinzel', serif;
+  --font-outfit: 'Outfit', sans-serif;
+}

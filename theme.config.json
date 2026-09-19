@@ -1,0 +1,10 @@
+{
+  "name": "Imperial Crimson & Gold (default)",
+  "colors": {
+    "primary": "#8B0000",
+    "accent": "#D4AF37",
+    "ink": "#200E01",
+    "bg": "#FAF8F2",
+    "sand": "#EDE7C7"
+  }
+}

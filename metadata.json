@@ -1,0 +1,7 @@
+{
+  "name": "Multi-Tenant School Management",
+  "description": "Progressive Web App for multi-tenant school operations, digital student diary with blackboard camera capture, one-click attendance, fee-locked report cards, and digital circulars.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
