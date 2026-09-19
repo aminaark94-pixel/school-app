@@ -11,16 +11,31 @@ import {
   DiaryEntry,
   Notice,
   CommunicationQuery,
-  AbsenceAlert,
   Datesheet,
 } from '../types';
 import { LocalStore } from '../lib/storage';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
+import { useAuth } from '../lib/authContext';
+
+interface RemoteData {
+  schools: School[];
+  users: User[];
+  students: Student[];
+  attendance: Attendance[];
+  fees: Fee[];
+  results: Result[];
+}
 
 export function useSchoolData() {
-  const [, setTick] = useState(0);
+  const [tick, setTick] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const isSupabaseActive = isSupabaseConfigured();
+  const { profile, school: authSchool } = useAuth();
+
+  // Supabase drives the core tables only when credentials exist AND the user is signed in
+  // with a linked profile row. Otherwise everything falls back to the local demo store.
+  const isSupabaseActive = isSupabaseConfigured() && Boolean(profile);
+  const [remote, setRemote] = useState<RemoteData | null>(null);
+  const [remoteError, setRemoteError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = LocalStore.subscribe(() => {
@@ -29,40 +44,121 @@ export function useSchoolData() {
     return unsubscribe;
   }, []);
 
-  const schools = useMemo(() => LocalStore.getSchools(), [setTick]);
-  const currentSchoolId = LocalStore.getCurrentSchoolId();
-  const currentSchool = useMemo(
-    () => schools.find((s) => s.id === currentSchoolId) || schools[0] || null,
-    [schools, currentSchoolId]
-  );
+  // ---------------------------------------------------------------------------
+  // Remote loading
+  // ---------------------------------------------------------------------------
+  const refreshRemote = useCallback(async () => {
+    const supabase = getSupabase();
+    if (!supabase || !profile) return;
 
-  const allUsers = useMemo(() => LocalStore.getUsers(), [setTick]);
+    const [schoolsRes, usersRes, studentsRes, attendanceRes, feesRes, resultsRes] =
+      await Promise.all([
+        supabase.from('schools').select('*'),
+        supabase.from('users').select('*'),
+        supabase.from('students').select('*'),
+        supabase.from('attendance').select('*'),
+        supabase.from('fees').select('*'),
+        supabase.from('results').select('*'),
+      ]);
+
+    const firstError =
+      schoolsRes.error ||
+      usersRes.error ||
+      studentsRes.error ||
+      attendanceRes.error ||
+      feesRes.error ||
+      resultsRes.error;
+
+    if (firstError) {
+      setRemoteError(firstError.message);
+      return;
+    }
+
+    setRemoteError(null);
+    setRemote({
+      schools: (schoolsRes.data ?? []) as School[],
+      users: (usersRes.data ?? []) as User[],
+      students: (studentsRes.data ?? []) as Student[],
+      attendance: (attendanceRes.data ?? []) as Attendance[],
+      fees: (feesRes.data ?? []) as Fee[],
+      results: (resultsRes.data ?? []) as Result[],
+    });
+  }, [profile]);
+
+  useEffect(() => {
+    if (!isSupabaseActive) {
+      setRemote(null);
+      setRemoteError(null);
+      setIsLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setIsLoading(true);
+    refreshRemote().finally(() => {
+      if (!cancelled) setIsLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isSupabaseActive, refreshRemote]);
+
+  const usingRemote = isSupabaseActive && remote !== null;
+
+  // ---------------------------------------------------------------------------
+  // Core collections (remote when signed in, local demo data otherwise)
+  // ---------------------------------------------------------------------------
+  const localSchools = useMemo(() => LocalStore.getSchools(), [tick]);
+  const schools = usingRemote ? remote!.schools : localSchools;
+
+  const localCurrentSchoolId = LocalStore.getCurrentSchoolId();
+  const currentSchool = useMemo(() => {
+    if (usingRemote) {
+      return (
+        authSchool ??
+        remote!.schools.find((s) => s.id === profile?.school_id) ??
+        remote!.schools[0] ??
+        null
+      );
+    }
+    return localSchools.find((s) => s.id === localCurrentSchoolId) || localSchools[0] || null;
+  }, [usingRemote, remote, authSchool, profile, localSchools, localCurrentSchoolId]);
+
+  const localUsers = useMemo(() => LocalStore.getUsers(), [tick]);
+  const allUsers = usingRemote ? remote!.users : localUsers;
   const usersInSchool = useMemo(
     () => allUsers.filter((u) => u.school_id === currentSchool?.id),
     [allUsers, currentSchool]
   );
 
-  const currentUserId = LocalStore.getCurrentUserId();
+  const localCurrentUserId = LocalStore.getCurrentUserId();
   const currentUser = useMemo(() => {
-    const found = allUsers.find((u) => u.id === currentUserId);
+    if (usingRemote) return profile;
+    const found = localUsers.find((u) => u.id === localCurrentUserId);
     if (found && found.school_id === currentSchool?.id) return found;
-    return usersInSchool[0] || allUsers[0] || null;
-  }, [allUsers, currentUserId, currentSchool, usersInSchool]);
+    return usersInSchool[0] || localUsers[0] || null;
+  }, [usingRemote, profile, localUsers, localCurrentUserId, currentSchool, usersInSchool]);
 
-  const allStudents = useMemo(() => LocalStore.getStudents(), [setTick]);
+  const localStudents = useMemo(() => LocalStore.getStudents(), [tick]);
+  const allStudents = usingRemote ? remote!.students : localStudents;
   const studentsInSchool = useMemo(
     () => allStudents.filter((s) => s.school_id === currentSchool?.id),
     [allStudents, currentSchool]
   );
 
-  const allAttendance = useMemo(() => LocalStore.getAttendance(), [setTick]);
-  const allFees = useMemo(() => LocalStore.getFees(), [setTick]);
-  const allResults = useMemo(() => LocalStore.getResults(), [setTick]);
-  const allDiary = useMemo(() => LocalStore.getDiary(), [setTick]);
-  const allNotices = useMemo(() => LocalStore.getNotices(), [setTick]);
-  const allQueries = useMemo(() => LocalStore.getQueries(), [setTick]);
-  const allAlerts = useMemo(() => LocalStore.getAlerts(), [setTick]);
-  const allDatesheets = useMemo(() => LocalStore.getDatesheets(), [setTick]);
+  const localAttendance = useMemo(() => LocalStore.getAttendance(), [tick]);
+  const localFees = useMemo(() => LocalStore.getFees(), [tick]);
+  const localResults = useMemo(() => LocalStore.getResults(), [tick]);
+
+  const allAttendance = usingRemote ? remote!.attendance : localAttendance;
+  const allFees = usingRemote ? remote!.fees : localFees;
+  const allResults = usingRemote ? remote!.results : localResults;
+
+  // These five have no tables in the schema yet, so they stay local for now.
+  const allDiary = useMemo(() => LocalStore.getDiary(), [tick]);
+  const allNotices = useMemo(() => LocalStore.getNotices(), [tick]);
+  const allQueries = useMemo(() => LocalStore.getQueries(), [tick]);
+  const allAlerts = useMemo(() => LocalStore.getAlerts(), [tick]);
+  const allDatesheets = useMemo(() => LocalStore.getDatesheets(), [tick]);
 
   const diaryInSchool = useMemo(
     () => allDiary.filter((d) => d.school_id === currentSchool?.id),
@@ -89,24 +185,33 @@ export function useSchoolData() {
     [allDatesheets, currentSchool]
   );
 
-  // Set Current School
-  const setCurrentSchoolId = useCallback((id: string) => {
-    LocalStore.setCurrentSchoolId(id);
-  }, []);
+  // Set Current School (local demo mode only - signed-in users get their own school)
+  const setCurrentSchoolId = useCallback(
+    (id: string) => {
+      if (usingRemote) return;
+      LocalStore.setCurrentSchoolId(id);
+    },
+    [usingRemote]
+  );
 
-  // Set Current User
-  const setCurrentUserId = useCallback((id: string) => {
-    LocalStore.setCurrentUserId(id);
-  }, []);
+  // Set Current User (local demo mode only)
+  const setCurrentUserId = useCallback(
+    (id: string) => {
+      if (usingRemote) return;
+      LocalStore.setCurrentUserId(id);
+    },
+    [usingRemote]
+  );
 
-  // Switch role helper
+  // Switch role helper - disabled once real accounts are in play, because the
+  // role comes from the signed-in account and is enforced by RLS.
   const switchRole = useCallback(
     (role: UserRole) => {
+      if (usingRemote) return;
       const match = usersInSchool.find((u) => u.role === role);
       if (match) {
         LocalStore.setCurrentUserId(match.id);
       } else {
-        // Create user for current school with that role if none exists
         const newUser: User = {
           id: `user-${role}-${Date.now()}`,
           school_id: currentSchool?.id || 'school-apex',
@@ -120,18 +225,70 @@ export function useSchoolData() {
         LocalStore.setCurrentUserId(newUser.id);
       }
     },
-    [usersInSchool, currentSchool, allUsers]
+    [usingRemote, usersInSchool, currentSchool, allUsers]
   );
 
-  // Mark attendance for batch of students & automatically trigger absence alerts
+  // Mark attendance for a batch of students & automatically trigger absence alerts
   const markAttendance = useCallback(
     (records: Array<{ student_id: string; status: AttendanceStatus; date: string }>) => {
-      const currentList = LocalStore.getAttendance();
-      const updated = [...currentList];
-      const allStudentsList = LocalStore.getStudents();
+      // Absence alerts have no table yet, so they are generated locally in both modes.
+      const allStudentsList = usingRemote ? remote!.students : LocalStore.getStudents();
       const currentAlerts = LocalStore.getAlerts();
       const newAlerts = [...currentAlerts];
 
+      records.forEach((rec) => {
+        if (rec.status !== 'absent') return;
+        const studentObj = allStudentsList.find((s) => s.id === rec.student_id);
+        const alreadyAlerted = newAlerts.some(
+          (al) => al.student_id === rec.student_id && al.date === rec.date
+        );
+        if (studentObj && !alreadyAlerted) {
+          newAlerts.unshift({
+            id: `alert-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+            school_id: studentObj.school_id,
+            student_id: studentObj.id,
+            student_name: studentObj.name,
+            roll_number: studentObj.roll_number,
+            class_id: studentObj.class_id,
+            section: studentObj.section,
+            date: rec.date,
+            parent_id: studentObj.parent_id || '',
+            parent_name: studentObj.parent_name || 'Guardian',
+            parent_email:
+              studentObj.parent_email || `${studentObj.roll_number.toLowerCase()}@parent.edu`,
+            sent_at: new Date().toISOString(),
+            status: 'sent',
+          });
+        }
+      });
+      LocalStore.saveAlerts(newAlerts);
+
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return;
+        supabase
+          .from('attendance')
+          .upsert(
+            records.map((r) => ({
+              student_id: r.student_id,
+              date: r.date,
+              status: r.status,
+              marked_by: currentUser?.id,
+            })),
+            { onConflict: 'student_id,date' }
+          )
+          .then(({ error }) => {
+            if (error) {
+              setRemoteError(error.message);
+              return;
+            }
+            refreshRemote();
+          });
+        return;
+      }
+
+      const currentList = LocalStore.getAttendance();
+      const updated = [...currentList];
       records.forEach((rec) => {
         const index = updated.findIndex(
           (a) => a.student_id === rec.student_id && a.date === rec.date
@@ -152,154 +309,172 @@ export function useSchoolData() {
             created_at: new Date().toISOString(),
           });
         }
-
-        // Automatic Absence Alert Generation
-        if (rec.status === 'absent') {
-          const studentObj = allStudentsList.find((s) => s.id === rec.student_id);
-          const alreadyAlerted = newAlerts.some(
-            (al) => al.student_id === rec.student_id && al.date === rec.date
-          );
-          if (studentObj && !alreadyAlerted) {
-            newAlerts.unshift({
-              id: `alert-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-              school_id: studentObj.school_id,
-              student_id: studentObj.id,
-              student_name: studentObj.name,
-              roll_number: studentObj.roll_number,
-              class_id: studentObj.class_id,
-              section: studentObj.section,
-              date: rec.date,
-              parent_id: studentObj.parent_id || '',
-              parent_name: studentObj.parent_name || 'Guardian',
-              parent_email: studentObj.parent_email || `${studentObj.roll_number.toLowerCase()}@parent.edu`,
-              sent_at: new Date().toISOString(),
-              status: 'sent',
-            });
-          }
-        }
       });
-
       LocalStore.saveAttendance(updated);
-      LocalStore.saveAlerts(newAlerts);
-
-      // Also persist to Supabase if configured
-      const supabase = getSupabase();
-      if (supabase) {
-        supabase
-          .from('attendance')
-          .upsert(
-            records.map((r) => ({
-              student_id: r.student_id,
-              date: r.date,
-              status: r.status,
-              marked_by: currentUser?.id,
-            })),
-            { onConflict: 'student_id,date' }
-          )
-          .then(({ error }) => {
-            if (error) console.error('Supabase attendance sync error:', error);
-          });
-      }
     },
-    [currentUser]
+    [usingRemote, remote, currentUser, refreshRemote]
   );
 
   // Pay or update Fee
-  const updateFeeStatus = useCallback((feeId: string, status: 'paid' | 'pending') => {
-    const fees = LocalStore.getFees();
-    const updated = fees.map((f) => {
-      if (f.id === feeId) {
-        return {
-          ...f,
-          status,
-          updated_at: new Date().toISOString(),
-          receipt_number:
-            status === 'paid'
-              ? f.receipt_number || `REC-${Date.now().toString().slice(-6)}`
-              : '',
-        };
+  const updateFeeStatus = useCallback(
+    (feeId: string, status: 'paid' | 'pending') => {
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return;
+        supabase
+          .from('fees')
+          .update({
+            status,
+            receipt_number: status === 'paid' ? `REC-${Date.now().toString().slice(-6)}` : '',
+          })
+          .eq('id', feeId)
+          .then(({ error }) => {
+            if (error) {
+              setRemoteError(error.message);
+              return;
+            }
+            refreshRemote();
+          });
+        return;
       }
-      return f;
-    });
-    LocalStore.saveFees(updated);
 
-    const supabase = getSupabase();
-    if (supabase) {
-      supabase.from('fees').update({ status }).eq('id', feeId).then();
-    }
-  }, []);
-
-  const payFeeForStudent = useCallback((studentId: string) => {
-    const fees = LocalStore.getFees();
-    const existingIndex = fees.findIndex((f) => f.student_id === studentId);
-    let updated = [...fees];
-
-    if (existingIndex >= 0) {
-      updated[existingIndex] = {
-        ...updated[existingIndex],
-        status: 'paid',
-        updated_at: new Date().toISOString(),
-        receipt_number: `REC-${Date.now().toString().slice(-6)}`,
-      };
-    } else {
-      updated.push({
-        id: `fee-${Date.now()}`,
-        student_id: studentId,
-        amount: 450,
-        status: 'paid',
-        due_date: new Date().toISOString().split('T')[0],
-        updated_at: new Date().toISOString(),
-        term: 'Fall Term 2025',
-        receipt_number: `REC-${Date.now().toString().slice(-6)}`,
+      const fees = LocalStore.getFees();
+      const updated = fees.map((f) => {
+        if (f.id === feeId) {
+          return {
+            ...f,
+            status,
+            updated_at: new Date().toISOString(),
+            receipt_number:
+              status === 'paid'
+                ? f.receipt_number || `REC-${Date.now().toString().slice(-6)}`
+                : '',
+          };
+        }
+        return f;
       });
-    }
-    LocalStore.saveFees(updated);
+      LocalStore.saveFees(updated);
+    },
+    [usingRemote, refreshRemote]
+  );
 
-    const supabase = getSupabase();
-    if (supabase) {
-      supabase.from('fees').update({ status: 'paid' }).eq('student_id', studentId).then();
-    }
-  }, []);
+  const payFeeForStudent = useCallback(
+    (studentId: string) => {
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return;
+        const receipt = `REC-${Date.now().toString().slice(-6)}`;
+        const existing = remote!.fees.find((f) => f.student_id === studentId);
+        const request = existing
+          ? supabase
+              .from('fees')
+              .update({ status: 'paid', receipt_number: receipt })
+              .eq('id', existing.id)
+          : supabase.from('fees').insert({
+              student_id: studentId,
+              amount: 450,
+              status: 'paid',
+              due_date: new Date().toISOString().split('T')[0],
+              term: 'Fall Term 2025',
+              receipt_number: receipt,
+            });
+        request.then(({ error }) => {
+          if (error) {
+            setRemoteError(error.message);
+            return;
+          }
+          refreshRemote();
+        });
+        return;
+      }
 
-  // Soft Delete Student
-  const softDeleteStudent = useCallback((studentId: string) => {
-    const students = LocalStore.getStudents();
-    const updated = students.map((s) =>
-      s.id === studentId ? { ...s, is_deleted: true } : s
-    );
-    LocalStore.saveStudents(updated);
+      const fees = LocalStore.getFees();
+      const existingIndex = fees.findIndex((f) => f.student_id === studentId);
+      const updated = [...fees];
 
-    const supabase = getSupabase();
-    if (supabase) {
-      supabase.from('students').update({ is_deleted: true }).eq('id', studentId).then();
-    }
-  }, []);
+      if (existingIndex >= 0) {
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          status: 'paid',
+          updated_at: new Date().toISOString(),
+          receipt_number: `REC-${Date.now().toString().slice(-6)}`,
+        };
+      } else {
+        updated.push({
+          id: `fee-${Date.now()}`,
+          student_id: studentId,
+          amount: 450,
+          status: 'paid',
+          due_date: new Date().toISOString().split('T')[0],
+          updated_at: new Date().toISOString(),
+          term: 'Fall Term 2025',
+          receipt_number: `REC-${Date.now().toString().slice(-6)}`,
+        });
+      }
+      LocalStore.saveFees(updated);
+    },
+    [usingRemote, remote, refreshRemote]
+  );
 
-  // Restore Student
-  const restoreStudent = useCallback((studentId: string) => {
-    const students = LocalStore.getStudents();
-    const updated = students.map((s) =>
-      s.id === studentId ? { ...s, is_deleted: false } : s
-    );
-    LocalStore.saveStudents(updated);
+  const setStudentDeleted = useCallback(
+    (studentId: string, isDeleted: boolean) => {
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return;
+        supabase
+          .from('students')
+          .update({ is_deleted: isDeleted })
+          .eq('id', studentId)
+          .then(({ error }) => {
+            if (error) {
+              setRemoteError(error.message);
+              return;
+            }
+            refreshRemote();
+          });
+        return;
+      }
+      const students = LocalStore.getStudents();
+      LocalStore.saveStudents(
+        students.map((s) => (s.id === studentId ? { ...s, is_deleted: isDeleted } : s))
+      );
+    },
+    [usingRemote, refreshRemote]
+  );
 
-    const supabase = getSupabase();
-    if (supabase) {
-      supabase.from('students').update({ is_deleted: false }).eq('id', studentId).then();
-    }
-  }, []);
+  const softDeleteStudent = useCallback(
+    (studentId: string) => setStudentDeleted(studentId, true),
+    [setStudentDeleted]
+  );
 
-  // Permanent Delete Student
-  const permanentDeleteStudent = useCallback((studentId: string) => {
-    const students = LocalStore.getStudents();
-    const updated = students.filter((s) => s.id !== studentId);
-    LocalStore.saveStudents(updated);
+  const restoreStudent = useCallback(
+    (studentId: string) => setStudentDeleted(studentId, false),
+    [setStudentDeleted]
+  );
 
-    const supabase = getSupabase();
-    if (supabase) {
-      supabase.from('students').delete().eq('id', studentId).then();
-    }
-  }, []);
+  const permanentDeleteStudent = useCallback(
+    (studentId: string) => {
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return;
+        supabase
+          .from('students')
+          .delete()
+          .eq('id', studentId)
+          .then(({ error }) => {
+            if (error) {
+              setRemoteError(error.message);
+              return;
+            }
+            refreshRemote();
+          });
+        return;
+      }
+      const students = LocalStore.getStudents();
+      LocalStore.saveStudents(students.filter((s) => s.id !== studentId));
+    },
+    [usingRemote, refreshRemote]
+  );
 
   // Bulk Import Students from CSV
   const bulkImportStudents = useCallback(
@@ -314,6 +489,31 @@ export function useSchoolData() {
       }>
     ) => {
       if (!currentSchool) return { count: 0 };
+
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return { count: 0 };
+        supabase
+          .from('students')
+          .insert(
+            newItems.map((item) => ({
+              school_id: currentSchool.id,
+              roll_number: item.roll_number.trim(),
+              name: item.name.trim(),
+              class_id: item.class_id.trim() || 'Grade 10',
+              section: (item.section || 'A').toUpperCase().trim(),
+            }))
+          )
+          .then(({ error }) => {
+            if (error) {
+              setRemoteError(error.message);
+              return;
+            }
+            refreshRemote();
+          });
+        return { count: newItems.length };
+      }
+
       const existing = LocalStore.getStudents();
       const currentFees = LocalStore.getFees();
       const currentResults = LocalStore.getResults();
@@ -324,7 +524,7 @@ export function useSchoolData() {
 
       newItems.forEach((item, idx) => {
         const studentId = `student-imp-${Date.now()}-${idx}`;
-        const student: Student = {
+        createdStudents.push({
           id: studentId,
           school_id: currentSchool.id,
           roll_number: item.roll_number.trim(),
@@ -336,10 +536,8 @@ export function useSchoolData() {
           parent_email: item.parent_email || 'parent@example.com',
           is_deleted: false,
           created_at: new Date().toISOString(),
-        };
-        createdStudents.push(student);
+        });
 
-        // Assign sample fee
         newFees.push({
           id: `fee-imp-${Date.now()}-${idx}`,
           student_id: studentId,
@@ -351,7 +549,6 @@ export function useSchoolData() {
           receipt_number: idx % 2 === 0 ? `REC-${Date.now().toString().slice(-6)}` : '',
         });
 
-        // Assign sample academic result
         newResults.push({
           id: `res-imp-${Date.now()}-${idx}`,
           student_id: studentId,
@@ -376,52 +573,50 @@ export function useSchoolData() {
       LocalStore.saveFees([...currentFees, ...newFees]);
       LocalStore.saveResults([...currentResults, ...newResults]);
 
-      // Attempt Supabase insert if active
-      const supabase = getSupabase();
-      if (supabase) {
-        supabase
-          .from('students')
-          .insert(
-            createdStudents.map((s) => ({
-              school_id: s.school_id,
-              roll_number: s.roll_number,
-              name: s.name,
-              class_id: s.class_id,
-              section: s.section,
-            }))
-          )
-          .then(({ error }) => {
-            if (error) console.warn('Supabase bulk insert warning:', error);
-          });
-      }
-
       return { count: createdStudents.length };
     },
-    [currentSchool, currentUser]
+    [usingRemote, currentSchool, currentUser, refreshRemote]
   );
 
   // Update School Branding
   const updateSchoolBranding = useCallback(
     (schoolId: string, updates: Partial<School>) => {
-      const all = LocalStore.getSchools();
-      const updated = all.map((s) => (s.id === schoolId ? { ...s, ...updates } : s));
-      LocalStore.saveSchools(updated);
-
-      const supabase = getSupabase();
-      if (supabase) {
-        supabase.from('schools').update(updates).eq('id', schoolId).then();
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return;
+        supabase
+          .from('schools')
+          .update(updates)
+          .eq('id', schoolId)
+          .then(({ error }) => {
+            if (error) {
+              setRemoteError(error.message);
+              return;
+            }
+            refreshRemote();
+          });
+        return;
       }
+      const all = LocalStore.getSchools();
+      LocalStore.saveSchools(all.map((s) => (s.id === schoolId ? { ...s, ...updates } : s)));
     },
-    []
+    [usingRemote, refreshRemote]
   );
 
   const resetToDefaults = useCallback(() => {
     LocalStore.resetDefaults();
   }, []);
 
-  // DIARY METHODS
+  // ---------------------------------------------------------------------------
+  // Diary / notices / queries / alerts / datesheets - local only for now
+  // ---------------------------------------------------------------------------
   const addDiaryEntry = useCallback(
-    (entry: Omit<DiaryEntry, 'id' | 'school_id' | 'teacher_id' | 'teacher_name' | 'created_at' | 'read_by_parents'>) => {
+    (
+      entry: Omit<
+        DiaryEntry,
+        'id' | 'school_id' | 'teacher_id' | 'teacher_name' | 'created_at' | 'read_by_parents'
+      >
+    ) => {
       const all = LocalStore.getDiary();
       const newEntry: DiaryEntry = {
         ...entry,
@@ -474,7 +669,6 @@ export function useSchoolData() {
     LocalStore.saveDiary(all.filter((d) => d.id !== diaryId));
   }, []);
 
-  // NOTICE METHODS
   const addNotice = useCallback(
     (notice: Omit<Notice, 'id' | 'school_id' | 'author_name' | 'author_role' | 'created_at'>) => {
       const all = LocalStore.getNotices();
@@ -497,7 +691,6 @@ export function useSchoolData() {
     LocalStore.saveNotices(all.filter((n) => n.id !== noticeId));
   }, []);
 
-  // QUERY / COMMUNICATION METHODS
   const createQuery = useCallback(
     (data: {
       student_id: string;
@@ -567,31 +760,34 @@ export function useSchoolData() {
     [currentUser]
   );
 
-  const updateQueryStatus = useCallback((queryId: string, status: 'open' | 'in_progress' | 'resolved') => {
-    const all = LocalStore.getQueries();
-    const updated = all.map((q) => (q.id === queryId ? { ...q, status, updated_at: new Date().toISOString() } : q));
-    LocalStore.saveQueries(updated);
-  }, []);
+  const updateQueryStatus = useCallback(
+    (queryId: string, status: 'open' | 'in_progress' | 'resolved') => {
+      const all = LocalStore.getQueries();
+      LocalStore.saveQueries(
+        all.map((q) =>
+          q.id === queryId ? { ...q, status, updated_at: new Date().toISOString() } : q
+        )
+      );
+    },
+    []
+  );
 
-  // ABSENCE ALERT METHODS
   const acknowledgeAlert = useCallback((alertId: string) => {
     const all = LocalStore.getAlerts();
-    const updated = all.map((a) =>
-      a.id === alertId ? { ...a, status: 'acknowledged' as const, acknowledged_at: new Date().toISOString() } : a
+    LocalStore.saveAlerts(
+      all.map((a) =>
+        a.id === alertId
+          ? { ...a, status: 'acknowledged' as const, acknowledged_at: new Date().toISOString() }
+          : a
+      )
     );
-    LocalStore.saveAlerts(updated);
   }, []);
 
-  // DATESHEET METHODS
   const saveDatesheet = useCallback((datesheet: Datesheet) => {
     const all = LocalStore.getDatesheets();
     const index = all.findIndex((d) => d.id === datesheet.id);
-    let updated: Datesheet[];
-    if (index >= 0) {
-      updated = all.map((d) => (d.id === datesheet.id ? datesheet : d));
-    } else {
-      updated = [datesheet, ...all];
-    }
+    const updated: Datesheet[] =
+      index >= 0 ? all.map((d) => (d.id === datesheet.id ? datesheet : d)) : [datesheet, ...all];
     LocalStore.saveDatesheets(updated);
   }, []);
 
@@ -636,6 +832,9 @@ export function useSchoolData() {
     acknowledgeAlert,
     saveDatesheet,
     isSupabaseActive,
+    isLiveData: usingRemote,
+    remoteError,
+    refreshRemote,
     isLoading,
   };
 }
