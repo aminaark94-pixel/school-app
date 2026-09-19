@@ -1,7 +1,39 @@
 import React from 'react';
-import { Shield, GraduationCap, Users, RefreshCw, Sparkles, Building2 } from 'lucide-react';
+import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database } from 'lucide-react';
 import { useSchoolData } from '../hooks/useSchoolData';
+import { useAuth } from '../lib/authContext';
 import { UserRole } from '../types';
+
+const roleConfigs: Record<
+  UserRole,
+  { label: string; icon: React.ReactNode; color: string; desc: string }
+> = {
+  admin: {
+    label: 'School Admin',
+    icon: <Shield className="w-3.5 h-3.5" />,
+    color: 'bg-[#8B0000] text-[#EDE7C7] border-[#D4AF37]',
+    desc: 'Full access: Student roster, CSV import, soft delete, fees, branding',
+  },
+  teacher: {
+    label: 'Faculty Teacher',
+    icon: <GraduationCap className="w-3.5 h-3.5" />,
+    color: 'bg-[#5B0202] text-[#EDE7C7] border-[#D4AF37]/70',
+    desc: 'One-Click attendance sheet, roster review, academic results',
+  },
+  parent: {
+    label: 'Guardian / Parent',
+    icon: <Users className="w-3.5 h-3.5" />,
+    color: 'bg-[#01411C] text-[#EDE7C7] border-emerald-400',
+    desc: 'View child report card (fee locked/unlocked), fee dues & attendance',
+  },
+};
+
+const roleBadgeClass = (role?: UserRole) =>
+  role === 'admin'
+    ? 'bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37]'
+    : role === 'teacher'
+    ? 'bg-[#5B0202] text-[#EDE7C7] border border-[#D4AF37]/50'
+    : 'bg-[#01411C] text-emerald-100 border border-emerald-500/50';
 
 export const RoleSwitcherBar: React.FC = () => {
   const {
@@ -11,32 +43,71 @@ export const RoleSwitcherBar: React.FC = () => {
     setCurrentSchoolId,
     switchRole,
     resetToDefaults,
+    isLiveData,
+    remoteError,
   } = useSchoolData();
+  const { signOut } = useAuth();
 
-  const roleConfigs: Record<
-    UserRole,
-    { label: string; icon: React.ReactNode; color: string; desc: string }
-  > = {
-    admin: {
-      label: 'School Admin',
-      icon: <Shield className="w-3.5 h-3.5" />,
-      color: 'bg-[#8B0000] text-[#EDE7C7] border-[#D4AF37]',
-      desc: 'Full access: Student roster, CSV import, soft delete, fees, branding',
-    },
-    teacher: {
-      label: 'Faculty Teacher',
-      icon: <GraduationCap className="w-3.5 h-3.5" />,
-      color: 'bg-[#5B0202] text-[#EDE7C7] border-[#D4AF37]/70',
-      desc: 'One-Click attendance sheet, roster review, academic results',
-    },
-    parent: {
-      label: 'Guardian / Parent',
-      icon: <Users className="w-3.5 h-3.5" />,
-      color: 'bg-[#01411C] text-[#EDE7C7] border-emerald-400',
-      desc: 'View child report card (fee locked/unlocked), fee dues & attendance',
-    },
-  };
+  // ---------------------------------------------------------------------
+  // Signed in against Supabase: the school and the role come from the
+  // account and are enforced by RLS, so there is nothing to switch here.
+  // ---------------------------------------------------------------------
+  if (isLiveData) {
+    return (
+      <div className="bg-[#200E01] text-[#EDE7C7] border-b border-[#5B0202] text-xs py-2.5 px-3 sm:px-6 shadow-md">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5">
+              <Building2 className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span className="font-bold text-[#EDE7C7] truncate max-w-[220px] font-['Cinzel',serif]">
+                {currentSchool?.name}
+              </span>
+            </div>
 
+            <span className="text-[#5B0202] hidden sm:inline">|</span>
+
+            <div className="flex items-center gap-1.5">
+              <span className="text-[#EDE7C7]/60">Signed in:</span>
+              <span className="font-bold truncate max-w-[140px] sm:max-w-xs">
+                {currentUser?.full_name}
+              </span>
+              <span
+                className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${roleBadgeClass(
+                  currentUser?.role
+                )}`}
+              >
+                {currentUser?.role}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#2D1605] border border-[#5B0202] text-[10px] font-bold text-emerald-300">
+              <Database className="w-3 h-3" />
+              Live database
+            </span>
+            <button
+              onClick={signOut}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-[#2D1605] hover:bg-[#3D1E07] border border-[#5B0202] font-bold transition"
+            >
+              <LogOut className="w-3 h-3" />
+              <span>Sign out</span>
+            </button>
+          </div>
+        </div>
+
+        {remoteError && (
+          <div className="max-w-7xl mx-auto mt-2 rounded-xl bg-rose-950/60 border border-rose-700 px-3 py-1.5 text-[11px] font-semibold text-rose-100">
+            Database error: {remoteError}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ---------------------------------------------------------------------
+  // Local demo mode: original persona / tenant switcher.
+  // ---------------------------------------------------------------------
   return (
     <div className="bg-[#200E01] text-[#EDE7C7] border-b border-[#5B0202] text-xs py-2.5 px-3 sm:px-6 shadow-md">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2.5">
@@ -66,13 +137,9 @@ export const RoleSwitcherBar: React.FC = () => {
               {currentUser?.full_name}
             </span>
             <span
-              className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                currentUser?.role === 'admin'
-                  ? 'bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37]'
-                  : currentUser?.role === 'teacher'
-                  ? 'bg-[#5B0202] text-[#EDE7C7] border border-[#D4AF37]/50'
-                  : 'bg-[#01411C] text-emerald-100 border border-emerald-500/50'
-              }`}
+              className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${roleBadgeClass(
+                currentUser?.role
+              )}`}
             >
               {currentUser?.role}
             </span>
@@ -119,4 +186,3 @@ export const RoleSwitcherBar: React.FC = () => {
     </div>
   );
 };
-

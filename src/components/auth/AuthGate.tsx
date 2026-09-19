@@ -7,7 +7,8 @@ import { LoginScreen } from './LoginScreen';
  * Wraps the application.
  *  - No Supabase credentials  -> the app runs exactly as before, on local demo data.
  *  - Credentials, no session  -> the login / signup screen.
- *  - Signed in                -> the app, with a slim account bar on top.
+ *  - Signed in                -> the app. The account details and the sign out
+ *    button live in RoleSwitcherBar, so nothing is duplicated here.
  */
 export function AuthGate({ children }: { children: React.ReactNode }) {
   const { enabled, loading, session, profile, profileError, signOut } = useAuth();
@@ -52,33 +53,5 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return (
-    <>
-      <AccountBar />
-      {children}
-    </>
-  );
-}
-
-function AccountBar() {
-  const { profile, school, signOut } = useAuth();
-  if (!profile) return null;
-
-  return (
-    <div className="w-full bg-[#5B0202] text-[#FAF8F2] px-3 sm:px-6 py-1.5">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 text-[11px]">
-        <span className="truncate font-semibold">
-          {profile.full_name} · {profile.role}
-          {school ? ` · ${school.name}` : ''}
-        </span>
-        <button
-          type="button"
-          onClick={signOut}
-          className="inline-flex items-center gap-1 rounded-full bg-[#FAF8F2]/15 px-2.5 py-1 font-bold hover:bg-[#FAF8F2]/25 transition"
-        >
-          <LogOut className="w-3 h-3" /> Sign out
-        </button>
-      </div>
-    </div>
-  );
+  return <>{children}</>;
 }
