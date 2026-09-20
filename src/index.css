@@ -11,3 +11,74 @@
   --font-cinzel: 'Cinzel', serif;
   --font-outfit: 'Outfit', sans-serif;
 }
+
+/* Hide scrollbars on horizontally scrolling strips (chips, tabs) while keeping them scrollable. */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile-first layout helpers (phone = default, md+ = larger screens) */
+/* ------------------------------------------------------------------ */
+:root {
+  /* Height of the fixed bottom tab bar on phones (excludes the device safe-area inset). */
+  --bottom-nav-h: 4rem;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Removes the 300ms tap delay / double-tap-zoom on interactive controls. */
+button,
+[role="button"],
+a,
+select,
+summary,
+label {
+  touch-action: manipulation;
+}
+
+/* Keep chrome clear of the notch / home indicator. Env values are 0 on devices without them. */
+.top-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.bottom-nav-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Space at the end of the page so content is never hidden behind the bottom tab bar. */
+.app-bottom-clear {
+  padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px) + 1rem);
+}
+
+/* For fixed / sticky elements that must float just above the bottom tab bar on phones. */
+.above-bottom-nav {
+  bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px) + 0.75rem);
+}
+
+@media (min-width: 768px) {
+  .app-bottom-clear {
+    padding-bottom: 2rem;
+  }
+  .above-bottom-nav {
+    bottom: 0.75rem;
+  }
+}
+
+/*
+  iOS Safari zooms the whole page when a focused field has a font size under 16px.
+  This is intentionally NOT inside a cascade layer so it wins over Tailwind's text-xs / text-sm.
+*/
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

@@ -1,22 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Wifi,
-  Battery,
-  Signal,
-  Smartphone,
-  Monitor,
-  Sparkles,
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  BookOpen,
-  CalendarCheck2,
-  FileText,
-  Megaphone,
-  Settings as SettingsIcon,
-  Shield,
-  Layers,
-} from 'lucide-react';
+import { Wifi, Battery, Signal, Smartphone, Monitor, ArrowLeft, Layers } from 'lucide-react';
 import { DribbbleScreen, DribbbleBottomNav } from './DribbbleBottomNav';
 import { DribbbleHomeView } from './DribbbleHomeView';
 import { DribbbleScheduledView } from './DribbbleScheduledView';
@@ -28,15 +11,10 @@ import { DribbbleChatView } from './DribbbleChatView';
 // Existing functional modules
 import { DiaryModule } from '../diary/DiaryModule';
 import { AttendanceModule } from '../attendance/AttendanceModule';
-import { ResultCardModule } from '../results/ResultCardModule';
-import { CommunicationModule } from '../communication/CommunicationModule';
-import { ExamsDatesheetModule } from '../datesheets/ExamsDatesheetModule';
-import { AdminDashboard } from '../admin/AdminDashboard';
-import { useSchoolData } from '../../hooks/useSchoolData';
 
 export const DribbbleAppShell: React.FC = () => {
-  const { currentSchool, currentUser } = useSchoolData();
   const [currentScreen, setCurrentScreen] = useState<DribbbleScreen>('home');
+  // Desktop-only preview switch. On real phones the app is always full width.
   const [viewMode, setViewMode] = useState<'mobile' | 'responsive'>('responsive');
 
   // "Send Homework" on the home screen: open the diary and pop the compose form open straight away.
@@ -57,45 +35,32 @@ export const DribbbleAppShell: React.FC = () => {
     return () => window.clearTimeout(timer);
   }, [currentScreen, pendingCompose]);
 
-  // Screen breadcrumbs or titles
-  const screenTitles: Record<DribbbleScreen, string> = {
-    home: 'Home Dashboard',
-    scheduled: 'Time Table Schedule',
-    calendar: 'School Calender & Events',
-    report: 'Student Report & Marks',
-    classes: 'My Classes & Student List',
-    chat: 'Parent-Teacher Messages',
-    diary: 'Chalkboard Photo Diary',
-    attendance: 'One-Click Attendance',
-  };
+  const chips = [
+    { id: 'home', label: '🏛️ Campus Home' },
+    { id: 'scheduled', label: '⏰ Timetable' },
+    { id: 'calendar', label: '📅 Calender & Events' },
+    { id: 'report', label: '📊 Student Report' },
+    { id: 'classes', label: '👥 Class Roster' },
+    { id: 'chat', label: '💬 Faculty Messages' },
+    { id: 'diary', label: '📸 Blackboard Diary' },
+    { id: 'attendance', label: '✅ Attendance' },
+  ] as const;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-[calc(100vh-110px)] pb-12 px-2 sm:px-4">
-      {/* Top Controls Bar: Golden Luxe Screen Navigator & Full View Switcher */}
-      <div className="w-full max-w-7xl px-4 py-2.5 mb-4 flex flex-wrap items-center justify-between gap-3 bg-[#200E01] text-[#EDE7C7] rounded-2xl border border-[#5B0202] shadow-md">
-        {/* Left: Quick Screen Jump Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-          <span className="text-[11px] font-black uppercase tracking-wider text-[#D4AF37] mr-1 flex items-center gap-1 font-['Cinzel',serif]">
+    <div className="flex flex-col items-center w-full min-h-[calc(100dvh-110px)] pb-20 px-0 sm:px-4">
+      {/* Top controls: scrollable screen chips (+ desktop-only frame toggle) */}
+      <div className="w-full max-w-7xl px-3 sm:px-4 py-2 sm:py-2.5 mb-3 sm:mb-4 flex items-center justify-between gap-3 bg-[#200E01] text-[#EDE7C7] rounded-2xl border border-[#5B0202] shadow-md">
+        <div className="flex flex-1 min-w-0 items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+          <span className="hidden lg:flex shrink-0 text-[11px] font-black uppercase tracking-wider text-[#D4AF37] mr-1 items-center gap-1 font-['Cinzel',serif]">
             <Layers className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span>Campus Views:</span>
           </span>
 
-          {(
-            [
-              { id: 'home', label: '🏛️ Campus Home' },
-              { id: 'scheduled', label: '⏰ Timetable' },
-              { id: 'calendar', label: '📅 Calender & Events' },
-              { id: 'report', label: '📊 Student Report' },
-              { id: 'classes', label: '👥 Class Roster' },
-              { id: 'chat', label: '💬 Faculty Messages' },
-              { id: 'diary', label: '📸 Blackboard Diary' },
-              { id: 'attendance', label: '✅ Attendance' },
-            ] as const
-          ).map((item) => (
+          {chips.map((item) => (
             <button
               key={item.id}
               onClick={() => setCurrentScreen(item.id as DribbbleScreen)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap active:scale-95 ${
+              className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-bold transition whitespace-nowrap active:scale-95 ${
                 currentScreen === item.id
                   ? 'bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37] shadow-sm font-black ring-1 ring-[#D4AF37]/50'
                   : 'bg-[#2D1605] text-[#EDE7C7]/80 hover:text-[#EDE7C7] hover:bg-[#3D1E07] border border-[#5B0202]'
@@ -106,8 +71,8 @@ export const DribbbleAppShell: React.FC = () => {
           ))}
         </div>
 
-        {/* Right: Device Frame Toggle */}
-        <div className="flex items-center gap-1 bg-[#2D1605] p-1 rounded-2xl border border-[#5B0202]">
+        {/* Device frame toggle: desktop preview only */}
+        <div className="hidden md:flex shrink-0 items-center gap-1 bg-[#2D1605] p-1 rounded-2xl border border-[#5B0202]">
           <button
             onClick={() => setViewMode('responsive')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
@@ -118,7 +83,7 @@ export const DribbbleAppShell: React.FC = () => {
             title="Full-Screen Premium School View"
           >
             <Monitor className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="hidden sm:inline">Full-Width UI</span>
+            <span>Full-Width UI</span>
           </button>
 
           <button
@@ -131,24 +96,23 @@ export const DribbbleAppShell: React.FC = () => {
             title="View in mobile smartphone frame"
           >
             <Smartphone className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Phone Frame</span>
+            <span>Phone Frame</span>
           </button>
         </div>
       </div>
 
-      {/* App Container: Either Phone Mockup or Wide Responsive Canvas */}
+      {/* App container. The phone-frame look only applies from md up; real phones always get full width. */}
       <div
-        className={`w-full transition-all duration-300 ${
+        className={`w-full transition-all duration-300 bg-[#FAF8F2] overflow-hidden relative ${
           viewMode === 'mobile'
-            ? 'max-w-[430px] rounded-[48px] shadow-[0_25px_70px_rgba(32,14,1,0.35)] border-[8px] border-[#200E01] bg-[#FAF8F2] overflow-hidden relative ring-2 ring-[#D4AF37]/40'
-            : 'max-w-7xl rounded-3xl shadow-xl border border-[#EDE7C7] bg-[#FAF8F2] overflow-hidden relative'
+            ? 'max-w-7xl rounded-2xl border border-[#EDE7C7] shadow-xl md:max-w-[430px] md:rounded-[48px] md:border-[8px] md:border-[#200E01] md:shadow-[0_25px_70px_rgba(32,14,1,0.35)] md:ring-2 md:ring-[#D4AF37]/40'
+            : 'max-w-7xl rounded-2xl md:rounded-3xl shadow-xl border border-[#EDE7C7]'
         }`}
       >
-        {/* Phone Frame Mockup Status Bar (9:30, WiFi, Battery) */}
-        <div className="bg-[#8B0000] text-[#EDE7C7] pt-2.5 px-7 pb-1 flex items-center justify-between text-xs font-bold select-none border-b border-[#5B0202]">
+        {/* Fake status bar (9:30, WiFi, Battery): desktop preview only. A real phone has its own. */}
+        <div className="hidden md:flex bg-[#8B0000] text-[#EDE7C7] pt-2.5 px-7 pb-1 items-center justify-between text-xs font-bold select-none border-b border-[#5B0202]">
           <span className="tracking-tight text-[11px] font-black font-['Outfit',sans-serif]">9:30 AM</span>
-          
-          {/* Subtle phone speaker pill (only in mobile frame) */}
+
           {viewMode === 'mobile' && (
             <div className="w-16 h-3.5 bg-black/40 rounded-full flex items-center justify-center">
               <div className="w-8 h-1 bg-[#D4AF37]/40 rounded-full" />
@@ -162,7 +126,7 @@ export const DribbbleAppShell: React.FC = () => {
           </div>
         </div>
 
-        {/* Dynamic Screen View */}
+        {/* Dynamic screen view */}
         <div className="relative">
           {currentScreen === 'home' && (
             <DribbbleHomeView
@@ -187,7 +151,7 @@ export const DribbbleAppShell: React.FC = () => {
           {currentScreen === 'classes' && (
             <DribbbleClassesView
               onBack={() => setCurrentScreen('home')}
-              onSelectStudent={(id) => setCurrentScreen('report')}
+              onSelectStudent={() => setCurrentScreen('report')}
             />
           )}
 
@@ -195,13 +159,13 @@ export const DribbbleAppShell: React.FC = () => {
             <DribbbleChatView onBack={() => setCurrentScreen('home')} />
           )}
 
-          {/* Full functional modules integrated seamlessly with header back bar */}
+          {/* Full functional modules with a back bar */}
           {currentScreen === 'diary' && (
-            <div className="p-4 sm:p-6 space-y-4">
+            <div className="p-3 sm:p-6 space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                 <button
                   onClick={() => setCurrentScreen('home')}
-                  className="flex items-center gap-1.5 text-xs font-extrabold text-[#8B0000] hover:text-[#700000]"
+                  className="flex items-center gap-1.5 min-h-[44px] pr-3 text-xs font-extrabold text-[#8B0000] hover:text-[#700000]"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home</span>
@@ -215,11 +179,11 @@ export const DribbbleAppShell: React.FC = () => {
           )}
 
           {currentScreen === 'attendance' && (
-            <div className="p-4 sm:p-6 space-y-4">
+            <div className="p-3 sm:p-6 space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                 <button
                   onClick={() => setCurrentScreen('home')}
-                  className="flex items-center gap-1.5 text-xs font-extrabold text-[#8B0000] hover:text-[#700000]"
+                  className="flex items-center gap-1.5 min-h-[44px] pr-3 text-xs font-extrabold text-[#8B0000] hover:text-[#700000]"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home</span>
@@ -233,7 +197,7 @@ export const DribbbleAppShell: React.FC = () => {
           )}
         </div>
 
-        {/* Floating Bottom Dock Bar */}
+        {/* Floating bottom dock (sits above the phone tab bar) */}
         <DribbbleBottomNav
           currentScreen={currentScreen}
           onSelect={(screen) => setCurrentScreen(screen)}

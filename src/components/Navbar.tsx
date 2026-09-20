@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   GraduationCap,
   CalendarCheck2,
   FileText,
   Settings,
   Database,
-  ShieldCheck,
   Menu,
   X,
   Smartphone,
@@ -13,6 +12,7 @@ import {
   Megaphone,
   CalendarDays,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useSchoolData } from '../hooks/useSchoolData';
 import { PWAInstallButton } from './PWAInstallButton';
 import { SupabaseConfigModal } from './supabase/SupabaseConfigModal';
@@ -24,107 +24,103 @@ interface NavbarProps {
   setActiveModule: (m: AppModule) => void;
 }
 
+interface NavItem {
+  id: AppModule;
+  label: string;
+  shortLabel: string;
+  Icon: LucideIcon;
+  allowedRoles: string[];
+}
+
+const ALL_ROLES = ['admin', 'teacher', 'parent'];
+
+const NAV_ITEMS: NavItem[] = [
+  { id: 'portal', label: 'Campus Portal', shortLabel: 'Home', Icon: Smartphone, allowedRoles: ALL_ROLES },
+  { id: 'diary', label: 'Digital Diary', shortLabel: 'Diary', Icon: BookOpen, allowedRoles: ALL_ROLES },
+  { id: 'attendance', label: 'Attendance', shortLabel: 'Attendance', Icon: CalendarCheck2, allowedRoles: ALL_ROLES },
+  { id: 'results', label: 'Result Cards', shortLabel: 'Results', Icon: FileText, allowedRoles: ALL_ROLES },
+  { id: 'communication', label: 'Notices & Chat', shortLabel: 'Notices', Icon: Megaphone, allowedRoles: ALL_ROLES },
+  { id: 'datesheets', label: 'Datesheets', shortLabel: 'Datesheets', Icon: CalendarDays, allowedRoles: ALL_ROLES },
+  { id: 'admin', label: 'Admin', shortLabel: 'Admin', Icon: Settings, allowedRoles: ['admin', 'teacher'] },
+];
+
+// A phone tab bar comfortably fits 5 slots. When there are more sections, the last slot becomes "More".
+const MAX_BOTTOM_SLOTS = 5;
+
 export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule }) => {
   const { currentSchool, currentUser, isSupabaseActive } = useSchoolData();
   const [isDbModalOpen, setIsDbModalOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
 
-  // Header colours now follow the app palette (Owner Studio / theme.config.json).
-  // School name, logo and motto still come from the school's own branding settings.
+  // Header colours follow the app palette (Owner Studio / theme.config.json).
   const primaryColor = 'var(--t-primary)';
   const secondaryColor = 'var(--t-primary-deep)';
 
-  const navItems = [
-    {
-      id: 'portal' as const,
-      label: 'Campus Portal',
-      icon: <Smartphone className="w-4 h-4" />,
-      allowedRoles: ['admin', 'teacher', 'parent'],
-    },
-    {
-      id: 'diary' as const,
-      label: 'Digital Diary',
-      icon: <BookOpen className="w-4 h-4" />,
-      allowedRoles: ['admin', 'teacher', 'parent'],
-    },
-    {
-      id: 'attendance' as const,
-      label: 'Attendance',
-      icon: <CalendarCheck2 className="w-4 h-4" />,
-      allowedRoles: ['admin', 'teacher', 'parent'],
-    },
-    {
-      id: 'results' as const,
-      label: 'Result Cards',
-      icon: <FileText className="w-4 h-4" />,
-      allowedRoles: ['admin', 'teacher', 'parent'],
-    },
-    {
-      id: 'communication' as const,
-      label: 'Notices & Chat',
-      icon: <Megaphone className="w-4 h-4" />,
-      allowedRoles: ['admin', 'teacher', 'parent'],
-    },
-    {
-      id: 'datesheets' as const,
-      label: 'Datesheets',
-      icon: <CalendarDays className="w-4 h-4" />,
-      allowedRoles: ['admin', 'teacher', 'parent'],
-    },
-    {
-      id: 'admin' as const,
-      label: 'Admin',
-      icon: <Settings className="w-4 h-4" />,
-      allowedRoles: ['admin', 'teacher'],
-    },
-  ];
-
-  // Filter visible items based on user role
-  const visibleNavItems = navItems.filter((item) =>
+  const visibleNavItems = NAV_ITEMS.filter((item) =>
     item.allowedRoles.includes(currentUser?.role || 'admin')
   );
+
+  const overflows = visibleNavItems.length > MAX_BOTTOM_SLOTS;
+  const bottomItems = overflows ? visibleNavItems.slice(0, MAX_BOTTOM_SLOTS - 1) : visibleNavItems;
+  const moreItems = overflows ? visibleNavItems.slice(MAX_BOTTOM_SLOTS - 1) : [];
+  const moreActive = moreItems.some((item) => item.id === activeModule);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMoreOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [moreOpen]);
+
+  const go = (id: AppModule) => {
+    setActiveModule(id);
+    setMoreOpen(false);
+    window.scrollTo({ top: 0 });
+  };
 
   return (
     <>
       <header
-        className="sticky top-0 z-40 text-[#EDE7C7] shadow-lg border-b border-[#D4AF37]/30 transition-colors"
+        className="sticky top-0 z-40 text-[#EDE7C7] shadow-lg border-b border-[#D4AF37]/30 transition-colors top-safe"
         style={{ backgroundColor: primaryColor }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-18">
-            {/* School Brand & Logo */}
-            <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
+          <div className="flex items-center justify-between gap-2 h-14 md:h-18">
+            {/* School brand & logo */}
+            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
               {currentSchool?.logo_url ? (
                 <img
                   src={currentSchool.logo_url}
                   alt={currentSchool.name}
-                  className="w-11 h-11 rounded-2xl object-cover border-2 border-[#D4AF37]/70 shadow-md ring-1 ring-black/20"
+                  className="w-9 h-9 md:w-11 md:h-11 shrink-0 rounded-xl md:rounded-2xl object-cover border-2 border-[#D4AF37]/70 shadow-md ring-1 ring-black/20"
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="w-11 h-11 rounded-2xl bg-[#5B0202] border border-[#D4AF37]/60 flex items-center justify-center font-bold text-[#EDE7C7] shadow-sm">
-                  <GraduationCap className="w-6 h-6 text-[#D4AF37]" />
+                <div className="w-9 h-9 md:w-11 md:h-11 shrink-0 rounded-xl md:rounded-2xl bg-[#5B0202] border border-[#D4AF37]/60 flex items-center justify-center font-bold text-[#EDE7C7] shadow-sm">
+                  <GraduationCap className="w-5 h-5 md:w-6 md:h-6 text-[#D4AF37]" />
                 </div>
               )}
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-lg sm:text-xl tracking-tight text-[#EDE7C7] line-clamp-1 font-['Cormorant_Garamond',serif] italic">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="font-bold text-base sm:text-xl tracking-tight text-[#EDE7C7] truncate font-['Cormorant_Garamond',serif] italic">
                     {currentSchool?.name || 'School Management PWA'}
                   </span>
                   <span
-                    className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest text-[#EDE7C7] border border-[#D4AF37]/60 shadow-xs font-['Cinzel',serif]"
+                    className="hidden sm:inline-block shrink-0 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest text-[#EDE7C7] border border-[#D4AF37]/60 shadow-xs font-['Cinzel',serif]"
                     style={{ backgroundColor: secondaryColor }}
                   >
                     Est. 1928
                   </span>
                 </div>
-                <p className="text-[11px] text-[#EDE7C7]/80 line-clamp-1 font-medium hidden sm:block tracking-wide">
+                <p className="text-[11px] text-[#EDE7C7]/80 truncate font-medium hidden sm:block tracking-wide">
                   {currentSchool?.motto || 'Perseverantia et Virtus • Knowledge is Light'}
                 </p>
               </div>
             </div>
 
-            {/* Desktop Navigation Links */}
+            {/* Desktop navigation */}
             <nav className="hidden md:flex items-center gap-1.5 bg-[#5B0202]/70 p-1.5 rounded-2xl border border-[#D4AF37]/30 shadow-inner">
               {visibleNavItems.map((item) => {
                 const isActive = activeModule === item.id;
@@ -139,105 +135,156 @@ export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule })
                         : 'text-[#EDE7C7]/80 hover:text-[#EDE7C7] hover:bg-white/10'
                     }`}
                   >
-                    {item.icon}
+                    <item.Icon className="w-4 h-4" />
                     <span>{item.label}</span>
                   </button>
                 );
               })}
             </nav>
 
-            {/* Right Controls: PWA Install & Supabase Status */}
-            <div className="flex items-center gap-2">
+            {/* Right controls */}
+            <div className="flex items-center gap-2 shrink-0">
               <PWAInstallButton />
 
-              {/* Supabase Status Pill */}
+              {/* Database status pill: desktop only. On phones it lives in the "More" sheet. */}
               <button
                 id="supabase-status-pill"
                 onClick={() => setIsDbModalOpen(true)}
                 title="Supabase Database & Authentication Configuration"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-semibold border transition ${
+                className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-semibold border transition ${
                   isSupabaseActive
                     ? 'bg-emerald-900/60 text-emerald-200 border-emerald-500/50 hover:bg-emerald-800/60'
                     : 'bg-[#5B0202]/80 text-[#EDE7C7] border-[#D4AF37]/30 hover:bg-[#5B0202]'
                 }`}
               >
                 <Database className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span className="hidden sm:inline text-[11px]">
-                  {isSupabaseActive ? 'Cloud Live' : 'Demo DB'}
-                </span>
+                <span className="text-[11px]">{isSupabaseActive ? 'Cloud Live' : 'Demo DB'}</span>
                 <span
                   className={`w-2 h-2 rounded-full ${
                     isSupabaseActive ? 'bg-emerald-400 animate-pulse' : 'bg-[#D4AF37]'
                   }`}
                 />
               </button>
+            </div>
+          </div>
+        </div>
+      </header>
 
-              {/* Mobile Menu Toggle */}
+      {/* Phone bottom tab bar (hidden on md+ where the header tabs take over) */}
+      <nav
+        aria-label="Primary"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#EDE7C7] shadow-[0_-4px_20px_rgba(32,14,1,0.08)] bottom-nav-safe"
+      >
+        <div className="flex items-stretch h-16">
+          {bottomItems.map((item) => {
+            const isActive = activeModule === item.id;
+            return (
               <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 rounded-xl text-[#EDE7C7] hover:bg-white/10 transition"
+                key={item.id}
+                onClick={() => go(item.id)}
+                aria-current={isActive ? 'page' : undefined}
+                className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 text-[10px] font-bold transition active:scale-95 ${
+                  isActive ? 'text-[#8B0000]' : 'text-[#5B0202]/60'
+                }`}
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                <span
+                  className={`px-4 py-1 rounded-full transition ${isActive ? 'bg-[#F8EBEB]' : ''}`}
+                >
+                  <item.Icon className="w-5 h-5" />
+                </span>
+                <span className="truncate max-w-full px-1">{item.shortLabel}</span>
+              </button>
+            );
+          })}
+
+          {overflows && (
+            <button
+              onClick={() => setMoreOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={moreOpen}
+              className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 text-[10px] font-bold transition active:scale-95 ${
+                moreActive ? 'text-[#8B0000]' : 'text-[#5B0202]/60'
+              }`}
+            >
+              <span className={`px-4 py-1 rounded-full transition ${moreActive ? 'bg-[#F8EBEB]' : ''}`}>
+                <Menu className="w-5 h-5" />
+              </span>
+              <span className="truncate max-w-full px-1">More</span>
+            </button>
+          )}
+        </div>
+      </nav>
+
+      {/* "More" bottom sheet */}
+      {moreOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-50"
+          role="dialog"
+          aria-modal="true"
+          aria-label="More sections"
+        >
+          <button
+            aria-label="Close menu"
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMoreOpen(false)}
+          />
+          <div className="absolute inset-x-0 bottom-0 bg-[#200E01] text-[#EDE7C7] rounded-t-3xl border-t border-[#D4AF37]/40 shadow-2xl bottom-nav-safe">
+            <div className="flex items-center justify-between px-5 pt-4 pb-2">
+              <span className="text-xs font-black uppercase tracking-wider text-[#D4AF37] font-['Cinzel',serif]">
+                More
+              </span>
+              <button
+                aria-label="Close"
+                onClick={() => setMoreOpen(false)}
+                className="p-2 -mr-2 rounded-xl hover:bg-white/10 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-3 pb-3 space-y-1.5">
+              {moreItems.map((item) => {
+                const isActive = activeModule === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => go(item.id)}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`w-full flex items-center gap-3 px-4 min-h-[52px] rounded-2xl text-sm font-bold text-left transition ${
+                      isActive
+                        ? 'bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]'
+                        : 'text-[#EDE7C7] hover:bg-[#2D1605]'
+                    }`}
+                  >
+                    <item.Icon className={`w-5 h-5 ${isActive ? 'text-[#8B0000]' : 'text-[#D4AF37]'}`} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+
+              <button
+                onClick={() => {
+                  setMoreOpen(false);
+                  setIsDbModalOpen(true);
+                }}
+                className="w-full flex items-center gap-3 px-4 min-h-[52px] rounded-2xl text-sm font-bold text-left text-[#EDE7C7] hover:bg-[#2D1605] transition"
+              >
+                <Database className="w-5 h-5 text-[#D4AF37]" />
+                <span>Database status</span>
+                <span
+                  className={`ml-auto text-[11px] font-semibold ${
+                    isSupabaseActive ? 'text-emerald-300' : 'text-[#EDE7C7]/60'
+                  }`}
+                >
+                  {isSupabaseActive ? 'Cloud Live' : 'Demo DB'}
+                </span>
               </button>
             </div>
           </div>
         </div>
+      )}
 
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-[#200E01] border-t border-[#5B0202] p-3 space-y-1.5 shadow-xl">
-            {visibleNavItems.map((item) => {
-              const isActive = activeModule === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveModule(item.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-bold transition text-left ${
-                    isActive
-                      ? 'bg-[#EDE7C7] text-[#8B0000] font-black border border-[#D4AF37]'
-                      : 'text-[#EDE7C7]/80 hover:bg-[#2D1605]'
-                  }`}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
-
-      {/* Mobile Bottom Navigation Bar (Standard PWA pattern) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 py-2 flex items-center justify-around shadow-lg">
-        {visibleNavItems.map((item) => {
-          const isActive = activeModule === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActiveModule(item.id)}
-              className={`flex flex-col items-center py-1 px-2.5 rounded-xl text-[10px] font-bold transition ${
-                isActive
-                  ? 'text-[#8B0000] font-black'
-                  : 'text-slate-500 hover:text-slate-800'
-              }`}
-            >
-              <div className={`p-1 rounded-lg ${isActive ? 'bg-[#F8EBEB]' : ''}`}>
-                {item.icon}
-              </div>
-              <span className="mt-0.5 line-clamp-1">{item.label.split(' ')[0]}</span>
-            </button>
-          );
-        })}
-      </div>
-
-
-      <SupabaseConfigModal
-        isOpen={isDbModalOpen}
-        onClose={() => setIsDbModalOpen(false)}
-      />
+      <SupabaseConfigModal isOpen={isDbModalOpen} onClose={() => setIsDbModalOpen(false)} />
     </>
   );
 };

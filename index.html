@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- viewport-fit=cover lets the app use the full screen on notched phones (safe-area insets are handled in CSS).
+         Pinch-zoom is deliberately NOT disabled: it is an accessibility requirement. iOS input auto-zoom is
+         prevented in index.css instead (inputs are 16px on phones). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Multi-Tenant School Management</title>
     <meta name="description" content="Progressive Web App for multi-tenant school operations, one-click attendance, fee-locked report cards with PDF export, and administrative controls." />
     <meta property="og:title" content="Multi-Tenant School Management" />
@@ -64,7 +67,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-[#FAF8F2] text-[#200E01] antialiased selection:bg-[#8B0000] selection:text-[#EDE7C7] min-h-screen font-['Plus_Jakarta_Sans',sans-serif]">
+  <body class="bg-[#FAF8F2] text-[#200E01] antialiased selection:bg-[#8B0000] selection:text-[#EDE7C7] min-h-dvh font-['Plus_Jakarta_Sans',sans-serif]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

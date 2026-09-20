@@ -76,11 +76,11 @@ export function LoginScreen() {
   };
 
   const inputClass =
-    'w-full rounded-2xl border border-[#EDE7C7] bg-white px-4 py-2.5 text-sm text-[#200E01] outline-none focus:border-[#8B0000] focus:ring-2 focus:ring-[#8B0000]/15';
+    'w-full min-h-[48px] rounded-2xl border border-[#EDE7C7] bg-white px-4 py-3 text-base sm:text-sm text-[#200E01] outline-none focus:border-[#8B0000] focus:ring-2 focus:ring-[#8B0000]/15';
   const labelClass = 'block text-[11px] font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1.5';
 
   return (
-    <div className="min-h-screen bg-[#FAF8F2] text-[#200E01] flex items-center justify-center p-4 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex items-start sm:items-center justify-center px-4 py-8 sm:p-4 font-['Plus_Jakarta_Sans',sans-serif] top-safe bottom-nav-safe">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center text-center mb-6">
           <div className="w-14 h-14 rounded-2xl bg-[#8B0000] flex items-center justify-center shadow-lg">
@@ -102,7 +102,7 @@ export function LoginScreen() {
                 setMode('signin');
                 setError(null);
               }}
-              className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] rounded-xl text-xs font-bold transition ${
                 mode === 'signin' ? 'bg-[#8B0000] text-[#FAF8F2]' : 'text-[#5B0202]'
               }`}
             >
@@ -114,7 +114,7 @@ export function LoginScreen() {
                 setMode('signup');
                 setError(null);
               }}
-              className={`flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition ${
+              className={`flex items-center justify-center gap-1.5 min-h-[44px] rounded-xl text-xs font-bold transition ${
                 mode === 'signup' ? 'bg-[#8B0000] text-[#FAF8F2]' : 'text-[#5B0202]'
               }`}
             >
@@ -125,8 +125,9 @@ export function LoginScreen() {
           <div className="space-y-4">
             {mode === 'signup' && (
               <div>
-                <label className={labelClass}>Full name</label>
+                <label className={labelClass} htmlFor="auth-full-name">Full name</label>
                 <input
+                  id="auth-full-name"
                   className={inputClass}
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
@@ -137,10 +138,15 @@ export function LoginScreen() {
             )}
 
             <div>
-              <label className={labelClass}>Email</label>
+              <label className={labelClass} htmlFor="auth-email">Email</label>
               <input
+                id="auth-email"
                 className={inputClass}
                 type="email"
+                inputMode="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@school.edu"
@@ -149,8 +155,9 @@ export function LoginScreen() {
             </div>
 
             <div>
-              <label className={labelClass}>Password</label>
+              <label className={labelClass} htmlFor="auth-password">Password</label>
               <input
+                id="auth-password"
                 className={inputClass}
                 type="password"
                 value={password}
@@ -166,8 +173,9 @@ export function LoginScreen() {
             {mode === 'signup' && (
               <>
                 <div>
-                  <label className={labelClass}>School</label>
+                  <label className={labelClass} htmlFor="auth-school">School</label>
                   <select
+                    id="auth-school"
                     className={inputClass}
                     value={schoolId}
                     onChange={(e) => setSchoolId(e.target.value)}
@@ -182,8 +190,9 @@ export function LoginScreen() {
                 </div>
 
                 <div>
-                  <label className={labelClass}>Role</label>
+                  <label className={labelClass} htmlFor="auth-role">Role</label>
                   <select
+                    id="auth-role"
                     className={inputClass}
                     value={role}
                     onChange={(e) => setRole(e.target.value as UserRole)}
@@ -211,7 +220,7 @@ export function LoginScreen() {
               type="button"
               onClick={handleSubmit}
               disabled={busy}
-              className="w-full rounded-2xl bg-[#8B0000] py-3 text-sm font-bold text-[#FAF8F2] shadow-sm transition hover:bg-[#700000] disabled:opacity-60"
+              className="w-full min-h-[48px] rounded-2xl bg-[#8B0000] py-3 text-sm font-bold text-[#FAF8F2] shadow-sm transition hover:bg-[#700000] active:scale-[0.99] disabled:opacity-60"
             >
               {busy ? (
                 <span className="inline-flex items-center gap-2">
