@@ -16,6 +16,7 @@ import {
 import { LocalStore } from '../lib/storage';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../lib/authContext';
+import { useDiaryStore, diaryActions } from '../lib/diaryStore';
 
 interface RemoteData {
   schools: School[];
@@ -36,6 +37,15 @@ export function useSchoolData() {
   const isSupabaseActive = isSupabaseConfigured() && Boolean(profile);
   const [remote, setRemote] = useState<RemoteData | null>(null);
   const [remoteError, setRemoteError] = useState<string | null>(null);
+
+  // Diary: one shared realtime store when signed in, the local demo store otherwise.
+  const diaryState = useDiaryStore();
+  const diarySchoolId = isSupabaseActive ? profile?.school_id ?? null : null;
+
+  useEffect(() => {
+    if (!diarySchoolId) return;
+    return diaryActions.attach(diarySchoolId);
+  }, [diarySchoolId]);
 
   useEffect(() => {
     const unsubscribe = LocalStore.subscribe(() => {
@@ -153,8 +163,12 @@ export function useSchoolData() {
   const allFees = usingRemote ? remote!.fees : localFees;
   const allResults = usingRemote ? remote!.results : localResults;
 
-  // These five have no tables in the schema yet, so they stay local for now.
-  const allDiary = useMemo(() => LocalStore.getDiary(), [tick]);
+  // The diary lives in Supabase when signed in (see lib/diaryStore.ts).
+  // These four have no tables in the schema yet, so they stay local for now.
+  const allDiary = useMemo(
+    () => (diarySchoolId ? diaryState.entries : LocalStore.getDiary()),
+    [tick, diarySchoolId, diaryState.entries]
+  );
   const allNotices = useMemo(() => LocalStore.getNotices(), [tick]);
   const allQueries = useMemo(() => LocalStore.getQueries(), [tick]);
   const allAlerts = useMemo(() => LocalStore.getAlerts(), [tick]);
@@ -502,6 +516,10 @@ export function useSchoolData() {
               name: item.name.trim(),
               class_id: item.class_id.trim() || 'Grade 10',
               section: (item.section || 'A').toUpperCase().trim(),
+              // The parent's email is what links a parent account to their child
+              // (done by a database trigger once that parent has confirmed their email).
+              parent_email: item.parent_email?.trim() || null,
+              parent_name: item.parent_name?.trim() || null,
             }))
           )
           .then(({ error }) => {
@@ -608,7 +626,7 @@ export function useSchoolData() {
   }, []);
 
   // ---------------------------------------------------------------------------
-  // Diary / notices / queries / alerts / datesheets - local only for now
+  // Diary (cloud + realtime when signed in, local demo otherwise)
   // ---------------------------------------------------------------------------
   const addDiaryEntry = useCallback(
     (
@@ -617,6 +635,14 @@ export function useSchoolData() {
         'id' | 'school_id' | 'teacher_id' | 'teacher_name' | 'created_at' | 'read_by_parents'
       >
     ) => {
+      if (diarySchoolId) {
+        return diaryActions.addEntry(entry, {
+          school_id: diarySchoolId,
+          teacher_id: currentUser?.id ?? '',
+          teacher_name: currentUser?.full_name || 'Class Teacher',
+        });
+      }
+
       const all = LocalStore.getDiary();
       const newEntry: DiaryEntry = {
         ...entry,
@@ -630,11 +656,23 @@ export function useSchoolData() {
       LocalStore.saveDiary([newEntry, ...all]);
       return newEntry;
     },
-    [currentSchool, currentUser]
+    [currentSchool, currentUser, diarySchoolId]
   );
 
   const markDiaryAsRead = useCallback(
     (diaryId: string, studentId: string, studentName: string) => {
+      if (diarySchoolId) {
+        if (!currentUser) return;
+        diaryActions.markRead(diaryId, {
+          school_id: diarySchoolId,
+          parent_id: currentUser.id,
+          parent_name: currentUser.full_name,
+          student_id: studentId,
+          student_name: studentName,
+        });
+        return;
+      }
+
       const all = LocalStore.getDiary();
       const updated = all.map((d) => {
         if (d.id === diaryId) {
@@ -661,14 +699,24 @@ export function useSchoolData() {
       });
       LocalStore.saveDiary(updated);
     },
-    [currentUser]
+    [currentUser, diarySchoolId]
   );
 
-  const deleteDiaryEntry = useCallback((diaryId: string) => {
-    const all = LocalStore.getDiary();
-    LocalStore.saveDiary(all.filter((d) => d.id !== diaryId));
-  }, []);
+  const deleteDiaryEntry = useCallback(
+    (diaryId: string) => {
+      if (diarySchoolId) {
+        diaryActions.deleteEntry(diaryId);
+        return;
+      }
+      const all = LocalStore.getDiary();
+      LocalStore.saveDiary(all.filter((d) => d.id !== diaryId));
+    },
+    [diarySchoolId]
+  );
 
+  // ---------------------------------------------------------------------------
+  // Notices / queries / alerts / datesheets - local only for now
+  // ---------------------------------------------------------------------------
   const addNotice = useCallback(
     (notice: Omit<Notice, 'id' | 'school_id' | 'author_name' | 'author_role' | 'created_at'>) => {
       const all = LocalStore.getNotices();
@@ -836,5 +884,7 @@ export function useSchoolData() {
     remoteError,
     refreshRemote,
     isLoading,
+    diaryLive: diaryState.live,
+    diaryError: diaryState.error,
   };
 }
