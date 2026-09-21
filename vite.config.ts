@@ -68,32 +68,67 @@ function themeVarsPlugin(): Plugin {
 function bakedThemePlugin(): Plugin {
   const keys = ['primary', 'accent', 'ink', 'bg', 'sand'];
 
-  const readColors = (): Record<string, string> => {
+  // Skin presets must mirror src/lib/skins.ts. Kept inline because this plugin
+  // runs in Node at build time and cannot import the app's TS modules.
+  const SKIN_PRESETS: Record<string, {colors: Record<string, string>; sans: string; display: string; radius: string}> = {
+    imperial: {
+      colors: {primary: '#8B0000', accent: '#D4AF37', ink: '#200E01', bg: '#FAF8F2', sand: '#EDE7C7'},
+      sans: "'Plus Jakarta Sans', sans-serif",
+      display: "'Cinzel', serif",
+      radius: 'soft',
+    },
+    highstar: {
+      colors: {primary: '#0A2540', accent: '#F5B800', ink: '#041226', bg: '#F0F4F8', sand: '#E2E8F0'},
+      sans: "'Inter', sans-serif",
+      display: "'Inter', sans-serif",
+      radius: 'sharp',
+    },
+  };
+
+  const readConfig = (): {colors: Record<string, string>; skin: string} => {
     try {
       const raw =
         process.env.VITE_THEME_JSON || fs.readFileSync(path.resolve(__dirname, 'theme.config.json'), 'utf8');
       const parsed = JSON.parse(raw);
-      return parsed && parsed.colors ? parsed.colors : {};
+      const skin = typeof parsed?.skin === 'string' && SKIN_PRESETS[parsed.skin] ? parsed.skin : 'imperial';
+      // An explicit "colors" block always wins, so a skin can still be re-tinted
+      // per school; otherwise fall back to the skin's own palette.
+      const colors = parsed && parsed.colors ? parsed.colors : SKIN_PRESETS[skin].colors;
+      return {colors, skin};
     } catch {
-      return {};
+      return {colors: {}, skin: 'imperial'};
     }
   };
 
   return {
     name: 'baked-theme',
     transformIndexHtml() {
-      const colors = readColors();
-      const decls = keys
+      const {colors, skin} = readConfig();
+      const preset = SKIN_PRESETS[skin];
+      const colorDecls = keys
         .filter((k) => /^#[0-9a-fA-F]{6}$/.test(colors[k] ?? ''))
         .map((k) => `--t-${k}:${colors[k]}`)
         .join(';');
+      const skinDecls = [
+        `--t-font-sans:${preset.sans}`,
+        `--t-font-display:${preset.display}`,
+        `--t-radius-card:${preset.radius === 'soft' ? '1.5rem' : '0.75rem'}`,
+        `--t-radius-pill:${preset.radius === 'soft' ? '9999px' : '0.5rem'}`,
+      ].join(';');
+      const decls = [colorDecls, skinDecls].filter(Boolean).join(';');
       if (!decls) return;
       return [
         {
           tag: 'style',
           attrs: {id: 'theme-baked'},
           children: `:root{${decls}}`,
-          injectTo: 'head',
+          injectTo: 'head' as const,
+        },
+        {
+          tag: 'script',
+          attrs: {id: 'skin-baked'},
+          children: `document.documentElement.setAttribute('data-skin','${skin}');window.__SKIN__='${skin}';`,
+          injectTo: 'head' as const,
         },
       ];
     },

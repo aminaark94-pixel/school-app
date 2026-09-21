@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RoleSwitcherBar } from './components/RoleSwitcherBar';
 import { Navbar, AppModule } from './components/Navbar';
+import { HighStarHeader } from './components/highstar/HighStarHeader';
 import { DribbbleAppShell } from './components/dribbble/DribbbleAppShell';
 import { DiaryModule } from './components/diary/DiaryModule';
 import { AttendanceModule } from './components/attendance/AttendanceModule';
@@ -10,10 +11,12 @@ import { ExamsDatesheetModule } from './components/datesheets/ExamsDatesheetModu
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { OfflineIndicator } from './components/OfflineIndicator';
 import { useSchoolData } from './hooks/useSchoolData';
+import { useSkin } from './hooks/useSkin';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
 
 export default function App() {
   const { currentSchool, currentUser } = useSchoolData();
+  const skin = useSkin();
   const [activeModule, setActiveModule] = useState<AppModule>('portal');
 
   // Parents never get the admin module
@@ -24,12 +27,19 @@ export default function App() {
   }, [currentUser, activeModule]);
 
   return (
-    <div className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex flex-col app-bottom-clear font-['Plus_Jakarta_Sans',sans-serif]">
+    <div
+      className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex flex-col app-bottom-clear"
+      style={{ fontFamily: 'var(--t-font-sans, "Plus Jakarta Sans", sans-serif)' }}
+    >
       {/* 1. Account / persona bar */}
       <RoleSwitcherBar />
 
-      {/* 2. Header (brand) + desktop tabs + phone bottom tab bar */}
-      <Navbar activeModule={activeModule} setActiveModule={setActiveModule} />
+      {/* 2. Header + navigation — swapped per published skin */}
+      {skin.id === 'highstar' ? (
+        <HighStarHeader activeModule={activeModule} setActiveModule={setActiveModule} />
+      ) : (
+        <Navbar activeModule={activeModule} setActiveModule={setActiveModule} />
+      )}
 
       {/* 3. Main workspace */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">

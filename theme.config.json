@@ -1,4 +1,6 @@
 {
+  "_comment": "Owner-only delivery config. Set 'skin' to pick the whole UI look for this school build: 'imperial' or 'highstar'. Omit 'colors' to use the skin's own palette, or include it to re-tint the skin for this school.",
+  "skin": "imperial",
   "name": "Imperial Crimson & Gold (default)",
   "colors": {
     "primary": "#8B0000",
