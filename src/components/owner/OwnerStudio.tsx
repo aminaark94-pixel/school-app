@@ -6,7 +6,6 @@ import {
   RotateCcw,
   Copy,
   Check,
-  Eye,
   EyeOff,
   ClipboardPaste,
   ShieldCheck,
@@ -32,15 +31,15 @@ import {
   readPreviewedSkinId,
 } from '../../lib/skins';
 import type { SkinId } from '../../lib/skins';
-import { SKIN_CHANGE_EVENT } from '../../hooks/useSkin';
+import { SKIN_CHANGE_EVENT, publishSkinToSchool, usePublishedSkinId } from '../../hooks/useSkin';
 import { useSchoolData } from '../../hooks/useSchoolData';
 
 /**
  * Owner Studio: a private panel for the app owner (not linked anywhere in the UI).
  * Open it by adding #owner to the site address, e.g. https://your-site.vercel.app/#owner
  * It asks for a PIN that is set the first time and stored (hashed) in this browser only.
- * Changes are previewed live and saved in this browser; to publish them for a school,
- * copy the theme JSON into theme.config.json.
+ * Skins and colours are previewed live in this browser; "Publish this skin now" saves the
+ * skin to the school in the database so every visitor sees it.
  */
 
 const PIN_KEY = 'owner_pin_hash_v1';
@@ -191,7 +190,7 @@ const PinGate: React.FC<{
 /* ------------------------------------------------------------------ */
 
 const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { currentSchool, updateSchoolBranding } = useSchoolData();
+  const { currentSchool, updateSchoolBranding, isLiveData, refreshRemote } = useSchoolData();
   const [colors, setColors] = useState<ThemeColors>(() => readCurrentColors());
   const [drafts, setDrafts] = useState<ThemeColors>(() => readCurrentColors());
   const [collapsed, setCollapsed] = useState(false);
@@ -202,13 +201,11 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [preview, setPreview] = useState<boolean>(() => hasOwnerPreview());
 
   // Skin = the whole UI look (header, nav, fonts, shape), not just colours.
-  const publishedSkinId = (currentSchool?.skin ||
-    (typeof window !== 'undefined' && window.__SKIN__) ||
-    document.documentElement.getAttribute('data-skin') ||
-    'imperial') as SkinId;
+  const publishedSkinId = usePublishedSkinId();
   const [skinId, setSkinId] = useState<SkinId>(() => readPreviewedSkinId() || publishedSkinId);
   const [publishing, setPublishing] = useState(false);
   const [published, setPublished] = useState(false);
+  const [publishError, setPublishError] = useState('');
 
   const chooseSkin = (id: SkinId) => {
     setSkinId(id);
@@ -220,28 +217,47 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     applyColors(next);
     setPreview(true);
     setPublished(false);
+    setPublishError('');
     window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
   };
 
   const resetSkin = () => {
     clearSkinPreview();
+    clearOwnerTheme();
     setSkinId(publishedSkinId);
+    setColors(SKINS[publishedSkinId].colors);
+    setDrafts(SKINS[publishedSkinId].colors);
+    setPreview(false);
+    setPublishError('');
     window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
   };
 
-  // One click, live for everyone — no file download, no manual paste.
-  const publishSkin = () => {
-    if (!currentSchool) return;
+  // One click, live for everyone. Reports the real result (no fake success).
+  const publishSkin = async () => {
+    if (!currentSchool || publishing) return;
     setPublishing(true);
-    updateSchoolBranding(currentSchool.id, {
+    setPublishError('');
+    const res = await publishSkinToSchool({
+      schoolId: currentSchool.id,
       skin: skinId,
-      primary_color: colors.primary,
-      secondary_color: colors.accent,
+      primary: colors.primary,
+      accent: colors.accent,
+      live: isLiveData,
+      saveLocal: (updates) => updateSchoolBranding(currentSchool.id, updates),
     });
+    setPublishing(false);
+
+    if (!res.ok) {
+      // Keep the preview so nothing visibly reverts; tell the owner why.
+      setPublishError(res.error || 'Publish nahi ho saka.');
+      return;
+    }
+
     clearSkinPreview();
     clearOwnerTheme();
     setPreview(false);
-    setPublishing(false);
+    window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
+    if (isLiveData) refreshRemote();
     setPublished(true);
     setTimeout(() => setPublished(false), 2500);
   };
@@ -343,7 +359,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </div>
           <div>
             <h2 className="font-extrabold text-sm">Owner Studio</h2>
-            <p className="text-[11px] text-slate-500">Colour palette • sirf aap ke liye</p>
+            <p className="text-[11px] text-slate-500">Skin &amp; colours • sirf aap ke liye</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
@@ -374,8 +390,8 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           }`}
         >
           {preview
-            ? 'Preview mode: ye look sirf is browser mein hai. School ke sab users ko dikhane ke liye neeche "Copy theme JSON" karke theme.config.json mein daalna hoga.'
-            : 'Abhi published look dikh raha hai (theme.config.json). Kuch bhi badlein to yahan preview shuru ho jata hai.'}
+            ? 'Preview mode: ye look sirf is browser mein hai. Sab users ko dikhane ke liye "Publish this skin now" dabayein.'
+            : 'Abhi published look dikh raha hai. Kuch bhi badlein to yahan preview shuru ho jata hai.'}
         </div>
 
         {/* Skin picker — the whole UI look, not just colours */}
@@ -384,7 +400,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">
               App skin (poora look)
             </h3>
-            {readPreviewedSkinId() && (
+            {(readPreviewedSkinId() || preview) && (
               <button
                 onClick={resetSkin}
                 className="text-[10px] font-bold text-slate-500 hover:text-slate-800 underline"
@@ -448,6 +464,12 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             {published ? <Check className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
             {published ? 'Published — live for everyone now' : publishing ? 'Publishing...' : 'Publish this skin now'}
           </button>
+
+          {publishError && (
+            <p className="rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-[11px] font-semibold text-rose-700 leading-snug">
+              Publish nahi hua: {publishError}
+            </p>
+          )}
         </section>
 
         {/* Presets */}
@@ -528,9 +550,9 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           })}
         </section>
 
-        {/* Publish / import / reset */}
+        {/* Copy / import / reset (advanced) */}
         <section className="space-y-2">
-          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Save for this school</h3>
+          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Advanced (optional)</h3>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={copyJson}
@@ -577,8 +599,8 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <p className="text-[11px] text-slate-500 leading-relaxed flex gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-0.5 text-slate-400" />
             <span>
-              Ye PIN sirf ek halki lock hai (browser ke andar). Studio se hue changes ki wajah se doosre users ka look
-              nahi badalta; woh sirf theme.config.json se aata hai.
+              Ye PIN sirf ek halki lock hai (browser ke andar). Preview sirf aapke browser mein hota hai;
+              doosre users ko tab dikhta hai jab aap "Publish this skin now" dabate hain.
             </span>
           </p>
         </section>
