@@ -74,12 +74,54 @@ export const SKINS: Record<SkinId, SkinDefinition> = {
 
 export const DEFAULT_SKIN: SkinId = 'imperial';
 
+/** Owner's live skin preview, kept in this browser only (like the colour preview). */
+export const SKIN_STORAGE_KEY = 'owner_skin_v1';
+
 export function isSkinId(v: unknown): v is SkinId {
   return typeof v === 'string' && Object.prototype.hasOwnProperty.call(SKINS, v);
 }
 
 export function getSkin(id: unknown): SkinDefinition {
   return isSkinId(id) ? SKINS[id] : SKINS[DEFAULT_SKIN];
+}
+
+/** Reads the owner's previewed skin, if any. */
+export function readPreviewedSkinId(): SkinId | null {
+  try {
+    const v = localStorage.getItem(SKIN_STORAGE_KEY);
+    return isSkinId(v) ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Switches the skin live in this browser (owner preview only). */
+export function applySkinPreview(id: SkinId): void {
+  applySkinTokens(SKINS[id]);
+  try {
+    localStorage.setItem(SKIN_STORAGE_KEY, id);
+  } catch {
+    /* storage may be blocked; the live preview still works */
+  }
+}
+
+/** Drops the owner's skin preview so the published skin shows again. */
+export function clearSkinPreview(): void {
+  try {
+    localStorage.removeItem(SKIN_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** The text that goes into theme.config.json for a delivery. */
+export function skinToJson(id: SkinId, colors?: Record<string, string>): string {
+  const skin = SKINS[id];
+  return JSON.stringify(
+    { skin: id, name: skin.name, colors: colors ?? skin.colors },
+    null,
+    2,
+  );
 }
 
 /**

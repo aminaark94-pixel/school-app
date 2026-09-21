@@ -25,6 +25,16 @@ import {
   parseThemeJson,
 } from '../../lib/theme';
 import type { ThemeColors, ThemeKey } from '../../lib/theme';
+import {
+  SKINS,
+  getSkin,
+  applySkinPreview,
+  clearSkinPreview,
+  readPreviewedSkinId,
+  skinToJson,
+} from '../../lib/skins';
+import type { SkinId } from '../../lib/skins';
+import { SKIN_CHANGE_EVENT } from '../../hooks/useSkin';
 
 /**
  * Owner Studio: a private panel for the app owner (not linked anywhere in the UI).
@@ -191,6 +201,31 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [importError, setImportError] = useState('');
   const [preview, setPreview] = useState<boolean>(() => hasOwnerPreview());
 
+  // Skin = the whole UI look (header, nav, fonts, shape), not just colours.
+  const publishedSkinId = ((typeof window !== 'undefined' && window.__SKIN__) ||
+    document.documentElement.getAttribute('data-skin') ||
+    'imperial') as SkinId;
+  const [skinId, setSkinId] = useState<SkinId>(() => readPreviewedSkinId() || publishedSkinId);
+  const [skinCopied, setSkinCopied] = useState(false);
+
+  const chooseSkin = (id: SkinId) => {
+    setSkinId(id);
+    applySkinPreview(id);
+    // Also adopt that skin's palette so the preview reads as one coherent look.
+    const next = SKINS[id].colors;
+    setDrafts(next);
+    setColors(next);
+    applyColors(next);
+    setPreview(true);
+    window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
+  };
+
+  const resetSkin = () => {
+    clearSkinPreview();
+    setSkinId(publishedSkinId);
+    window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
+  };
+
   const commit = (next: ThemeColors) => {
     setColors(next);
     applyColors(next);
@@ -322,6 +357,80 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             ? 'Preview mode: ye look sirf is browser mein hai. School ke sab users ko dikhane ke liye neeche "Copy theme JSON" karke theme.config.json mein daalna hoga.'
             : 'Abhi published look dikh raha hai (theme.config.json). Kuch bhi badlein to yahan preview shuru ho jata hai.'}
         </div>
+
+        {/* Skin picker — the whole UI look, not just colours */}
+        <section className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">
+              App skin (poora look)
+            </h3>
+            {readPreviewedSkinId() && (
+              <button
+                onClick={resetSkin}
+                className="text-[10px] font-bold text-slate-500 hover:text-slate-800 underline"
+              >
+                Reset to published
+              </button>
+            )}
+          </div>
+          <p className="text-[11px] text-slate-500 leading-relaxed">
+            Skin header, navigation, fonts aur shape — sab badalti hai. School khud ise nahi badal
+            sakta; aap delivery ke waqt select karte ho.
+          </p>
+
+          <div className="space-y-2">
+            {Object.values(SKINS).map((s) => {
+              const active = skinId === s.id;
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => chooseSkin(s.id)}
+                  className={`w-full flex items-start gap-3 p-2.5 rounded-xl border text-left transition ${
+                    active
+                      ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900'
+                      : 'border-slate-200 hover:border-slate-400 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="flex gap-1 shrink-0 mt-0.5">
+                    {(['primary', 'accent', 'bg'] as const).map((k) => (
+                      <span
+                        key={k}
+                        className="w-4 h-4 rounded-full border border-black/10"
+                        style={{ backgroundColor: s.colors[k] }}
+                      />
+                    ))}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="flex items-center gap-1.5">
+                      <span className="text-xs font-black text-slate-800">{s.name}</span>
+                      {active && <Check className="w-3.5 h-3.5 text-slate-900" />}
+                      {publishedSkinId === s.id && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
+                          Published
+                        </span>
+                      )}
+                    </span>
+                    <span className="block text-[11px] text-slate-500 leading-snug mt-0.5">
+                      {s.description}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => {
+              navigator.clipboard?.writeText(skinToJson(skinId, colors));
+              setSkinCopied(true);
+              setTimeout(() => setSkinCopied(false), 2000);
+            }}
+            className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-bold transition"
+          >
+            {skinCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            {skinCopied ? 'Copied — paste into theme.config.json' : 'Copy delivery JSON (skin + colours)'}
+          </button>
+        </section>
 
         {/* Presets */}
         <section className="space-y-2">
