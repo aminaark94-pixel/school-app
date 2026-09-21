@@ -27,14 +27,13 @@ import {
 import type { ThemeColors, ThemeKey } from '../../lib/theme';
 import {
   SKINS,
-  getSkin,
   applySkinPreview,
   clearSkinPreview,
   readPreviewedSkinId,
-  skinToJson,
 } from '../../lib/skins';
 import type { SkinId } from '../../lib/skins';
 import { SKIN_CHANGE_EVENT } from '../../hooks/useSkin';
+import { useSchoolData } from '../../hooks/useSchoolData';
 
 /**
  * Owner Studio: a private panel for the app owner (not linked anywhere in the UI).
@@ -192,6 +191,7 @@ const PinGate: React.FC<{
 /* ------------------------------------------------------------------ */
 
 const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { currentSchool, updateSchoolBranding } = useSchoolData();
   const [colors, setColors] = useState<ThemeColors>(() => readCurrentColors());
   const [drafts, setDrafts] = useState<ThemeColors>(() => readCurrentColors());
   const [collapsed, setCollapsed] = useState(false);
@@ -202,11 +202,13 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [preview, setPreview] = useState<boolean>(() => hasOwnerPreview());
 
   // Skin = the whole UI look (header, nav, fonts, shape), not just colours.
-  const publishedSkinId = ((typeof window !== 'undefined' && window.__SKIN__) ||
+  const publishedSkinId = (currentSchool?.skin ||
+    (typeof window !== 'undefined' && window.__SKIN__) ||
     document.documentElement.getAttribute('data-skin') ||
     'imperial') as SkinId;
   const [skinId, setSkinId] = useState<SkinId>(() => readPreviewedSkinId() || publishedSkinId);
-  const [skinCopied, setSkinCopied] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [published, setPublished] = useState(false);
 
   const chooseSkin = (id: SkinId) => {
     setSkinId(id);
@@ -217,6 +219,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setColors(next);
     applyColors(next);
     setPreview(true);
+    setPublished(false);
     window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
   };
 
@@ -224,6 +227,23 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     clearSkinPreview();
     setSkinId(publishedSkinId);
     window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
+  };
+
+  // One click, live for everyone — no file download, no manual paste.
+  const publishSkin = () => {
+    if (!currentSchool) return;
+    setPublishing(true);
+    updateSchoolBranding(currentSchool.id, {
+      skin: skinId,
+      primary_color: colors.primary,
+      secondary_color: colors.accent,
+    });
+    clearSkinPreview();
+    clearOwnerTheme();
+    setPreview(false);
+    setPublishing(false);
+    setPublished(true);
+    setTimeout(() => setPublished(false), 2500);
   };
 
   const commit = (next: ThemeColors) => {
@@ -375,7 +395,8 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </div>
           <p className="text-[11px] text-slate-500 leading-relaxed">
             Skin header, navigation, fonts aur shape — sab badalti hai. School khud ise nahi badal
-            sakta; aap delivery ke waqt select karte ho.
+            sakta. Neeche dabao karke aap dekh sakte hain, phir "Publish" se turant sabke liye live
+            ho jayega — koi file edit nahi.
           </p>
 
           <div className="space-y-2">
@@ -420,15 +441,12 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </div>
 
           <button
-            onClick={() => {
-              navigator.clipboard?.writeText(skinToJson(skinId, colors));
-              setSkinCopied(true);
-              setTimeout(() => setSkinCopied(false), 2000);
-            }}
-            className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-bold transition"
+            onClick={publishSkin}
+            disabled={publishing || !currentSchool}
+            className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-[11px] font-bold transition"
           >
-            {skinCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            {skinCopied ? 'Copied — paste into theme.config.json' : 'Copy delivery JSON (skin + colours)'}
+            {published ? <Check className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
+            {published ? 'Published — live for everyone now' : publishing ? 'Publishing...' : 'Publish this skin now'}
           </button>
         </section>
 

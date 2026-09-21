@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getSkin, readPreviewedSkinId, SkinDefinition, SkinId } from '../lib/skins';
+import { useSchoolData } from './useSchoolData';
 
 declare global {
   interface Window {
@@ -10,11 +11,7 @@ declare global {
 /** Event fired by Owner Studio so the app re-renders the moment a skin is previewed. */
 export const SKIN_CHANGE_EVENT = 'owner-skin-change';
 
-function resolveSkinId(): SkinId | string | undefined {
-  // Owner's live preview (this browser only) wins over the published skin.
-  const previewed = readPreviewedSkinId();
-  if (previewed) return previewed;
-
+function bakedSkinId(): SkinId | string | undefined {
   const fromWindow = typeof window !== 'undefined' ? window.__SKIN__ : undefined;
   const fromAttr =
     typeof document !== 'undefined' ? document.documentElement.getAttribute('data-skin') : undefined;
@@ -22,18 +19,19 @@ function resolveSkinId(): SkinId | string | undefined {
 }
 
 /**
- * Resolves the skin in force right now.
- *
- * Source of truth for a delivered build is theme.config.json -> "skin",
- * baked into the page by vite.config.ts. Schools cannot change it. The
- * owner can preview other skins live from Owner Studio (#owner), which is
- * kept in their own browser only until copied into theme.config.json.
+ * Resolves the skin in force right now, in priority order:
+ *   1. Owner's live preview (this browser only, via Owner Studio)
+ *   2. The school's published skin in the database (real one-click publish —
+ *      no rebuild needed, every visitor sees it immediately)
+ *   3. Whatever skin is baked into this build (theme.config.json) as the
+ *      starting default for a brand-new school that's never had one set
  */
 export function useSkin(): SkinDefinition {
-  const [skin, setSkin] = useState<SkinDefinition>(() => getSkin(resolveSkinId()));
+  const { currentSchool } = useSchoolData();
+  const [previewId, setPreviewId] = useState<SkinId | null>(() => readPreviewedSkinId());
 
   useEffect(() => {
-    const sync = () => setSkin(getSkin(resolveSkinId()));
+    const sync = () => setPreviewId(readPreviewedSkinId());
     window.addEventListener(SKIN_CHANGE_EVENT, sync);
     window.addEventListener('storage', sync);
     return () => {
@@ -42,5 +40,6 @@ export function useSkin(): SkinDefinition {
     };
   }, []);
 
-  return skin;
+  const resolved = previewId || currentSchool?.skin || bakedSkinId();
+  return getSkin(resolved);
 }

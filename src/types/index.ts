@@ -10,6 +10,8 @@ export interface School {
   motto?: string;
   address?: string;
   phone?: string;
+  /** Which full UI look this school uses. Owner-only — schools never change this themselves. */
+  skin?: string;
 }
 
 export interface User {

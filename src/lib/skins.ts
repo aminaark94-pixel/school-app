@@ -54,7 +54,7 @@ export const SKINS: Record<SkinId, SkinDefinition> = {
   },
   highstar: {
     id: 'highstar',
-    name: 'High Star Corporate',
+    name: 'High Star',
     description:
       'Navy & gold, Inter throughout, tighter corners and flat cards. Reads as a modern, corporate secondary school.',
     colors: {
