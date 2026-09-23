@@ -73,6 +73,16 @@ function reportFailure(title: string, err: unknown) {
   if (typeof window !== 'undefined') window.alert(`${title}.\n\n${errorMessage(err)}`);
 }
 
+function newId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
 function rowToQuery(row: QueryRow, messages: Message[] = []): CommunicationQuery {
   return {
     id: row.id,
@@ -234,6 +244,11 @@ function refresh() {
   if (attachedSchoolId) void fetchAll(attachedSchoolId);
 }
 
+/**
+ * Creates the query with a client-generated id (so the caller can navigate to it
+ * immediately, in the same tab, without waiting for the realtime echo) and inserts
+ * the first message. Returns just the id, or null if it failed.
+ */
 async function createQuery(
   data: {
     student_id: string;
@@ -244,33 +259,32 @@ async function createQuery(
     initial_message: string;
   },
   author: { school_id: string; parent_id: string; parent_name: string }
-) {
+): Promise<{ id: string } | null> {
   const supabase = getSupabase();
-  if (!supabase) return;
+  if (!supabase) return null;
 
-  const { data: inserted, error } = await supabase
-    .from('communication_queries')
-    .insert({
-      school_id: author.school_id,
-      student_id: data.student_id,
-      student_name: data.student_name,
-      student_class: data.student_class,
-      parent_id: author.parent_id,
-      parent_name: author.parent_name,
-      subject: data.subject,
-      category: data.category,
-      status: 'open',
-    })
-    .select('id')
-    .single();
+  const id = newId();
 
-  if (error || !inserted) {
+  const { error } = await supabase.from('communication_queries').insert({
+    id,
+    school_id: author.school_id,
+    student_id: data.student_id,
+    student_name: data.student_name,
+    student_class: data.student_class,
+    parent_id: author.parent_id,
+    parent_name: author.parent_name,
+    subject: data.subject,
+    category: data.category,
+    status: 'open',
+  });
+
+  if (error) {
     reportFailure('Could not start the conversation', error);
-    return;
+    return null;
   }
 
   const { error: msgError } = await supabase.from('communication_messages').insert({
-    query_id: inserted.id,
+    query_id: id,
     school_id: author.school_id,
     sender_id: author.parent_id,
     sender_name: author.parent_name,
@@ -278,6 +292,8 @@ async function createQuery(
     text: data.initial_message,
   });
   if (msgError) reportFailure('Could not send your message', msgError);
+
+  return { id };
 }
 
 async function reply(
