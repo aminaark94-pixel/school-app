@@ -49,10 +49,13 @@ export const DribbbleAppShell: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full min-h-[calc(100dvh-110px)] pb-20 px-0 sm:px-4">
       {/* Top controls: scrollable screen chips (+ desktop-only frame toggle) */}
-      <div className="w-full max-w-7xl px-3 sm:px-4 py-2 sm:py-2.5 mb-3 sm:mb-4 flex items-center justify-between gap-3 bg-[#200E01] text-[#EDE7C7] rounded-2xl border border-[#5B0202] shadow-md">
+      <div className="w-full max-w-7xl px-3 sm:px-4 py-2 sm:py-2.5 mb-3 sm:mb-4 flex items-center justify-between gap-3 bg-[var(--t-ink)] text-[var(--t-sand)] rounded-2xl border border-[var(--t-primary)]/40 shadow-md">
         <div className="flex flex-1 min-w-0 items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-          <span className="hidden lg:flex shrink-0 text-[11px] font-black uppercase tracking-wider text-[#D4AF37] mr-1 items-center gap-1 font-['Cinzel',serif]">
-            <Layers className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <span
+            className="hidden lg:flex shrink-0 text-[11px] font-black uppercase tracking-wider text-[var(--t-accent)] mr-1 items-center gap-1"
+            style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
+          >
+            <Layers className="w-3.5 h-3.5 text-[var(--t-accent)]" />
             <span>Campus Views:</span>
           </span>
 
@@ -62,8 +65,8 @@ export const DribbbleAppShell: React.FC = () => {
               onClick={() => setCurrentScreen(item.id as DribbbleScreen)}
               className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-bold transition whitespace-nowrap active:scale-95 ${
                 currentScreen === item.id
-                  ? 'bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37] shadow-sm font-black ring-1 ring-[#D4AF37]/50'
-                  : 'bg-[#2D1605] text-[#EDE7C7]/80 hover:text-[#EDE7C7] hover:bg-[#3D1E07] border border-[#5B0202]'
+                  ? 'bg-[var(--t-primary)] text-[var(--t-sand)] border border-[var(--t-accent)] shadow-sm font-black ring-1 ring-[var(--t-accent)]/50'
+                  : 'bg-[var(--t-ink)]/80 text-[var(--t-sand)]/80 hover:text-[var(--t-sand)] hover:bg-[var(--t-ink)]/60 border border-[var(--t-primary)]/40'
               }`}
             >
               {item.label}
@@ -72,17 +75,17 @@ export const DribbbleAppShell: React.FC = () => {
         </div>
 
         {/* Device frame toggle: desktop preview only */}
-        <div className="hidden md:flex shrink-0 items-center gap-1 bg-[#2D1605] p-1 rounded-2xl border border-[#5B0202]">
+        <div className="hidden md:flex shrink-0 items-center gap-1 bg-[var(--t-ink)]/80 p-1 rounded-2xl border border-[var(--t-primary)]/40">
           <button
             onClick={() => setViewMode('responsive')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               viewMode === 'responsive'
-                ? 'bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37]/60 shadow-sm font-extrabold'
-                : 'text-[#EDE7C7]/70 hover:text-[#EDE7C7]'
+                ? 'bg-[var(--t-primary)] text-[var(--t-sand)] border border-[var(--t-accent)]/60 shadow-sm font-extrabold'
+                : 'text-[var(--t-sand)]/70 hover:text-[var(--t-sand)]'
             }`}
             title="Full-Screen Premium School View"
           >
-            <Monitor className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Monitor className="w-3.5 h-3.5 text-[var(--t-accent)]" />
             <span>Full-Width UI</span>
           </button>
 
@@ -90,8 +93,8 @@ export const DribbbleAppShell: React.FC = () => {
             onClick={() => setViewMode('mobile')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               viewMode === 'mobile'
-                ? 'bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37]/60 shadow-sm font-extrabold'
-                : 'text-[#EDE7C7]/70 hover:text-[#EDE7C7]'
+                ? 'bg-[var(--t-primary)] text-[var(--t-sand)] border border-[var(--t-accent)]/60 shadow-sm font-extrabold'
+                : 'text-[var(--t-sand)]/70 hover:text-[var(--t-sand)]'
             }`}
             title="View in mobile smartphone frame"
           >
@@ -103,26 +106,26 @@ export const DribbbleAppShell: React.FC = () => {
 
       {/* App container. The phone-frame look only applies from md up; real phones always get full width. */}
       <div
-        className={`w-full transition-all duration-300 bg-[#FAF8F2] overflow-hidden relative ${
+        className={`w-full transition-all duration-300 bg-[var(--t-bg)] overflow-hidden relative ${
           viewMode === 'mobile'
-            ? 'max-w-7xl rounded-2xl border border-[#EDE7C7] shadow-xl md:max-w-[430px] md:rounded-[48px] md:border-[8px] md:border-[#200E01] md:shadow-[0_25px_70px_rgba(32,14,1,0.35)] md:ring-2 md:ring-[#D4AF37]/40'
-            : 'max-w-7xl rounded-2xl md:rounded-3xl shadow-xl border border-[#EDE7C7]'
+            ? 'max-w-7xl rounded-2xl border border-[var(--t-sand)] shadow-xl md:max-w-[430px] md:rounded-[48px] md:border-[8px] md:border-[var(--t-ink)] md:shadow-[0_25px_70px_rgba(32,14,1,0.35)] md:ring-2 md:ring-[var(--t-accent)]/40'
+            : 'max-w-7xl rounded-2xl md:rounded-3xl shadow-xl border border-[var(--t-sand)]'
         }`}
       >
         {/* Fake status bar (9:30, WiFi, Battery): desktop preview only. A real phone has its own. */}
-        <div className="hidden md:flex bg-[#8B0000] text-[#EDE7C7] pt-2.5 px-7 pb-1 items-center justify-between text-xs font-bold select-none border-b border-[#5B0202]">
+        <div className="hidden md:flex bg-[var(--t-primary)] text-[var(--t-sand)] pt-2.5 px-7 pb-1 items-center justify-between text-xs font-bold select-none border-b border-[var(--t-primary)]/60">
           <span className="tracking-tight text-[11px] font-black font-['Outfit',sans-serif]">9:30 AM</span>
 
           {viewMode === 'mobile' && (
             <div className="w-16 h-3.5 bg-black/40 rounded-full flex items-center justify-center">
-              <div className="w-8 h-1 bg-[#D4AF37]/40 rounded-full" />
+              <div className="w-8 h-1 bg-[var(--t-accent)]/40 rounded-full" />
             </div>
           )}
 
-          <div className="flex items-center gap-1.5 text-[#EDE7C7]">
+          <div className="flex items-center gap-1.5 text-[var(--t-sand)]">
             <Signal className="w-3 h-3" />
             <Wifi className="w-3 h-3" />
-            <Battery className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <Battery className="w-3.5 h-3.5 text-[var(--t-accent)]" />
           </div>
         </div>
 
@@ -165,7 +168,7 @@ export const DribbbleAppShell: React.FC = () => {
               <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                 <button
                   onClick={() => setCurrentScreen('home')}
-                  className="flex items-center gap-1.5 min-h-[44px] pr-3 text-xs font-extrabold text-[#8B0000] hover:text-[#700000]"
+                  className="flex items-center gap-1.5 min-h-[44px] pr-3 text-xs font-extrabold text-[var(--t-primary)] hover:opacity-80"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home</span>
@@ -183,7 +186,7 @@ export const DribbbleAppShell: React.FC = () => {
               <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                 <button
                   onClick={() => setCurrentScreen('home')}
-                  className="flex items-center gap-1.5 min-h-[44px] pr-3 text-xs font-extrabold text-[#8B0000] hover:text-[#700000]"
+                  className="flex items-center gap-1.5 min-h-[44px] pr-3 text-xs font-extrabold text-[var(--t-primary)] hover:opacity-80"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home</span>

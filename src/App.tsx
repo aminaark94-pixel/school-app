@@ -28,7 +28,7 @@ export default function App() {
 
   return (
     <div
-      className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex flex-col app-bottom-clear"
+      className="min-h-dvh bg-[var(--t-bg)] text-[var(--t-ink)] flex flex-col app-bottom-clear"
       style={{ fontFamily: 'var(--t-font-sans, "Plus Jakarta Sans", sans-serif)' }}
     >
       {/* 1. Account / persona bar */}
@@ -49,12 +49,16 @@ export default function App() {
             <div className="min-w-0">
               <button
                 onClick={() => setActiveModule('portal')}
-                className="inline-flex items-center gap-1 min-h-[44px] sm:min-h-0 -ml-1 pl-1 pr-3 text-xs font-bold text-[#8B0000] hover:underline font-['Cinzel',serif]"
+                className="inline-flex items-center gap-1 min-h-[44px] sm:min-h-0 -ml-1 pl-1 pr-3 text-xs font-bold text-[var(--t-primary)] hover:underline"
+                style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Campus Portal</span>
               </button>
-              <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-[#200E01] font-['Cormorant_Garamond',serif] italic leading-snug">
+              <h2
+                className="text-lg sm:text-2xl font-bold tracking-tight text-[var(--t-ink)] italic leading-snug"
+                style={{ fontFamily: 'var(--t-font-display, "Cormorant Garamond", serif)' }}
+              >
                 {activeModule === 'diary' && 'Digital Student Diary & Homework Feed'}
                 {activeModule === 'attendance' && 'One-Click Attendance System'}
                 {activeModule === 'results' && 'Student Result Cards & Fee-Locked Transcript'}
@@ -62,7 +66,7 @@ export default function App() {
                 {activeModule === 'datesheets' && 'Examinations Schedule & Syllabus'}
                 {activeModule === 'admin' && 'School Administration & Data Import'}
               </h2>
-              <p className="hidden sm:block text-sm text-[#5B0202]/80 mt-1 font-medium">
+              <p className="hidden sm:block text-sm text-[var(--t-ink)]/70 mt-1 font-medium">
                 {activeModule === 'diary' &&
                   'Daily classwork & homework log with chalkboard photos, absent student catch-up, and verified parent read receipts.'}
                 {activeModule === 'attendance' &&
@@ -79,12 +83,17 @@ export default function App() {
             </div>
 
             {/* School pill: desktop only (the school name is already in the phone header) */}
-            <div className="hidden sm:flex self-auto items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-white border border-[#EDE7C7] text-xs text-[#200E01] shadow-2xs">
+            <div className="hidden sm:flex self-auto items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-white border border-[var(--t-sand)] text-xs text-[var(--t-ink)] shadow-2xs">
               <span
                 className="w-2.5 h-2.5 rounded-full"
                 style={{ backgroundColor: currentSchool?.primary_color || '#8B0000' }}
               />
-              <span className="font-bold text-[#200E01] font-['Cinzel',serif]">{currentSchool?.name}</span>
+              <span
+                className="font-bold text-[var(--t-ink)]"
+                style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
+              >
+                {currentSchool?.name}
+              </span>
             </div>
           </div>
         )}
@@ -109,16 +118,21 @@ export default function App() {
         {activeModule === 'results' && <ResultCardModule />}
         {activeModule === 'communication' && <CommunicationModule />}
         {activeModule === 'datesheets' && <ExamsDatesheetModule />}
+        {/* Admin area intentionally keeps its own fixed Imperial look regardless of the
+            published app skin — the owner asked for this to stay as-is. */}
         {activeModule === 'admin' && currentUser?.role !== 'parent' && <AdminDashboard />}
       </main>
 
       {/* 4. Footer (short on phones) */}
-      <footer className="mt-auto border-t border-[#EDE7C7] bg-[#FAF8F2] py-3 sm:py-4 px-4 sm:px-6 text-center text-xs text-[#5B0202]/80">
+      <footer className="mt-auto border-t border-[var(--t-sand)] bg-[var(--t-bg)] py-3 sm:py-4 px-4 sm:px-6 text-center text-xs text-[var(--t-ink)]/70">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span className="font-bold text-[#200E01] font-['Cinzel',serif]">
+          <span
+            className="font-bold text-[var(--t-ink)]"
+            style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
+          >
             {currentSchool?.name} • School Management PWA
           </span>
-          <span className="hidden sm:inline text-[11px] text-[#8B0000] font-semibold">
+          <span className="hidden sm:inline text-[11px] text-[var(--t-primary)] font-semibold">
             Digital Diary • Blackboard Photo Capture • Zero Paper Circulars • Fee-Locked Reports
           </span>
         </div>
