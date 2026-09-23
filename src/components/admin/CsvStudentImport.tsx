@@ -21,6 +21,8 @@ export const CsvStudentImport: React.FC = () => {
   const [fileName, setFileName] = useState<string>('');
   const [parseError, setParseError] = useState<string>('');
   const [importSuccess, setImportSuccess] = useState<number | null>(null);
+  const [unmatchedParentEmails, setUnmatchedParentEmails] = useState<string[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
 
   // Sample CSV Download with Pakistani student profiles
   const handleDownloadSample = () => {
@@ -83,7 +85,7 @@ export const CsvStudentImport: React.FC = () => {
     });
   };
 
-  const handleConfirmImport = () => {
+  const handleConfirmImport = async () => {
     if (parsedRows.length === 0) return;
 
     const formatted = parsedRows.map((row) => ({
@@ -95,10 +97,16 @@ export const CsvStudentImport: React.FC = () => {
       parent_name: String(row.parent_name || '').trim(),
     }));
 
-    const result = bulkImportStudents(formatted);
-    setImportSuccess(result.count);
-    setParsedRows([]);
-    setFileName('');
+    setIsImporting(true);
+    try {
+      const result = await bulkImportStudents(formatted);
+      setImportSuccess(result.count);
+      setUnmatchedParentEmails(result.unmatchedParentEmails);
+      setParsedRows([]);
+      setFileName('');
+    } finally {
+      setIsImporting(false);
+    }
   };
 
   return (
@@ -165,6 +173,25 @@ export const CsvStudentImport: React.FC = () => {
         </div>
       )}
 
+      {/* Unmatched Parent Emails Warning */}
+      {unmatchedParentEmails.length > 0 && (
+        <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold space-y-1.5">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+            <span>
+              {unmatchedParentEmails.length} student{unmatchedParentEmails.length > 1 ? 's were' : ' was'} enrolled
+              without being linked to a parent — no parent account exists yet for:
+            </span>
+          </div>
+          <div className="pl-6 font-mono text-[11px] text-amber-700 break-all">
+            {unmatchedParentEmails.join(', ')}
+          </div>
+          <p className="pl-6 font-normal text-amber-700">
+            Once that parent signs up, use "Link Parent" on the roster to connect them to their child.
+          </p>
+        </div>
+      )}
+
       {/* CSV Data Preview Table */}
       {parsedRows.length > 0 && (
         <div className="bg-white rounded-3xl shadow-sm border border-[#EDE7C7] overflow-hidden">
@@ -179,9 +206,10 @@ export const CsvStudentImport: React.FC = () => {
             <button
               id="confirm-import-csv-btn"
               onClick={handleConfirmImport}
-              className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-[#8B0000] hover:bg-[#700000] text-[#EDE7C7] shadow-sm transition active:scale-95 border border-[#D4AF37]/50"
+              disabled={isImporting}
+              className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-[#8B0000] hover:bg-[#700000] text-[#EDE7C7] shadow-sm transition active:scale-95 border border-[#D4AF37]/50 disabled:opacity-60"
             >
-              <span>Confirm Enrollment to {currentSchool?.name}</span>
+              <span>{isImporting ? 'Enrolling…' : `Confirm Enrollment to ${currentSchool?.name}`}</span>
               <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
             </button>
           </div>
