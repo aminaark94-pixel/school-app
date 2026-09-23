@@ -18,7 +18,7 @@ import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../lib/authContext';
 import { useDiaryStore, diaryActions } from '../lib/diaryStore';
 import { useNoticeStore, noticeActions } from '../lib/noticeStore';
-import { useChatStore, chatActions } from '../lib/chatStore';
+import { useChatStore, chatActions, newChatId } from '../lib/chatStore';
 import { useAlertStore, alertActions } from '../lib/alertStore';
 import { useDatesheetStore, datesheetActions } from '../lib/datesheetStore';
 
@@ -43,7 +43,7 @@ export function useSchoolData() {
   const [remoteError, setRemoteError] = useState<string | null>(null);
 
   // Cloud collections: one shared realtime store per table when signed in, the
-  // local demo store otherwise. All four follow the same attach/detach pattern.
+  // local demo store otherwise. All five follow the same attach/detach pattern.
   const diaryState = useDiaryStore();
   const noticeState = useNoticeStore();
   const chatState = useChatStore();
@@ -819,12 +819,15 @@ export function useSchoolData() {
       initial_message: string;
     }) => {
       if (cloudSchoolId && currentUser) {
-        void chatActions.createQuery(data, {
+        const id = newChatId();
+        chatActions.createQuery(id, data, {
           school_id: cloudSchoolId,
           parent_id: currentUser.id,
           parent_name: currentUser.full_name,
         });
-        return;
+        // The full row (with the message) arrives moments later via realtime;
+        // callers only need the id to select this thread right away.
+        return { id } as CommunicationQuery;
       }
 
       const all = LocalStore.getQueries();
