@@ -11,8 +11,15 @@ import { DribbbleChatView } from './DribbbleChatView';
 // Existing functional modules
 import { DiaryModule } from '../diary/DiaryModule';
 import { AttendanceModule } from '../attendance/AttendanceModule';
+import type { AppModule } from '../Navbar';
 
-export const DribbbleAppShell: React.FC = () => {
+interface DribbbleAppShellProps {
+  /** Unused here (this shell manages its own internal screen state) — accepted
+   *  so this component satisfies the same `Portal` shape every skin uses. */
+  setActiveModule?: (m: AppModule) => void;
+}
+
+export const DribbbleAppShell: React.FC<DribbbleAppShellProps> = () => {
   const [currentScreen, setCurrentScreen] = useState<DribbbleScreen>('home');
   // Desktop-only preview switch. On real phones the app is always full width.
   const [viewMode, setViewMode] = useState<'mobile' | 'responsive'>('responsive');
