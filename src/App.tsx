@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { RoleSwitcherBar } from './components/RoleSwitcherBar';
 import { Navbar, AppModule } from './components/Navbar';
-import { HighStarHeader } from './components/highstar/HighStarHeader';
 import { DribbbleAppShell } from './components/dribbble/DribbbleAppShell';
 import { DiaryModule } from './components/diary/DiaryModule';
 import { AttendanceModule } from './components/attendance/AttendanceModule';
@@ -19,6 +18,11 @@ export default function App() {
   const skin = useSkin();
   const [activeModule, setActiveModule] = useState<AppModule>('portal');
 
+  // Each skin can supply its own header/nav and portal/home screen (lib/skins.ts);
+  // falls back to the shared components when a skin doesn't provide one.
+  const SkinHeader = skin.Header ?? Navbar;
+  const SkinPortal = skin.Portal ?? DribbbleAppShell;
+
   // Parents never get the admin module
   React.useEffect(() => {
     if (currentUser?.role === 'parent' && activeModule === 'admin') {
@@ -34,12 +38,8 @@ export default function App() {
       {/* 1. Account / persona bar */}
       <RoleSwitcherBar />
 
-      {/* 2. Header + navigation — swapped per published skin */}
-      {skin.id === 'highstar' ? (
-        <HighStarHeader activeModule={activeModule} setActiveModule={setActiveModule} />
-      ) : (
-        <Navbar activeModule={activeModule} setActiveModule={setActiveModule} />
-      )}
+      {/* 2. Header + navigation — each skin can supply its own; falls back to the shared Navbar */}
+      <SkinHeader activeModule={activeModule} setActiveModule={setActiveModule} />
 
       {/* 3. Main workspace */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
@@ -112,7 +112,7 @@ export default function App() {
         )}
 
         {/* Dynamic module rendering */}
-        {activeModule === 'portal' && <DribbbleAppShell />}
+        {activeModule === 'portal' && <SkinPortal setActiveModule={setActiveModule} />}
         {activeModule === 'diary' && <DiaryModule />}
         {activeModule === 'attendance' && <AttendanceModule />}
         {activeModule === 'results' && <ResultCardModule />}

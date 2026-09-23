@@ -2,16 +2,27 @@
  * Skin registry.
  *
  * A "theme" (see ./theme.ts) only changes COLOURS. A "skin" goes further: it
- * swaps the actual shell — header/navigation style, the portal home layout,
+ * swaps the actual shell — header/navigation, the portal home layout,
  * typography and the shape language — so two schools running the same build
  * can look like completely different products.
  *
- * Skins are chosen by the OWNER at delivery time (theme.config.json ->
- * "skin"), never by the school itself. There is deliberately no in-app
- * school-facing switcher.
+ * Skins are chosen by the OWNER at delivery time (Owner Studio -> Publish),
+ * never by the school itself. There is deliberately no in-app school-facing
+ * switcher.
+ *
+ * TO ADD A NEW SKIN: drop an entry in SKINS below with its own colours/fonts,
+ * and optionally its own Header and Portal React components (see the
+ * `highstar` entry for an example). Nothing else in the app needs to change
+ * — App.tsx resolves whichever skin is published/previewed and renders that
+ * skin's Header/Portal automatically, falling back to the shared Navbar /
+ * DribbbleAppShell when a skin doesn't supply its own.
  */
 
+import type { ComponentType } from 'react';
 import { ThemeColors } from './theme';
+import type { AppModule } from '../components/Navbar';
+import { HighStarHeader } from '../components/highstar/HighStarHeader';
+import { HighStarPortal } from '../components/highstar/HighStarPortal';
 
 export type SkinId = 'imperial' | 'highstar';
 
@@ -31,6 +42,10 @@ export interface SkinDefinition {
   };
   /** Corner rounding language — "soft" = large radii, "sharp" = tighter, more corporate. */
   radius: 'soft' | 'sharp';
+  /** This skin's own header + navigation. Falls back to the shared Navbar when omitted. */
+  Header?: ComponentType<{ activeModule: AppModule; setActiveModule: (m: AppModule) => void }>;
+  /** This skin's own portal/home screen. Falls back to the shared DribbbleAppShell when omitted. */
+  Portal?: ComponentType<{ setActiveModule: (m: AppModule) => void }>;
 }
 
 export const SKINS: Record<SkinId, SkinDefinition> = {
@@ -69,6 +84,8 @@ export const SKINS: Record<SkinId, SkinDefinition> = {
       display: "'Inter', sans-serif",
     },
     radius: 'sharp',
+    Header: HighStarHeader,
+    Portal: HighStarPortal,
   },
 };
 
