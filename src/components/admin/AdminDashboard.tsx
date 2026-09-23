@@ -10,6 +10,8 @@ import {
   CheckCircle2,
   Lock,
   Building2,
+  Link2,
+  AlertTriangle,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { CsvStudentImport } from './CsvStudentImport';
@@ -34,11 +36,87 @@ export const AdminDashboard: React.FC = () => {
     restoreStudent,
     permanentDeleteStudent,
     updateFeeStatus,
+    linkParentToStudent,
   } = useSchoolData();
 
   const [activeTab, setActiveTab] = useState<AdminTab>('roster');
   const [showTrash, setShowTrash] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [linkingStudentId, setLinkingStudentId] = useState<string | null>(null);
+  const [linkEmailInput, setLinkEmailInput] = useState('');
+  const [linkError, setLinkError] = useState<string | null>(null);
+  const [isLinking, setIsLinking] = useState(false);
+
+  const handleLinkParent = async (studentId: string) => {
+    setLinkError(null);
+    setIsLinking(true);
+    const result = await linkParentToStudent(studentId, linkEmailInput);
+    setIsLinking(false);
+    if (result.success) {
+      setLinkingStudentId(null);
+      setLinkEmailInput('');
+    } else {
+      setLinkError(result.error || 'Could not link parent.');
+    }
+  };
+
+  // Shared "Link Parent" control shown when a student has no parent_id yet -
+  // this is what makes the student actually visible on that parent's login.
+  const renderLinkParent = (student: Student) => {
+    if (student.parent_id) return null;
+    const isOpen = linkingStudentId === student.id;
+    if (!isOpen) {
+      return (
+        <button
+          onClick={() => {
+            setLinkingStudentId(student.id);
+            setLinkEmailInput(student.parent_email || '');
+            setLinkError(null);
+          }}
+          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#8B0000] hover:underline"
+        >
+          <Link2 className="w-3 h-3" />
+          <span>No parent linked — Link Parent</span>
+        </button>
+      );
+    }
+    return (
+      <div className="mt-1.5 space-y-1.5">
+        <div className="flex items-center gap-1.5">
+          <input
+            type="email"
+            autoFocus
+            placeholder="parent@example.com"
+            value={linkEmailInput}
+            onChange={(e) => setLinkEmailInput(e.target.value)}
+            className="min-w-0 flex-1 px-2 py-1.5 text-[11px] border border-[#EDE7C7] rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:outline-hidden"
+          />
+          <button
+            onClick={() => handleLinkParent(student.id)}
+            disabled={isLinking}
+            className="shrink-0 px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-[#8B0000] text-[#EDE7C7] disabled:opacity-60"
+          >
+            {isLinking ? 'Linking…' : 'Link'}
+          </button>
+          <button
+            onClick={() => {
+              setLinkingStudentId(null);
+              setLinkError(null);
+            }}
+            className="shrink-0 px-2 py-1.5 text-[11px] font-semibold text-[#5B0202]"
+          >
+            Cancel
+          </button>
+        </div>
+        {linkError && (
+          <div className="flex items-start gap-1 text-[11px] text-rose-700">
+            <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+            <span>{linkError}</span>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const filteredStudents = students.filter((s) => {
     const matchesTrash = showTrash ? s.is_deleted : !s.is_deleted;
@@ -265,6 +343,7 @@ export const AdminDashboard: React.FC = () => {
                           {student.parent_email ? ` · ${student.parent_email}` : ''}
                         </div>
                       )}
+                      {renderLinkParent(student)}
                     </div>
                     {student.is_deleted && (
                       <span className="shrink-0 text-[10px] text-rose-600 font-bold uppercase tracking-wider">
@@ -327,6 +406,7 @@ export const AdminDashboard: React.FC = () => {
                         <div className="text-[11px] text-[#5B0202]/60 font-mono">
                           {student.parent_email || '—'}
                         </div>
+                        {renderLinkParent(student)}
                       </td>
                       <td className="py-3 px-4 text-center">{renderFee(student.id)}</td>
                       <td className="py-3 px-4 text-right">{renderActions(student)}</td>
