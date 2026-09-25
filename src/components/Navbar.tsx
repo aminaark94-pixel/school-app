@@ -41,7 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'results', label: 'Result Cards', shortLabel: 'Results', Icon: FileText, allowedRoles: ALL_ROLES },
   { id: 'communication', label: 'Notices & Chat', shortLabel: 'Notices', Icon: Megaphone, allowedRoles: ALL_ROLES },
   { id: 'datesheets', label: 'Datesheets', shortLabel: 'Datesheets', Icon: CalendarDays, allowedRoles: ALL_ROLES },
-  { id: 'admin', label: 'Admin', shortLabel: 'Admin', Icon: Settings, allowedRoles: ['admin', 'teacher'] },
+  { id: 'admin', label: 'Admin', shortLabel: 'Admin', Icon: Settings, allowedRoles: ['admin'] },
 ];
 
 // A phone tab bar comfortably fits 5 slots. When there are more sections, the last slot becomes "More".

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database } from 'lucide-react';
 import { useSchoolData } from '../hooks/useSchoolData';
+import { useSkin } from '../hooks/useSkin';
 import { useAuth } from '../lib/authContext';
 import { UserRole } from '../types';
 
@@ -46,6 +47,7 @@ export const RoleSwitcherBar: React.FC = () => {
     isLiveData,
     remoteError,
   } = useSchoolData();
+  const skin = useSkin();
   const { signOut } = useAuth();
 
   // ---------------------------------------------------------------------
@@ -61,7 +63,7 @@ export const RoleSwitcherBar: React.FC = () => {
             <div className="hidden sm:flex items-center gap-1.5 shrink-0">
               <Building2 className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span className="font-bold text-[#EDE7C7] truncate max-w-[220px] font-['Cinzel',serif]">
-                {currentSchool?.name}
+                {skin.name}
               </span>
             </div>
 

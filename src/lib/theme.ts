@@ -33,44 +33,24 @@ export const COLOR_LABELS: Record<ThemeKey, { label: string; hint: string }> = {
 
 export const PRESETS: Array<{ id: string; name: string; colors: ThemeColors }> = [
   {
-    id: 'imperial',
-    name: 'Imperial Crimson & Gold',
+    id: 'premium',
+    name: 'Premium Branding',
     colors: { primary: '#8B0000', accent: '#D4AF37', ink: '#200E01', bg: '#FAF8F2', sand: '#EDE7C7' },
   },
   {
-    id: 'oxford',
-    name: 'Oxford Navy & Amber',
-    colors: { primary: '#1E3A8A', accent: '#F59E0B', ink: '#0B1533', bg: '#F5F8FF', sand: '#DCE6FB' },
+    id: 'ideas',
+    name: 'Ideas Schooling System',
+    colors: { primary: '#0C1F38', accent: '#F02434', ink: '#0C1F38', bg: '#EDF2F7', sand: '#DCE5EF' },
   },
   {
-    id: 'emerald',
-    name: 'Forest Emerald & Gold',
-    colors: { primary: '#065F46', accent: '#E0B040', ink: '#062A20', bg: '#F4FAF7', sand: '#D6EFE3' },
+    id: 'highstar',
+    name: 'High Star Public Secondary School',
+    colors: { primary: '#0A2540', accent: '#F5B800', ink: '#041226', bg: '#F0F4F8', sand: '#E2E8F0' },
   },
   {
-    id: 'indigo',
-    name: 'Royal Indigo & Sun',
-    colors: { primary: '#3730A3', accent: '#FBBF24', ink: '#1B1748', bg: '#F7F6FF', sand: '#E4E1FA' },
-  },
-  {
-    id: 'teal',
-    name: 'Teal & Coral',
-    colors: { primary: '#0F766E', accent: '#F97316', ink: '#10302E', bg: '#F3FAF9', sand: '#D5EEEB' },
-  },
-  {
-    id: 'plum',
-    name: 'Plum & Honey',
-    colors: { primary: '#6B21A8', accent: '#F59E0B', ink: '#2E1065', bg: '#FAF5FF', sand: '#EBDDF7' },
-  },
-  {
-    id: 'sky',
-    name: 'Sky Blue & Sunshine',
-    colors: { primary: '#0369A1', accent: '#FACC15', ink: '#0C2A3D', bg: '#F3F9FD', sand: '#D7ECF8' },
-  },
-  {
-    id: 'charcoal',
-    name: 'Charcoal & Amber',
-    colors: { primary: '#1F2937', accent: '#F59E0B', ink: '#111827', bg: '#F9FAFB', sand: '#E5E7EB' },
+    id: 'leading',
+    name: 'The Leading Schooling System',
+    colors: { primary: '#312E81', accent: '#F59E0B', ink: '#17134B', bg: '#F7F7FF', sand: '#E5E4FA' },
   },
 ];
 

@@ -26,6 +26,7 @@ import {
 } from './IllustrationAssets';
 import { DribbbleScreen } from './DribbbleBottomNav';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { getActiveSkin } from '../../lib/skins';
 import { HomeworkHero } from '../home/HomeworkHero';
 
 interface DribbbleHomeViewProps {
@@ -139,7 +140,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&auto=format&fit=crop&q=80"
-              alt="Imperial College Campus"
+              alt={`${getActiveSkin().name} campus`}
               className="w-full h-full object-cover opacity-35"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#200E01] via-[#200E01]/85 to-transparent" />
@@ -152,7 +153,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
                 <span>Historic Canal Campus • Est. 1928</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-                {currentSchool?.name || 'Aitchisonian Imperial College & Grammar School'}
+                {getActiveSkin().name}
               </h2>
               <p className="text-xs sm:text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
                 Welcome to the unified student and parent academic portal. Track syllabus milestones, daily chalkboard assignments, laboratory practicals, and certified Cambridge terminal exam cards.

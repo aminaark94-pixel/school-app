@@ -29,9 +29,119 @@
   --bottom-nav-h: 4rem;
 }
 
+/*
+  Skin bridge for the original Imperial module library.
+
+  The newer skins own their header and home shell, while diary, attendance,
+  results and admin reuse the established module components. Those components
+  still contain the original Imperial Tailwind colour utilities. Map those
+  utilities to the active skin tokens here so a skin applies across the whole
+  application, including while Vite is running in development mode.
+*/
+html[data-skin] [class*="bg-[#8B0000"],
+html[data-skin] [class*="from-[#8B0000"],
+html[data-skin] [class*="via-[#8B0000"],
+html[data-skin] [class*="to-[#8B0000"] { background-color: var(--t-primary) !important; }
+html[data-skin] [class*="bg-[#700000"],
+html[data-skin] [class*="from-[#700000"],
+html[data-skin] [class*="via-[#700000"],
+html[data-skin] [class*="to-[#700000"] { background-color: var(--t-primary-dark) !important; }
+html[data-skin] [class*="bg-[#5B0202"],
+html[data-skin] [class*="from-[#5B0202"],
+html[data-skin] [class*="via-[#5B0202"],
+html[data-skin] [class*="to-[#5B0202"] { background-color: var(--t-primary-deep) !important; }
+html[data-skin] [class*="bg-[#200E01"],
+html[data-skin] [class*="from-[#200E01"],
+html[data-skin] [class*="via-[#200E01"],
+html[data-skin] [class*="to-[#200E01"] { background-color: var(--t-ink) !important; }
+html[data-skin] [class*="bg-[#EDE7C7"],
+html[data-skin] [class*="from-[#EDE7C7"],
+html[data-skin] [class*="via-[#EDE7C7"],
+html[data-skin] [class*="to-[#EDE7C7"] { background-color: var(--t-sand) !important; }
+html[data-skin] [class*="bg-[#FAF8F2"],
+html[data-skin] [class*="from-[#FAF8F2"],
+html[data-skin] [class*="via-[#FAF8F2"],
+html[data-skin] [class*="to-[#FAF8F2"] { background-color: var(--t-bg) !important; }
+html[data-skin] [class*="bg-[#D4AF37"],
+html[data-skin] [class*="from-[#D4AF37"],
+html[data-skin] [class*="via-[#D4AF37"],
+html[data-skin] [class*="to-[#D4AF37"] { background-color: var(--t-accent) !important; }
+
+html[data-skin] [class*="text-[#8B0000"] { color: var(--t-primary) !important; }
+html[data-skin] [class*="text-[#700000"] { color: var(--t-primary-dark) !important; }
+html[data-skin] [class*="text-[#5B0202"] { color: var(--t-primary-deep) !important; }
+html[data-skin] [class*="text-[#200E01"] { color: var(--t-ink) !important; }
+html[data-skin] [class*="text-[#EDE7C7"] { color: var(--t-sand) !important; }
+html[data-skin] [class*="text-[#FAF8F2"] { color: var(--t-bg) !important; }
+html[data-skin] [class*="text-[#D4AF37"] { color: var(--t-accent) !important; }
+
+html[data-skin] [class*="border-[#8B0000"] { border-color: var(--t-primary) !important; }
+html[data-skin] [class*="border-[#700000"] { border-color: var(--t-primary-dark) !important; }
+html[data-skin] [class*="border-[#5B0202"] { border-color: var(--t-primary-deep) !important; }
+html[data-skin] [class*="border-[#200E01"] { border-color: var(--t-ink) !important; }
+html[data-skin] [class*="border-[#EDE7C7"] { border-color: var(--t-sand) !important; }
+html[data-skin] [class*="border-[#FAF8F2"] { border-color: var(--t-bg) !important; }
+html[data-skin] [class*="border-[#D4AF37"] { border-color: var(--t-accent) !important; }
+
+html[data-skin] [class*="from-[#8B0000"] { --tw-gradient-from: var(--t-primary) var(--tw-gradient-from-position) !important; }
+html[data-skin] [class*="from-[#700000"] { --tw-gradient-from: var(--t-primary-dark) var(--tw-gradient-from-position) !important; }
+html[data-skin] [class*="from-[#5B0202"] { --tw-gradient-from: var(--t-primary-deep) var(--tw-gradient-from-position) !important; }
+html[data-skin] [class*="from-[#200E01"] { --tw-gradient-from: var(--t-ink) var(--tw-gradient-from-position) !important; }
+html[data-skin] [class*="via-[#8B0000"] { --tw-gradient-via: var(--t-primary) var(--tw-gradient-via-position) !important; }
+html[data-skin] [class*="via-[#700000"] { --tw-gradient-via: var(--t-primary-dark) var(--tw-gradient-via-position) !important; }
+html[data-skin] [class*="via-[#5B0202"] { --tw-gradient-via: var(--t-primary-deep) var(--tw-gradient-via-position) !important; }
+html[data-skin] [class*="via-[#200E01"] { --tw-gradient-via: var(--t-ink) var(--tw-gradient-via-position) !important; }
+html[data-skin] [class*="to-[#8B0000"] { --tw-gradient-to: var(--t-primary) var(--tw-gradient-to-position) !important; }
+html[data-skin] [class*="to-[#700000"] { --tw-gradient-to: var(--t-primary-dark) var(--tw-gradient-to-position) !important; }
+html[data-skin] [class*="to-[#5B0202"] { --tw-gradient-to: var(--t-primary-deep) var(--tw-gradient-to-position) !important; }
+html[data-skin] [class*="to-[#200E01"] { --tw-gradient-to: var(--t-ink) var(--tw-gradient-to-position) !important; }
+
+/* Shape, density and elevation are part of a skin too—not just its palette. */
+.skin-content-highstar {
+  max-width: 76rem;
+}
+.skin-content-highstar [class*="rounded-3xl"],
+.skin-content-highstar [class*="rounded-[32px]"],
+.skin-content-highstar [class*="rounded-[28px]"] {
+  border-radius: 0.75rem !important;
+}
+.skin-content-highstar [class*="shadow-lg"],
+.skin-content-highstar [class*="shadow-xl"] {
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--t-ink) 14%, transparent) !important;
+}
+
+.skin-content-ideas [class*="rounded-[32px]"],
+.skin-content-ideas [class*="rounded-[28px]"] {
+  border-radius: 1.5rem !important;
+}
+.skin-content-ideas [class*="font-['Cormorant_Garamond'"] {
+  font-family: var(--t-font-display) !important;
+  font-style: normal !important;
+}
+
+.skin-content-leading [class*="rounded-3xl"],
+.skin-content-leading [class*="rounded-[32px]"],
+.skin-content-leading [class*="rounded-[28px]"] {
+  border-radius: 1rem !important;
+}
+.skin-content-leading [class*="font-['Cormorant_Garamond'"] {
+  font-family: var(--t-font-display) !important;
+  font-style: normal !important;
+}
+.skin-content-leading [class*="shadow-lg"],
+.skin-content-leading [class*="shadow-xl"] {
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--t-primary) 14%, transparent) !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 320px;
+  overflow-x: hidden;
 }
 
 /* Removes the 300ms tap delay / double-tap-zoom on interactive controls. */
@@ -80,5 +190,10 @@ label {
   select,
   textarea {
     font-size: 16px;
+  }
+
+  /* Tables in school modules remain usable instead of forcing the page wider. */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
   }
 }

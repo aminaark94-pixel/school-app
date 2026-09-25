@@ -26,11 +26,14 @@ import {
 import type { ThemeColors, ThemeKey } from '../../lib/theme';
 import {
   SKINS,
+  applyCustomSkin,
   applySkinPreview,
   clearSkinPreview,
+  readCustomSkins,
   readPreviewedSkinId,
+  saveCustomSkin,
 } from '../../lib/skins';
-import type { SkinId } from '../../lib/skins';
+import type { CustomSkin, SkinId } from '../../lib/skins';
 import { SKIN_CHANGE_EVENT, publishSkinToSchool, usePublishedSkinId } from '../../hooks/useSkin';
 import { useSchoolData } from '../../hooks/useSchoolData';
 
@@ -206,6 +209,10 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [publishing, setPublishing] = useState(false);
   const [published, setPublished] = useState(false);
   const [publishError, setPublishError] = useState('');
+  const [customName, setCustomName] = useState('');
+  const [customBaseSkin, setCustomBaseSkin] = useState<SkinId>(() => readPreviewedSkinId() || publishedSkinId);
+  const [customSkins, setCustomSkins] = useState<CustomSkin[]>(() => readCustomSkins());
+  const [customError, setCustomError] = useState('');
 
   const chooseSkin = (id: SkinId) => {
     setSkinId(id);
@@ -230,6 +237,37 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setPreview(false);
     setPublishError('');
     window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
+  };
+
+  const activateCustomSkin = (custom: CustomSkin) => {
+    setSkinId(custom.baseSkin);
+    setCustomName(custom.name);
+    setDrafts(custom.colors);
+    setColors(custom.colors);
+    applyCustomSkin(custom);
+    applyColors(custom.colors);
+    setPreview(true);
+    setPublished(false);
+    setPublishError('');
+    window.dispatchEvent(new Event(SKIN_CHANGE_EVENT));
+  };
+
+  const createCustomSkin = () => {
+    const name = customName.trim();
+    if (!name) {
+      setCustomError('Custom school skin ka naam likhein.');
+      return;
+    }
+    const custom: CustomSkin = {
+      id: `custom-${Date.now()}`,
+      name,
+      baseSkin: customBaseSkin,
+      colors,
+    };
+    saveCustomSkin(custom);
+    setCustomSkins(readCustomSkins());
+    setCustomError('');
+    activateCustomSkin(custom);
   };
 
   // One click, live for everyone. Reports the real result (no fake success).
@@ -469,6 +507,52 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <p className="rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-[11px] font-semibold text-rose-700 leading-snug">
               Publish nahi hua: {publishError}
             </p>
+          )}
+        </section>
+
+        {/* Custom skin creator */}
+        <section className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Create custom school skin</h3>
+          <p className="text-[11px] leading-relaxed text-slate-500">
+            Current layout base aur neeche selected colours use hongay. Naam poore portal mein school skin name ke taur par dikhega.
+          </p>
+          <input
+            value={customName}
+            onChange={(e) => setCustomName(e.target.value)}
+            placeholder="e.g. Beaconhouse North Campus"
+            className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-slate-400"
+          />
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            Base layout
+            <select
+              value={customBaseSkin}
+              onChange={(e) => setCustomBaseSkin(e.target.value as SkinId)}
+              className="mt-1 block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold normal-case tracking-normal"
+            >
+              {Object.values(SKINS).map((skin) => <option key={skin.id} value={skin.id}>{skin.name}</option>)}
+            </select>
+          </label>
+          {customError && <p className="text-[11px] font-semibold text-rose-600">{customError}</p>}
+          <button
+            onClick={createCustomSkin}
+            className="w-full rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold text-white transition hover:bg-slate-800"
+          >
+            Save & preview custom skin
+          </button>
+          {customSkins.length > 0 && (
+            <div className="space-y-1.5 pt-1">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Saved custom skins</p>
+              {customSkins.map((custom) => (
+                <button
+                  key={custom.id}
+                  onClick={() => activateCustomSkin(custom)}
+                  className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-left text-[11px] font-bold text-slate-700 hover:border-slate-400"
+                >
+                  <span className="flex -space-x-1">{[custom.colors.primary, custom.colors.accent, custom.colors.bg].map((color) => <span key={color} className="h-3.5 w-3.5 rounded-full border border-white" style={{ backgroundColor: color }} />)}</span>
+                  <span className="truncate">{custom.name}</span>
+                </button>
+              ))}
+            </div>
           )}
         </section>
 

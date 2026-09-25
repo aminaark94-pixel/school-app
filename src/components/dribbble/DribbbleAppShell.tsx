@@ -199,7 +199,7 @@ export const DribbbleAppShell: React.FC<DribbbleAppShellProps> = () => {
                   <span>Back to Home</span>
                 </button>
                 <h3 className="text-base font-black text-slate-900 font-['Outfit',sans-serif]">
-                  One-Click Attendance
+                  Attendance Register
                 </h3>
               </div>
               <AttendanceModule />

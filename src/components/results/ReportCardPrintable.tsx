@@ -1,6 +1,7 @@
 import React from 'react';
 import { Result, School, Student, Fee } from '../../types';
 import { Award, CheckCircle2, ShieldCheck, Building2, GraduationCap } from 'lucide-react';
+import { getActiveSkin } from '../../lib/skins';
 
 interface ReportCardPrintableProps {
   school: School;
@@ -17,9 +18,10 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
   fee,
   reportRef,
 }) => {
-  const primaryColor = '#8B0000'; // Imperial Crimson
-  const secondaryColor = '#D4AF37'; // Imperial Gold
-  const darkBrown = '#200E01';
+  const brand = getActiveSkin();
+  const primaryColor = brand.colors.primary;
+  const secondaryColor = brand.colors.accent;
+  const darkBrown = brand.colors.ink;
 
   const totalMaxMarks = result.marks_json.reduce((sum, item) => sum + item.max_marks, 0);
   const totalObtained = result.marks_json.reduce((sum, item) => sum + item.obtained_marks, 0);
@@ -42,7 +44,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
       {/* Background Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none">
         <div className="text-center font-serif font-black text-8xl tracking-widest text-[#8B0000] rotate-[-25deg]">
-          AITCHISONIAN
+          {brand.name}
         </div>
       </div>
 
@@ -57,10 +59,10 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
               Registered Cambridge International & Federal Board
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-[#200E01] font-['Cormorant_Garamond',serif] italic">
-              {school.name || 'Aitchisonian Imperial College & Grammar School'}
+              {brand.name}
             </h1>
             <p className="text-xs italic text-[#5B0202]/80 font-medium mt-0.5">
-              "{school.motto || 'Perseverance, Character & Intellectual Distinction'}"
+              "{school.motto || 'Excellence in learning and character'}"
             </p>
             <p className="text-xs text-[#200E01]/70 mt-1">
               Historic Canal Road Campus, Lahore, Pakistan • Affiliation No. PK-CAM-40912
@@ -71,7 +73,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
         {/* Official Gold Seal Badge */}
         <div className="hidden sm:flex flex-col items-center justify-center px-4 py-2.5 rounded-2xl border-2 border-[#D4AF37]/60 bg-[#FAF8F2] text-center shadow-xs">
           <Award className="w-6 h-6 mb-1 text-[#D4AF37]" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B0000] font-['Cinzel',serif]">Imperial Seal</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B0000] font-['Cinzel',serif]">{brand.name} Seal</span>
           <span className="text-[9px] text-[#5B0202]/70">Verified & Certified</span>
         </div>
       </div>

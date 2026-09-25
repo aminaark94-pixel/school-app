@@ -15,9 +15,11 @@ import {
   Award,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { useSkin } from '../../hooks/useSkin';
 
 export const ExamsDatesheetModule: React.FC = () => {
   const { currentSchool, currentUser, datesheets, students } = useSchoolData();
+  const skin = useSkin();
 
   const isParent = currentUser?.role === 'parent';
   const parentStudents = students.filter((s) => s.parent_id === currentUser?.id);
@@ -47,7 +49,7 @@ export const ExamsDatesheetModule: React.FC = () => {
           <div className="max-w-xl space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
               <CalendarDays className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Imperial Examination Board • Cambridge & Matriculation</span>
+              <span>{skin.name} Examination Board • Cambridge &amp; Matriculation</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
               Terminal Examination Datesheet & Syllabus
@@ -126,7 +128,7 @@ export const ExamsDatesheetModule: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="text-xl font-bold font-['Cormorant_Garamond',serif] italic text-[#EDE7C7]">
-                    {currentSchool?.name || 'Aitchisonian Imperial College'}
+                    {skin.name}
                   </h4>
                   <p className="text-xs text-[#EDE7C7]/80 font-medium">
                     {activeDatesheet.title} • {activeDatesheet.class_id} (Academic Year {activeDatesheet.academic_year})

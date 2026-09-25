@@ -83,6 +83,18 @@ function bakedThemePlugin(): Plugin {
       display: "'Inter', sans-serif",
       radius: 'sharp',
     },
+    ideas: {
+      colors: {primary: '#0C1F38', accent: '#F02434', ink: '#0C1F38', bg: '#EDF2F7', sand: '#DCE5EF'},
+      sans: "'Plus Jakarta Sans', sans-serif",
+      display: "'Montserrat', 'Plus Jakarta Sans', sans-serif",
+      radius: 'soft',
+    },
+    leading: {
+      colors: {primary: '#312E81', accent: '#F59E0B', ink: '#17134B', bg: '#F7F7FF', sand: '#E5E4FA'},
+      sans: "'Inter', sans-serif",
+      display: "'Inter', sans-serif",
+      radius: 'sharp',
+    },
   };
 
   const readConfig = (): {colors: Record<string, string>; skin: string} => {

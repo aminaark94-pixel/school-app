@@ -6,7 +6,6 @@ import {
   Save,
   Users,
   CheckCheck,
-  BellRing,
   Building2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -45,12 +44,23 @@ const STATUS_BUTTONS: Array<{
 ];
 
 export const AttendanceModule: React.FC = () => {
-  const { students, attendance, markAttendance, currentUser, alerts, acknowledgeAlert } = useSchoolData();
+  const { students, attendance, markAttendance, currentUser } = useSchoolData();
+  const canEditAttendance = currentUser?.role === 'admin' || currentUser?.role === 'teacher';
 
   const todayStr = useMemo(() => localDateString(), []);
   const [selectedDate, setSelectedDate] = useState<string>(todayStr);
 
-  const activeStudents = useMemo(() => students.filter((s) => !s.is_deleted), [students]);
+  const activeStudents = useMemo(
+    () =>
+      students.filter(
+        (s) =>
+          !s.is_deleted &&
+          (currentUser?.role !== 'parent' ||
+            s.parent_id === currentUser.id ||
+            s.parent_email === currentUser.email)
+      ),
+    [students, currentUser]
+  );
 
   const classes = useMemo(() => {
     const set = new Set(activeStudents.map((s) => s.class_id));
@@ -119,11 +129,13 @@ export const AttendanceModule: React.FC = () => {
   const attendanceRate = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 100;
 
   const toggleStatus = (studentId: string, status: AttendanceStatus) => {
+    if (!canEditAttendance) return;
     setAttendanceState((prev) => ({ ...prev, [studentId]: status }));
     setIsSaved(false);
   };
 
   const handleMarkAllPresent = () => {
+    if (!canEditAttendance) return;
     const updated: Record<string, AttendanceStatus> = {};
     roster.forEach((s) => {
       updated[s.id] = 'present';
@@ -135,6 +147,7 @@ export const AttendanceModule: React.FC = () => {
   // markAttendance takes ONE array of records. (This screen used to call it once per student with three
   // separate arguments, which threw and saved nothing.)
   const handleSaveAttendance = () => {
+    if (!canEditAttendance) return;
     if (roster.length === 0) return;
     markAttendance(
       roster.map((student) => ({
@@ -173,28 +186,30 @@ export const AttendanceModule: React.FC = () => {
               <span>Morning Roll Call</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              Daily Scholar Attendance Registry
+              {canEditAttendance ? 'Daily Attendance Register' : 'Your Child\'s Attendance'}
             </h2>
             <p className="hidden sm:block text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Record official daily classroom attendance. Automated absence alerts keep parents and academic housemasters instantly notified.
+              {canEditAttendance
+                ? 'Record official daily classroom attendance. Absence alerts keep parents and school staff informed.'
+                : 'View your child\'s daily attendance record. Only school staff can update attendance.'}
             </p>
           </div>
 
-          <div className="flex items-center justify-around md:justify-start gap-4 bg-[#FAF8F2]/10 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-[#D4AF37]/30">
+          <div className="flex items-center justify-around md:justify-start gap-4 bg-white/15 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-white/25">
             <div className="text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] font-['Cinzel',serif] block">
-                Roster
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/75 font-['Cinzel',serif] block">
+                {canEditAttendance ? 'Class total' : 'Your child'}
               </span>
-              <p className="text-xl sm:text-2xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
-                {totalCount} Scholars
+              <p className="text-xl sm:text-2xl font-bold text-white font-['Cormorant_Garamond',serif] italic">
+                {totalCount} {canEditAttendance ? 'Students' : totalCount === 1 ? 'Student' : 'Students'}
               </p>
             </div>
-            <div className="h-8 w-px bg-[#D4AF37]/40" />
+            <div className="h-8 w-px bg-white/25" />
             <div className="text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] font-['Cinzel',serif] block">
-                Presence Rate
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/75 font-['Cinzel',serif] block">
+                Attendance rate
               </span>
-              <p className="text-xl sm:text-2xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
+              <p className="text-xl sm:text-2xl font-bold text-white font-['Cormorant_Garamond',serif] italic">
                 {attendanceRate}%
               </p>
             </div>
@@ -258,7 +273,7 @@ export const AttendanceModule: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          {canEditAttendance && <div className="flex items-center gap-2">
             <button
               id="mark-all-present-btn"
               onClick={handleMarkAllPresent}
@@ -277,7 +292,7 @@ export const AttendanceModule: React.FC = () => {
               <Save className="w-4 h-4 text-[#D4AF37]" />
               <span>Save Attendance</span>
             </button>
-          </div>
+          </div>}
         </div>
 
         {isSaved && (
@@ -340,55 +355,6 @@ export const AttendanceModule: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Absence alerts */}
-      {alerts.length > 0 && (
-        <div className="p-4 rounded-2xl bg-rose-50/70 border border-rose-200 space-y-2.5">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <BellRing className="w-4 h-4 text-rose-600 animate-pulse" />
-              <h4 className="font-bold text-xs uppercase tracking-wider text-rose-900 font-['Cinzel',serif]">
-                Absence Alerts Dispatched
-              </h4>
-            </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-200/80 text-rose-900">
-              {alerts.length} Parent Alerts Active
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-            {alerts.slice(0, 4).map((alert) => (
-              <div
-                key={alert.id}
-                className="bg-white p-3 rounded-xl border border-rose-200 flex items-center justify-between gap-2 shadow-2xs"
-              >
-                <div className="min-w-0">
-                  <p className="font-bold text-[#200E01] truncate">{alert.student_name}</p>
-                  <p className="text-[11px] text-[#5B0202]/70">
-                    {alert.class_id} • Sent:{' '}
-                    {new Date(alert.sent_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </p>
-                </div>
-                <div className="shrink-0">
-                  {alert.status === 'acknowledged' ? (
-                    <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-100 text-emerald-800 flex items-center gap-1">
-                      <CheckCheck className="w-3 h-3 text-emerald-600" />
-                      Acknowledged
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => acknowledgeAlert(alert.id)}
-                      className="min-h-[36px] text-[11px] font-bold px-3 py-1 rounded-lg bg-[#8B0000] hover:bg-[#700000] text-white shadow-xs transition"
-                    >
-                      Acknowledge
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* 5. Roster */}
       <div className="bg-white rounded-3xl sm:rounded-[28px] shadow-sm border border-[#EDE7C7] overflow-hidden">
         <div className="p-3 sm:p-4 border-b border-[#EDE7C7] bg-[#FAF8F2] flex items-center justify-between gap-2">
@@ -440,25 +406,39 @@ export const AttendanceModule: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* One-tap status: three equal, 44px-tall targets on phones */}
-                  <div className="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center sm:gap-1.5">
-                    {STATUS_BUTTONS.map(({ status, label, Icon, active }) => (
-                      <button
-                        key={status}
-                        id={`att-${status}-${student.id}`}
-                        onClick={() => toggleStatus(student.id, status)}
-                        aria-pressed={currentStatus === status}
-                        className={`flex items-center justify-center gap-1 min-h-[44px] sm:min-h-0 px-3 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition active:scale-95 ${
-                          currentStatus === status
-                            ? active
-                            : 'bg-[#FAF8F2] text-[#200E01] hover:bg-[#EDE7C7] border border-[#EDE7C7]'
-                        }`}
-                      >
-                        <Icon className="w-3.5 h-3.5" />
-                        <span>{label}</span>
-                      </button>
-                    ))}
-                  </div>
+                  {canEditAttendance ? (
+                    <div className="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center sm:gap-1.5">
+                      {STATUS_BUTTONS.map(({ status, label, Icon, active }) => (
+                        <button
+                          key={status}
+                          id={`att-${status}-${student.id}`}
+                          onClick={() => toggleStatus(student.id, status)}
+                          aria-pressed={currentStatus === status}
+                          className={`flex items-center justify-center gap-1 min-h-[44px] sm:min-h-0 px-3 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition active:scale-95 ${
+                            currentStatus === status
+                              ? active
+                              : 'bg-[#FAF8F2] text-[#200E01] hover:bg-[#EDE7C7] border border-[#EDE7C7]'
+                          }`}
+                        >
+                          <Icon className="w-3.5 h-3.5" />
+                          <span>{label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
+                        currentStatus === 'present'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : currentStatus === 'absent'
+                            ? 'bg-rose-100 text-rose-800'
+                            : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      {currentStatus === 'present' ? <CheckCircle2 className="h-3.5 w-3.5" /> : currentStatus === 'absent' ? <XCircle className="h-3.5 w-3.5" /> : <Clock className="h-3.5 w-3.5" />}
+                      {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
+                    </span>
+                  )}
                 </div>
               );
             })}
@@ -467,7 +447,7 @@ export const AttendanceModule: React.FC = () => {
       </div>
 
       {/* 6. Phone-only sticky save bar: always reachable while scrolling a long roster */}
-      {roster.length > 0 && (
+      {canEditAttendance && roster.length > 0 && (
         <div className="md:hidden sticky above-bottom-nav z-30">
           <div className="rounded-2xl bg-[#200E01] text-[#EDE7C7] p-3 shadow-xl border border-[#D4AF37]/40 flex items-center justify-between gap-3">
             <div className="text-[11px] font-bold leading-tight min-w-0">

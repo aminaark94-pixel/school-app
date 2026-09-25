@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, Star } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { getActiveSkin } from '../../lib/skins';
 import { AppModule } from '../Navbar';
 
 /**
@@ -57,7 +58,7 @@ interface Props {
 export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule }) => {
   const { currentSchool, currentUser } = useSchoolData();
   const isParent = currentUser?.role === 'parent';
-  const visibleModules = MODULES.filter((m) => !(isParent && m.id === 'admin'));
+  const visibleModules = MODULES.filter((m) => currentUser?.role === 'admin' || m.id !== 'admin');
 
   const initials = (currentUser?.full_name || 'User')
     .split(' ')
@@ -89,7 +90,7 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
             </span>
             <span className="min-w-0">
               <span className="block text-sm sm:text-xl font-black leading-tight tracking-wide text-white truncate">
-                {currentSchool?.name || 'School Portal'}
+                {getActiveSkin().name}
               </span>
               <span
                 className="mt-0.5 text-[10px] sm:text-xs font-bold tracking-wide flex items-center gap-1.5"
@@ -160,16 +161,17 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
 
       {/* Phone bottom tab bar */}
       <nav
-        className="sm:hidden fixed bottom-0 inset-x-0 z-50 border-t flex"
+        aria-label="Primary navigation"
+        className="sm:hidden fixed bottom-0 inset-x-0 z-50 border-t flex overflow-x-auto no-scrollbar"
         style={{ backgroundColor: 'var(--t-ink)', borderTopColor: 'color-mix(in srgb, var(--t-accent) 35%, transparent)' }}
       >
-        {visibleModules.slice(0, 5).map((m) => {
+        {visibleModules.map((m) => {
           const active = activeModule === m.id;
           return (
             <button
               key={m.id}
               onClick={() => setActiveModule(m.id)}
-              className="flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wide"
+              className="min-w-[76px] flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wide"
               style={{ color: active ? 'var(--t-accent)' : 'rgba(255,255,255,0.6)' }}
             >
               {m.label}
