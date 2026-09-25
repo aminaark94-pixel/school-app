@@ -46,6 +46,87 @@ Last updated: 2026-09-25
 4. Current role switching at localhost is demo-mode only; it is not real login.
 5. Some internal comments/data structures may still use old terms such as `Imperial` or `absence alerts`, but end-user attendance UI copy was cleaned up.
 
+## Work to do after the app goes online (implement one by one)
+
+These items need a deployed app and/or Supabase. They are not fully achievable with only local browser demo data.
+
+### 1. Deploy the website
+
+- Connect the GitHub repository to Vercel, Netlify, Cloudflare Pages, or another hosting provider.
+- Add the production domain and verify each push deploys a new build.
+- Configure PWA cache/version behaviour so users receive updates reliably.
+
+### 2. Configure Supabase for production
+
+- Create/configure the Supabase project URL and anon key in the deployed environment.
+- Apply the SQL schema/migrations from the repository's `supabase/` directory using the platform-owner account only.
+- Do not expose schema/migration tooling in the school Admin UI.
+- Enable Row Level Security and test every policy with separate accounts.
+
+### 3. Create real platform Owner access
+
+- Replace the browser-local `#owner` PIN with a secure platform-owner account/role.
+- Only platform owners should create schools, create/edit skins, publish skins, view deployment/database operations, and resolve cross-school issues.
+- School Admin must not see platform database controls or other schools' information.
+
+### 4. Make custom skins publishable
+
+- Add database storage for custom skin name, base layout, five colours, and school assignment.
+- Store custom skins per school or as reusable owner templates.
+- Let platform Owner publish a chosen custom skin to a school so every user/device sees it.
+- Keep the current localStorage custom-skin feature only as preview/draft support, not the production source of truth.
+
+### 5. Real authentication
+
+- Enable email/password sign-up and sign-in in Supabase Auth.
+- Configure email confirmation, password reset emails, redirect URLs, and production email templates.
+- Public sign-up should not allow arbitrary Admin creation.
+- Recommended flow: Admin is invited/created by platform Owner; teachers and parents request/create accounts; school Admin approves them where appropriate.
+
+### 6. Account approval and roles
+
+- Add an account status such as pending, approved, suspended.
+- School Admin can approve teachers and parents for their own school only.
+- Parent and Teacher accounts must never self-promote to Admin.
+- Enforce all permissions in database RLS, not merely hidden UI buttons.
+
+### 7. Parent–child linking
+
+- Add an Admin workflow to link a parent account to one or more student records.
+- Match by explicit account ID, not only parent email.
+- Parent view should show only linked children; test with multiple children and multiple parents/guardians.
+
+### 8. Real shared school data
+
+- Move demo/localStorage data to Supabase tables: students, attendance, diary, notices, results, fees, datesheets, and communications.
+- Ensure every query filters by `school_id` and is protected by RLS.
+- Test from two browser sessions/devices: Admin enters data, Teacher/Parent see only permitted data.
+
+### 9. Uploads and media
+
+- Set up Supabase Storage buckets for school logos, diary/blackboard images, and report assets.
+- Add file size/type validation and storage security policies.
+- Replace browser data-URL logo uploads with secure uploaded URLs.
+
+### 10. Real notifications (only if desired later)
+
+- The attendance alert UI was intentionally removed. If schools later request notifications, build an opt-in notification system.
+- Decide whether notifications are in-app, email, WhatsApp/SMS through an approved provider, or push notifications.
+- Add recipient consent, delivery logs, retries, and a school-level settings page. Do not add it as default marketing language.
+
+### 11. Report-card designer (future feature)
+
+- Build an Owner/Admin-controlled designer with a preview before publishing.
+- Allow approved template selection, logo placement, colours, sections, signatures, grading scale, and print/PDF configuration.
+- Save report templates per school and use the selected version when generating PDFs.
+- Do not let ordinary Parent/Teacher roles redesign report cards.
+
+### 12. Security and production checks
+
+- Test school isolation, role escalation attempts, direct API calls, and file access with RLS enabled.
+- Add audit logs for enrollment, fee changes, results publishing, and skin/report-template publishing.
+- Set backups, monitoring, error reporting, and a support process for the platform Owner.
+
 ## How to test locally
 
 1. Run `npm run dev` (or `run.bat`) and open `http://localhost:3000`.
