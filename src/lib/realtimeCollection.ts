@@ -47,7 +47,7 @@ interface Options<Row, T> {
   getId: (item: T) => string;
 }
 
-export function createCollectionStore<Row extends Record<string, unknown>, T>(
+export function createCollectionStore<Row extends object, T>(
   opts: Options<Row, T>
 ): CollectionStore<T> {
   const schoolColumn = opts.schoolColumn ?? 'school_id';
