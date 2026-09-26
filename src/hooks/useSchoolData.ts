@@ -542,7 +542,7 @@ export function useSchoolData() {
 
   // Bulk Import Students from CSV
   const bulkImportStudents = useCallback(
-    (
+    async (
       newItems: Array<{
         roll_number: string;
         name: string;
@@ -551,35 +551,59 @@ export function useSchoolData() {
         parent_email?: string;
         parent_name?: string;
       }>
-    ) => {
-      if (!currentSchool) return { count: 0 };
+    ): Promise<{ count: number; unmatchedParentEmails: string[] }> => {
+      if (!currentSchool) return { count: 0, unmatchedParentEmails: [] };
 
       if (usingRemote) {
         const supabase = getSupabase();
-        if (!supabase) return { count: 0 };
-        supabase
-          .from('students')
-          .insert(
-            newItems.map((item) => ({
-              school_id: currentSchool.id,
-              roll_number: item.roll_number.trim(),
-              name: item.name.trim(),
-              class_id: item.class_id.trim() || 'Grade 10',
-              section: (item.section || 'A').toUpperCase().trim(),
-              // The parent's email is what links a parent account to their child
-              // (done by a database trigger once that parent has confirmed their email).
-              parent_email: item.parent_email?.trim() || null,
-              parent_name: item.parent_name?.trim() || null,
-            }))
-          )
-          .then(({ error }) => {
-            if (error) {
-              setRemoteError(error.message);
-              return;
-            }
-            refreshRemote();
-          });
-        return { count: newItems.length };
+        if (!supabase) return { count: 0, unmatchedParentEmails: [] };
+
+        // The `students` table only stores parent_id (a real users.id FK) -
+        // there is no parent_email column on it. So before inserting we have
+        // to resolve each row's parent_email to an existing parent account
+        // in this school. A parent has to have signed up first; if nobody
+        // with that email exists yet, the student is still created but with
+        // no parent_id, and we report the email back as unmatched so the
+        // admin knows to invite that parent (or use "Link Parent" later).
+        const { data: parentRows, error: parentErr } = await supabase
+          .from('users')
+          .select('id, email')
+          .eq('school_id', currentSchool.id)
+          .eq('role', 'parent');
+
+        if (parentErr) {
+          setRemoteError(parentErr.message);
+          return { count: 0, unmatchedParentEmails: [] };
+        }
+
+        const parentIdByEmail = new Map<string, string>();
+        (parentRows ?? []).forEach((u) => {
+          if (u.email) parentIdByEmail.set(u.email.trim().toLowerCase(), u.id);
+        });
+
+        const unmatchedParentEmails: string[] = [];
+        const rowsToInsert = newItems.map((item) => {
+          const email = (item.parent_email || '').trim().toLowerCase();
+          const parentId = email ? parentIdByEmail.get(email) : undefined;
+          if (email && !parentId) unmatchedParentEmails.push(item.parent_email!.trim());
+          return {
+            school_id: currentSchool.id,
+            roll_number: item.roll_number.trim(),
+            name: item.name.trim(),
+            class_id: item.class_id.trim() || 'Grade 10',
+            section: (item.section || 'A').toUpperCase().trim(),
+            parent_id: parentId ?? null,
+          };
+        });
+
+        const { error } = await supabase.from('students').insert(rowsToInsert);
+        if (error) {
+          setRemoteError(error.message);
+          return { count: 0, unmatchedParentEmails: [] };
+        }
+
+        await refreshRemote();
+        return { count: newItems.length, unmatchedParentEmails };
       }
 
       const existing = LocalStore.getStudents();
@@ -641,9 +665,67 @@ export function useSchoolData() {
       LocalStore.saveFees([...currentFees, ...newFees]);
       LocalStore.saveResults([...currentResults, ...newResults]);
 
-      return { count: createdStudents.length };
+      return { count: createdStudents.length, unmatchedParentEmails: [] };
     },
     [usingRemote, currentSchool, currentUser, refreshRemote]
+  );
+
+  // Link (or re-link) a student to an existing parent account by email.
+  // Fixes rows that were imported before a parent had signed up, or that
+  // were imported with an unmatched parent_email.
+  const linkParentToStudent = useCallback(
+    async (studentId: string, parentEmail: string): Promise<{ success: boolean; error?: string }> => {
+      const email = parentEmail.trim().toLowerCase();
+      if (!email) return { success: false, error: 'Enter a parent email.' };
+      if (!currentSchool) return { success: false, error: 'No active school.' };
+
+      if (usingRemote) {
+        const supabase = getSupabase();
+        if (!supabase) return { success: false, error: 'Not connected to Supabase.' };
+
+        const { data: parentRows, error: findErr } = await supabase
+          .from('users')
+          .select('id, email')
+          .eq('school_id', currentSchool.id)
+          .eq('role', 'parent');
+
+        if (findErr) return { success: false, error: findErr.message };
+
+        const match = (parentRows ?? []).find((u) => (u.email || '').trim().toLowerCase() === email);
+        if (!match) {
+          return {
+            success: false,
+            error: 'No parent account with that email yet in this school. Ask them to sign up first.',
+          };
+        }
+
+        const { error: updateErr } = await supabase
+          .from('students')
+          .update({ parent_id: match.id })
+          .eq('id', studentId);
+
+        if (updateErr) return { success: false, error: updateErr.message };
+        await refreshRemote();
+        return { success: true };
+      }
+
+      const localParent = LocalStore.getUsers().find(
+        (u) => u.role === 'parent' && u.email.trim().toLowerCase() === email
+      );
+      if (!localParent) {
+        return { success: false, error: 'No parent account with that email yet.' };
+      }
+      const students = LocalStore.getStudents();
+      LocalStore.saveStudents(
+        students.map((s) =>
+          s.id === studentId
+            ? { ...s, parent_id: localParent.id, parent_email: localParent.email, parent_name: localParent.full_name }
+            : s
+        )
+      );
+      return { success: true };
+    },
+    [usingRemote, currentSchool, refreshRemote]
   );
 
   // Update School Branding
@@ -983,6 +1065,7 @@ export function useSchoolData() {
     restoreStudent,
     permanentDeleteStudent,
     bulkImportStudents,
+    linkParentToStudent,
     updateSchoolBranding,
     resetToDefaults,
     addDiaryEntry,
