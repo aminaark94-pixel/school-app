@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import Papa from 'papaparse';
 import { UploadCloud, FileText, CheckCircle2, AlertTriangle, Download, ArrowRight, Table } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { useSkin } from '../../hooks/useSkin';
 
 interface ParsedRow {
   roll_number?: string;
@@ -15,6 +16,7 @@ interface ParsedRow {
 
 export const CsvStudentImport: React.FC = () => {
   const { bulkImportStudents, currentSchool } = useSchoolData();
+  const skin = useSkin();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [parsedRows, setParsedRows] = useState<ParsedRow[]>([]);
@@ -35,7 +37,7 @@ export const CsvStudentImport: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `${currentSchool?.name || 'school'}_student_template.csv`);
+    link.setAttribute('download', `${skin.name || 'school'}_student_template.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -160,7 +162,7 @@ export const CsvStudentImport: React.FC = () => {
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-            <span>Successfully registered {importSuccess} scholar records into {currentSchool?.name}!</span>
+            <span>Successfully registered {importSuccess} scholar records into {skin.name}!</span>
           </div>
         </div>
       )}
@@ -181,7 +183,7 @@ export const CsvStudentImport: React.FC = () => {
               onClick={handleConfirmImport}
               className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-[#8B0000] hover:bg-[#700000] text-[#EDE7C7] shadow-sm transition active:scale-95 border border-[#D4AF37]/50"
             >
-              <span>Confirm Enrollment to {currentSchool?.name}</span>
+              <span>Confirm Enrollment to {skin.name}</span>
               <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
             </button>
           </div>

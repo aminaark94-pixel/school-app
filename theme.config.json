@@ -1,12 +1,12 @@
 {
-  "_comment": "Owner-only delivery config. Set 'skin' to pick the whole UI look for this school build: 'imperial' or 'highstar'. Omit 'colors' to use the skin's own palette, or include it to re-tint the skin for this school.",
-  "skin": "imperial",
-  "name": "Imperial Crimson & Gold (default)",
+  "_comment": "Owner-only delivery config. Set 'skin' to choose the full school UI: 'ideas' (Ideas Schooling System), 'highstar' (High Star Public Secondary School), or 'leading' (The Leading Schooling System). Omit 'colors' to use that profile's palette, or include them to re-tint it for a school.",
+  "skin": "ideas",
+  "name": "Ideas Schooling System",
   "colors": {
-    "primary": "#8B0000",
-    "accent": "#D4AF37",
-    "ink": "#200E01",
-    "bg": "#FAF8F2",
-    "sand": "#EDE7C7"
+    "primary": "#0C1F38",
+    "accent": "#F02434",
+    "ink": "#0C1F38",
+    "bg": "#EDF2F7",
+    "sand": "#DCE5EF"
   }
 }

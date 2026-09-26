@@ -23,8 +23,9 @@ import { ThemeColors } from './theme';
 import type { AppModule } from '../components/Navbar';
 import { HighStarHeader } from '../components/highstar/HighStarHeader';
 import { HighStarPortal } from '../components/highstar/HighStarPortal';
+import { IdeasHeader, IdeasPortal, LeadingHeader, LeadingPortal } from '../components/skins/ReferenceSchoolSkins';
 
-export type SkinId = 'imperial' | 'highstar';
+export type SkinId = 'imperial' | 'highstar' | 'ideas' | 'leading';
 
 export interface SkinDefinition {
   id: SkinId;
@@ -51,9 +52,9 @@ export interface SkinDefinition {
 export const SKINS: Record<SkinId, SkinDefinition> = {
   imperial: {
     id: 'imperial',
-    name: 'Imperial Heritage',
+    name: 'Ideas Schooling System',
     description:
-      'Warm crimson & gold, serif display type, rounded cards. Reads as an established, traditional institution.',
+      'Warm crimson and gold with classic display type, rounded cards, and a traditional campus feel.',
     colors: {
       primary: '#8B0000',
       accent: '#D4AF37',
@@ -69,9 +70,9 @@ export const SKINS: Record<SkinId, SkinDefinition> = {
   },
   highstar: {
     id: 'highstar',
-    name: 'High Star',
+    name: 'High Star Public Secondary School',
     description:
-      'Navy & gold, Inter throughout, tighter corners and flat cards. Reads as a modern, corporate secondary school.',
+      'Navy and gold with a crisp, modern secondary-school shell, compact navigation, and flat cards.',
     colors: {
       primary: '#0A2540',
       accent: '#F5B800',
@@ -87,12 +88,95 @@ export const SKINS: Record<SkinId, SkinDefinition> = {
     Header: HighStarHeader,
     Portal: HighStarPortal,
   },
+  ideas: {
+    id: 'ideas',
+    name: 'Ideas Schooling System',
+    description:
+      'Deep navy and school red, bold rounded cards and a focused parent/student dashboard. Based on the Ideas Schooling reference UI.',
+    colors: {
+      primary: '#0C1F38',
+      accent: '#F02434',
+      ink: '#0C1F38',
+      bg: '#EDF2F7',
+      sand: '#DCE5EF',
+    },
+    fonts: {
+      sans: "'Plus Jakarta Sans', sans-serif",
+      display: "'Montserrat', 'Plus Jakarta Sans', sans-serif",
+    },
+    radius: 'soft',
+    Header: IdeasHeader,
+    Portal: IdeasPortal,
+  },
+  leading: {
+    id: 'leading',
+    name: 'The Leading Schooling System',
+    description:
+      'A confident indigo and amber academic look with sharp cards and a contemporary, city-campus character.',
+    colors: {
+      primary: '#312E81',
+      accent: '#F59E0B',
+      ink: '#17134B',
+      bg: '#F7F7FF',
+      sand: '#E5E4FA',
+    },
+    fonts: {
+      sans: "'Inter', sans-serif",
+      display: "'Inter', sans-serif",
+    },
+    radius: 'sharp',
+    Header: LeadingHeader,
+    Portal: LeadingPortal,
+  },
 };
 
 export const DEFAULT_SKIN: SkinId = 'imperial';
 
 /** Owner's live skin preview, kept in this browser only (like the colour preview). */
 export const SKIN_STORAGE_KEY = 'owner_skin_v1';
+export const CUSTOM_SKINS_STORAGE_KEY = 'owner_custom_skins_v1';
+export const ACTIVE_CUSTOM_SKIN_STORAGE_KEY = 'owner_active_custom_skin_v1';
+
+export interface CustomSkin {
+  id: string;
+  name: string;
+  baseSkin: SkinId;
+  colors: ThemeColors;
+}
+
+export function readCustomSkins(): CustomSkin[] {
+  try {
+    const raw = JSON.parse(localStorage.getItem(CUSTOM_SKINS_STORAGE_KEY) || '[]');
+    return Array.isArray(raw)
+      ? raw.filter((item): item is CustomSkin => item && typeof item.id === 'string' && typeof item.name === 'string' && isSkinId(item.baseSkin) && item.colors && typeof item.colors === 'object')
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveCustomSkin(skin: CustomSkin): void {
+  const skins = readCustomSkins().filter((item) => item.id !== skin.id);
+  skins.unshift(skin);
+  localStorage.setItem(CUSTOM_SKINS_STORAGE_KEY, JSON.stringify(skins));
+}
+
+export function readActiveCustomSkin(): CustomSkin | null {
+  try {
+    const id = localStorage.getItem(ACTIVE_CUSTOM_SKIN_STORAGE_KEY);
+    return readCustomSkins().find((item) => item.id === id) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export function clearActiveCustomSkin(): void {
+  try {
+    localStorage.removeItem(ACTIVE_CUSTOM_SKIN_STORAGE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
 
 export function isSkinId(v: unknown): v is SkinId {
   return typeof v === 'string' && Object.prototype.hasOwnProperty.call(SKINS, v);
@@ -100,6 +184,14 @@ export function isSkinId(v: unknown): v is SkinId {
 
 export function getSkin(id: unknown): SkinDefinition {
   return isSkinId(id) ? SKINS[id] : SKINS[DEFAULT_SKIN];
+}
+
+/** The active skin is also the visual product brand shown throughout the UI. */
+export function getActiveSkin(): SkinDefinition {
+  const id = typeof document !== 'undefined' ? document.documentElement.getAttribute('data-skin') : null;
+  const skin = getSkin(id);
+  const custom = readActiveCustomSkin();
+  return custom && custom.baseSkin === skin.id ? { ...skin, name: custom.name, colors: custom.colors } : skin;
 }
 
 /** Reads the owner's previewed skin, if any. */
@@ -115,6 +207,7 @@ export function readPreviewedSkinId(): SkinId | null {
 /** Switches the skin live in this browser (owner preview only). */
 export function applySkinPreview(id: SkinId): void {
   applySkinTokens(SKINS[id]);
+  clearActiveCustomSkin();
   try {
     localStorage.setItem(SKIN_STORAGE_KEY, id);
   } catch {
@@ -122,8 +215,19 @@ export function applySkinPreview(id: SkinId): void {
   }
 }
 
+export function applyCustomSkin(skin: CustomSkin): void {
+  applySkinTokens(SKINS[skin.baseSkin]);
+  try {
+    localStorage.setItem(SKIN_STORAGE_KEY, skin.baseSkin);
+    localStorage.setItem(ACTIVE_CUSTOM_SKIN_STORAGE_KEY, skin.id);
+  } catch {
+    /* preview remains active for this session */
+  }
+}
+
 /** Drops the owner's skin preview so the published skin shows again. */
 export function clearSkinPreview(): void {
+  clearActiveCustomSkin();
   try {
     localStorage.removeItem(SKIN_STORAGE_KEY);
   } catch {

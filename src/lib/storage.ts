@@ -38,6 +38,7 @@ export const INITIAL_SCHOOLS: School[] = [
     secondary_color: '#5B0202', // Deep Burgundy Oxblood
     address: 'Mall Road & Canal Campus, Lahore, Pakistan',
     phone: '+92 (42) 3578-9100',
+    skin: 'imperial',
     created_at: new Date('2024-01-01').toISOString(),
   },
   {
@@ -49,6 +50,7 @@ export const INITIAL_SCHOOLS: School[] = [
     secondary_color: '#8B0000', // Crimson
     address: 'Shadman Campus, Lahore, Pakistan',
     phone: '+92 (42) 3742-1200',
+    skin: 'highstar',
     created_at: new Date('2024-02-01').toISOString(),
   },
 ];
@@ -655,7 +657,20 @@ export const LocalStore = {
       localStorage.setItem(STORAGE_KEYS.SCHOOLS, JSON.stringify(INITIAL_SCHOOLS));
       return INITIAL_SCHOOLS;
     }
-    return JSON.parse(raw);
+    const schools = JSON.parse(raw) as School[];
+    // Existing demo data predates per-school skins. Give only those known
+    // records their intended identity; never replace a skin the owner chose.
+    const legacySkins: Record<string, NonNullable<School['skin']>> = {
+      'school-apex': 'imperial',
+      'school-horizon': 'highstar',
+    };
+    const hydrated = schools.map((school) =>
+      school.skin || !legacySkins[school.id] ? school : {...school, skin: legacySkins[school.id]},
+    );
+    if (hydrated.some((school, index) => school !== schools[index])) {
+      localStorage.setItem(STORAGE_KEYS.SCHOOLS, JSON.stringify(hydrated));
+    }
+    return hydrated;
   },
 
   saveSchools(schools: School[]) {

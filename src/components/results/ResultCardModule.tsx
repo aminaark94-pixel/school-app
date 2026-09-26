@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { useSkin } from '../../hooks/useSkin';
 import { ReportCardPrintable } from './ReportCardPrintable';
 import { ExamTerm, Student } from '../../types';
 
@@ -29,6 +30,7 @@ export const ResultCardModule: React.FC = () => {
     payFeeForStudent,
     updateFeeStatus,
   } = useSchoolData();
+  const skin = useSkin();
 
   const [selectedTerm, setSelectedTerm] = useState<ExamTerm>('mid_term');
   const [isExporting, setIsExporting] = useState(false);
@@ -57,7 +59,7 @@ export const ResultCardModule: React.FC = () => {
   // Student result for selected term
   const studentResult = results.find(
     (r) => r.student_id === activeStudent?.id && r.term === selectedTerm
-  ) || results.find((r) => r.student_id === activeStudent?.id);
+  );
 
   // PDF Export using html2pdf.js or print fallback
   const handleDownloadPDF = async () => {
@@ -77,7 +79,7 @@ export const ResultCardModule: React.FC = () => {
 
       const opt = {
         margin: [10, 10, 10, 10],
-        filename: `${currentSchool.name.replace(/\s+/g, '_')}_${activeStudent.name.replace(/\s+/g, '_')}_${selectedTerm}.pdf`,
+        filename: `${skin.name.replace(/\s+/g, '_')}_${activeStudent.name.replace(/\s+/g, '_')}_${selectedTerm}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -272,7 +274,7 @@ export const ResultCardModule: React.FC = () => {
       {/* RESULT CARD CONTAINER WITH CONDITIONAL UNLOCK */}
       <div className="relative">
         {/* CONDITIONAL LOCKED OVERLAY BANNER */}
-        {!isFeePaid && (
+        {studentResult && !isFeePaid && (
           <div
             id="result-card-locked-overlay"
             className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 bg-[#200E01]/70 backdrop-blur-md rounded-3xl text-center"
@@ -339,6 +341,13 @@ export const ResultCardModule: React.FC = () => {
               result={studentResult}
               fee={studentFee}
             />
+          )}
+          {!studentResult && (
+            <div className="rounded-3xl border border-[#EDE7C7] bg-white p-8 text-center shadow-sm">
+              <FileCheck className="mx-auto h-10 w-10 text-[#8B0000]" />
+              <h3 className="mt-3 text-lg font-bold text-[#200E01]">No {selectedTerm === 'mid_term' ? 'mid-term' : 'final-term'} report published</h3>
+              <p className="mt-1 text-xs text-[#5B0202]/70">This student does not have results for the selected examination term yet.</p>
+            </div>
           )}
         </div>
       </div>

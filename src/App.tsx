@@ -23,9 +23,9 @@ export default function App() {
   const SkinHeader = skin.Header ?? Navbar;
   const SkinPortal = skin.Portal ?? DribbbleAppShell;
 
-  // Parents never get the admin module
+  // School administration is exclusively for the school's admin account.
   React.useEffect(() => {
-    if (currentUser?.role === 'parent' && activeModule === 'admin') {
+    if (currentUser?.role !== 'admin' && activeModule === 'admin') {
       setActiveModule('portal');
     }
   }, [currentUser, activeModule]);
@@ -42,7 +42,7 @@ export default function App() {
       <SkinHeader activeModule={activeModule} setActiveModule={setActiveModule} />
 
       {/* 3. Main workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+      <main className={`skin-content skin-content-${skin.id} flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6`}>
         {/* Module title (sub-modules only). Compact on phones: no long blurb, no duplicate school pill. */}
         {activeModule !== 'portal' && (
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 pb-1 sm:pb-2">
@@ -60,7 +60,7 @@ export default function App() {
                 style={{ fontFamily: 'var(--t-font-display, "Cormorant Garamond", serif)' }}
               >
                 {activeModule === 'diary' && 'Digital Student Diary & Homework Feed'}
-                {activeModule === 'attendance' && 'One-Click Attendance System'}
+                {activeModule === 'attendance' && 'Attendance Register'}
                 {activeModule === 'results' && 'Student Result Cards & Fee-Locked Transcript'}
                 {activeModule === 'communication' && 'Digital Circulars & Parent-Teacher Chat'}
                 {activeModule === 'datesheets' && 'Examinations Schedule & Syllabus'}
@@ -70,7 +70,7 @@ export default function App() {
                 {activeModule === 'diary' &&
                   'Daily classwork & homework log with chalkboard photos, absent student catch-up, and verified parent read receipts.'}
                 {activeModule === 'attendance' &&
-                  'Take daily attendance with single-tap toggle switches. Automated alerts dispatched to parents upon absence.'}
+                  'Record, review, and maintain daily class attendance for your school.'}
                 {activeModule === 'results' &&
                   'Conditional exam card unlock with fee status verification. Download branded official PDFs with school seal.'}
                 {activeModule === 'communication' &&
@@ -92,14 +92,14 @@ export default function App() {
                 className="font-bold text-[var(--t-ink)]"
                 style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
               >
-                {currentSchool?.name}
+                {skin.name}
               </span>
             </div>
           </div>
         )}
 
         {/* Parent role restricted warning */}
-        {currentUser?.role === 'parent' && activeModule === 'admin' && (
+        {currentUser?.role !== 'admin' && activeModule === 'admin' && (
           <div className="p-4 rounded-3xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-3 shadow-2xs">
             <ShieldAlert className="w-5 h-5 text-amber-600 flex-shrink-0" />
             <div>
@@ -120,7 +120,7 @@ export default function App() {
         {activeModule === 'datesheets' && <ExamsDatesheetModule />}
         {/* Admin area intentionally keeps its own fixed Imperial look regardless of the
             published app skin — the owner asked for this to stay as-is. */}
-        {activeModule === 'admin' && currentUser?.role !== 'parent' && <AdminDashboard />}
+        {activeModule === 'admin' && currentUser?.role === 'admin' && <AdminDashboard />}
       </main>
 
       {/* 4. Footer (short on phones) */}
@@ -130,7 +130,7 @@ export default function App() {
             className="font-bold text-[var(--t-ink)]"
             style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
           >
-            {currentSchool?.name} • School Management PWA
+            {skin.name} • School Management PWA
           </span>
           <span className="hidden sm:inline text-[11px] text-[var(--t-primary)] font-semibold">
             Digital Diary • Blackboard Photo Capture • Zero Paper Circulars • Fee-Locked Reports

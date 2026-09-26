@@ -1,0 +1,16 @@
+# Dependencies and local package-manager state
+node_modules/
+
+# Generated application output and local development artifacts
+dist/
+dev-dist/
+.vite/
+
+# Local environment secrets
+.env
+.env.local
+.env.*.local
+
+# Editor and operating-system files
+.DS_Store
+Thumbs.db

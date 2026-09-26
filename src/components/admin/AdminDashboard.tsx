@@ -3,7 +3,6 @@ import {
   Users,
   FileSpreadsheet,
   Palette,
-  Database,
   Trash2,
   RotateCcw,
   Search,
@@ -12,18 +11,17 @@ import {
   Building2,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { useSkin } from '../../hooks/useSkin';
 import { CsvStudentImport } from './CsvStudentImport';
 import { SchoolBrandingSettings } from './SchoolBrandingSettings';
-import { SqlMigrationViewer } from './SqlMigrationViewer';
 import { Student } from '../../types';
 
-type AdminTab = 'roster' | 'import' | 'branding' | 'sql';
+type AdminTab = 'roster' | 'import' | 'branding';
 
 const TABS = [
   { id: 'roster', domId: 'tab-admin-roster', Icon: Users, full: 'Scholar Management', short: 'Roster' },
   { id: 'import', domId: 'tab-admin-import', Icon: FileSpreadsheet, full: 'CSV Batch Enrollment', short: 'Import' },
-  { id: 'branding', domId: 'tab-admin-branding', Icon: Palette, full: 'Campus Crest & Branding', short: 'Branding' },
-  { id: 'sql', domId: 'tab-admin-sql', Icon: Database, full: 'Institutional Schema & Security', short: 'Schema' },
+  { id: 'branding', domId: 'tab-admin-branding', Icon: Palette, full: 'School Branding', short: 'Branding' },
 ] as const;
 
 export const AdminDashboard: React.FC = () => {
@@ -35,6 +33,7 @@ export const AdminDashboard: React.FC = () => {
     permanentDeleteStudent,
     updateFeeStatus,
   } = useSchoolData();
+  const skin = useSkin();
 
   const [activeTab, setActiveTab] = useState<AdminTab>('roster');
   const [showTrash, setShowTrash] = useState(false);
@@ -153,10 +152,10 @@ export const AdminDashboard: React.FC = () => {
               <span>Registrar &amp; Bursar Secretariat</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              Administrative Command &amp; Institutional Registry
+              {skin.name} Administration
             </h2>
             <p className="hidden sm:block text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Manage student enrollment rosters, CSV batch admissions, campus identity branding, bursar fee locks, and institutional database governance.
+              Manage student enrollment, CSV admissions, school branding, and fee records for {skin.name}.
             </p>
           </div>
 
@@ -341,7 +340,6 @@ export const AdminDashboard: React.FC = () => {
 
       {activeTab === 'import' && <CsvStudentImport />}
       {activeTab === 'branding' && <SchoolBrandingSettings />}
-      {activeTab === 'sql' && <SqlMigrationViewer />}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { applySkinTokens, getSkin, isSkinId, readPreviewedSkinId } from '../lib/skins';
+import { applySkinTokens, getSkin, isSkinId, readActiveCustomSkin, readPreviewedSkinId } from '../lib/skins';
 import type { SkinDefinition, SkinId } from '../lib/skins';
 import { THEME_KEYS, hasOwnerPreview, normalizeHex } from '../lib/theme';
 import type { ThemeColors } from '../lib/theme';
@@ -94,7 +94,11 @@ export function usePublishedSkinId(): SkinId {
  */
 export function useSkin(): SkinDefinition {
   const { previewId, explicit, publishedId, primary, accent } = useSkinState();
-  const skin = getSkin(previewId ?? publishedId);
+  const baseSkin = getSkin(previewId ?? publishedId);
+  const custom = readActiveCustomSkin();
+  const skin = custom && custom.baseSkin === baseSkin.id
+    ? { ...baseSkin, name: custom.name, colors: custom.colors }
+    : baseSkin;
 
   useEffect(() => {
     applySkinTokens(skin);

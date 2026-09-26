@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Palette, Image as ImageIcon, Save, CheckCircle2, Building, RefreshCw } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { useSkin } from '../../hooks/useSkin';
 
 const COLOR_PRESETS = [
-  { name: 'Imperial Crimson & Gold (Golden Luxe)', primary: '#8B0000', secondary: '#D4AF37' },
-  { name: 'Deep Burgundy & Cream', primary: '#5B0202', secondary: '#EDE7C7' },
-  { name: 'Oxford Navy & Blue', primary: '#1e3a8a', secondary: '#3b82f6' },
-  { name: 'Forest Emerald & Mint', primary: '#065f46', secondary: '#10b981' },
-  { name: 'Royal Indigo & Violet', primary: '#312e81', secondary: '#6366f1' },
-  { name: 'Slate Onyx & Amber', primary: '#0f172a', secondary: '#f59e0b' },
+  { name: 'Ideas Schooling System', primary: '#0C1F38', secondary: '#F02434' },
+  { name: 'High Star Public Secondary School', primary: '#0A2540', secondary: '#F5B800' },
+  { name: 'The Leading Schooling System', primary: '#312E81', secondary: '#F59E0B' },
+  { name: 'Premium Branding', primary: '#8B0000', secondary: '#D4AF37' },
 ];
 
 const LOGO_PRESETS = [
@@ -28,6 +27,7 @@ const LOGO_PRESETS = [
 
 export const SchoolBrandingSettings: React.FC = () => {
   const { currentSchool, updateSchoolBranding } = useSchoolData();
+  const skin = useSkin();
 
   const [name, setName] = useState(currentSchool?.name || '');
   const [motto, setMotto] = useState(currentSchool?.motto || '');
@@ -70,10 +70,10 @@ export const SchoolBrandingSettings: React.FC = () => {
     <form onSubmit={handleSave} className="space-y-6">
       <div className="pb-4 border-b border-slate-200">
         <h3 className="text-base font-bold text-slate-900">
-          Dynamic School Branding & Visual Identity
+          {skin.name} — School Branding
         </h3>
         <p className="text-xs text-slate-500 mt-0.5">
-          Customize school logo, primary theme color, and institutional details. Changes update the web portal, navigation badges, and the official PDF report card in real-time.
+          Update your school name, logo, colours, and institutional details. Changes update the portal and official report card.
         </p>
       </div>
 
@@ -291,7 +291,7 @@ export const SchoolBrandingSettings: React.FC = () => {
               className="flex items-center gap-2 px-5 py-2.5 text-xs font-bold rounded-2xl bg-[#8B0000] hover:bg-[#700000] text-[#EDE7C7] border border-[#D4AF37]/50 shadow-md transition active:scale-95 cursor-pointer font-['Cinzel',serif]"
             >
               <Save className="w-4 h-4 text-[#D4AF37]" />
-              <span>Save & Apply Imperial Branding</span>
+              <span>Save & Apply {skin.name}</span>
             </button>
           </div>
         </div>

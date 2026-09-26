@@ -1,6 +1,7 @@
 import React from 'react';
 import { BookOpen, CalendarCheck2, FileText, Megaphone, CalendarDays, Settings, ArrowRight, Star } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
+import { getActiveSkin } from '../../lib/skins';
 import { AppModule } from '../Navbar';
 
 /**
@@ -59,7 +60,7 @@ export const HighStarPortal: React.FC<Props> = ({ setActiveModule }) => {
           Welcome, {currentUser?.full_name || 'Guest'}
         </h2>
         <p className="mt-1 text-sm text-white/75">
-          {currentSchool?.name || 'School Portal'} — {currentSchool?.motto || 'digital campus portal'}
+          {getActiveSkin().name} — {currentSchool?.motto || 'digital campus portal'}
         </p>
       </div>
 
