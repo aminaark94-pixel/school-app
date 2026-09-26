@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- viewport-fit=cover lets the app use the full screen on notched phones (safe-area insets are handled in CSS).
+         Pinch-zoom is deliberately NOT disabled: it is an accessibility requirement. iOS input auto-zoom is
+         prevented in index.css instead (inputs are 16px on phones). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Multi-Tenant School Management</title>
+    <meta name="description" content="Progressive Web App for multi-tenant school operations, one-click attendance, fee-locked report cards with PDF export, and administrative controls." />
+    <meta property="og:title" content="Multi-Tenant School Management" />
+    <meta property="og:description" content="Progressive Web App for multi-tenant school operations, one-click attendance, fee-locked report cards with PDF export, and administrative controls." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <!-- PWA meta tags -->
+    <meta name="theme-color" content="#8B0000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Royal Crescent" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!--
+      App palette (default look). The whole UI reads these CSS variables.
+      - theme.config.json overrides them at build time (the "published" look for a school).
+      - Owner Studio (#owner) overrides them live in the owner's own browser.
+    -->
+    <style id="theme-defaults">:root{--t-primary:#8b0000;--t-accent:#d4af37;--t-ink:#200e01;--t-bg:#faf8f2;--t-sand:#ede7c7;--t-font-sans:"Plus Jakarta Sans", sans-serif;--t-font-display:"Cinzel", serif;--t-radius-card:1.5rem;--t-radius-pill:9999px;--t-primary-dark:color-mix(in srgb, var(--t-primary) 82%, #000);--t-primary-deep:color-mix(in srgb, var(--t-primary) 65%, #000);--t-primary-tint:color-mix(in srgb, var(--t-primary) 7%, #fff);--t-primary-tint2:color-mix(in srgb, var(--t-primary) 13%, #fff);--t-accent-tint:color-mix(in srgb, var(--t-accent) 8.5%, #fff);--t-accent-tint2:color-mix(in srgb, var(--t-accent) 19%, #fff);--t-ink-lift:color-mix(in srgb, var(--t-ink) 92%, var(--t-primary));--t-ink-lift2:color-mix(in srgb, var(--t-ink) 82%, var(--t-primary))}</style>
+    <script>
+      // Apply the owner's saved preview colours before the first paint (no flash).
+      (function () {
+        try {
+          var saved = JSON.parse(localStorage.getItem('owner_theme_v1') || 'null');
+          if (saved && saved.colors) {
+            var root = document.documentElement;
+            for (var k in saved.colors) {
+              if (/^#[0-9a-fA-F]{6}$/.test(saved.colors[k])) {
+                root.style.setProperty('--t-' + k, saved.colors[k]);
+              }
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Google Fonts: Cormorant Garamond (Golden Luxe font), Cinzel, Outfit & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/assets/index-QysZgC6w.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DDSQSDID.css">
+    <style id="theme-baked">:root{--t-primary:#0C1F38;--t-accent:#F02434;--t-ink:#0C1F38;--t-bg:#EDF2F7;--t-sand:#DCE5EF;--t-font-sans:'Plus Jakarta Sans', sans-serif;--t-font-display:'Montserrat', 'Plus Jakarta Sans', sans-serif;--t-radius-card:1.5rem;--t-radius-pill:9999px}</style>
+    <script id="skin-baked">document.documentElement.setAttribute('data-skin','ideas');window.__SKIN__='ideas';</script>
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
+  <body class="bg-[#FAF8F2] text-[#200E01] antialiased selection:bg-[#8B0000] selection:text-[#EDE7C7] min-h-dvh font-['Plus_Jakarta_Sans',sans-serif]">
+    <div id="root"></div>
+  </body>
+</html>
