@@ -16,6 +16,11 @@ import {
 import { LocalStore } from '../lib/storage';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../lib/authContext';
+import { useDiaryStore, diaryActions } from '../lib/diaryStore';
+import { useNoticeStore, noticeActions } from '../lib/noticeStore';
+import { useChatStore, chatActions, newChatId } from '../lib/chatStore';
+import { useAlertStore, alertActions } from '../lib/alertStore';
+import { useDatesheetStore, datesheetActions } from '../lib/datesheetStore';
 
 interface RemoteData {
   schools: School[];
@@ -36,6 +41,32 @@ export function useSchoolData() {
   const isSupabaseActive = isSupabaseConfigured() && Boolean(profile);
   const [remote, setRemote] = useState<RemoteData | null>(null);
   const [remoteError, setRemoteError] = useState<string | null>(null);
+
+  // Cloud collections: one shared realtime store per table when signed in, the
+  // local demo store otherwise. All five follow the same attach/detach pattern.
+  const diaryState = useDiaryStore();
+  const noticeState = useNoticeStore();
+  const chatState = useChatStore();
+  const alertState = useAlertStore();
+  const datesheetState = useDatesheetStore();
+
+  const cloudSchoolId = isSupabaseActive ? profile?.school_id ?? null : null;
+
+  useEffect(() => {
+    if (!cloudSchoolId) return;
+    const detachDiary = diaryActions.attach(cloudSchoolId);
+    const detachNotices = noticeActions.attach(cloudSchoolId);
+    const detachChat = chatActions.attach(cloudSchoolId);
+    const detachAlerts = alertActions.attach(cloudSchoolId);
+    const detachDatesheets = datesheetActions.attach(cloudSchoolId);
+    return () => {
+      detachDiary();
+      detachNotices();
+      detachChat();
+      detachAlerts();
+      detachDatesheets();
+    };
+  }, [cloudSchoolId]);
 
   useEffect(() => {
     const unsubscribe = LocalStore.subscribe(() => {
@@ -153,12 +184,28 @@ export function useSchoolData() {
   const allFees = usingRemote ? remote!.fees : localFees;
   const allResults = usingRemote ? remote!.results : localResults;
 
-  // These five have no tables in the schema yet, so they stay local for now.
-  const allDiary = useMemo(() => LocalStore.getDiary(), [tick]);
-  const allNotices = useMemo(() => LocalStore.getNotices(), [tick]);
-  const allQueries = useMemo(() => LocalStore.getQueries(), [tick]);
-  const allAlerts = useMemo(() => LocalStore.getAlerts(), [tick]);
-  const allDatesheets = useMemo(() => LocalStore.getDatesheets(), [tick]);
+  // Diary, notices, chat, absence alerts and datesheets all live in Supabase (realtime)
+  // once signed in; local demo store otherwise. See lib/*Store.ts.
+  const allDiary = useMemo(
+    () => (cloudSchoolId ? diaryState.entries : LocalStore.getDiary()),
+    [tick, cloudSchoolId, diaryState.entries]
+  );
+  const allNotices = useMemo(
+    () => (cloudSchoolId ? noticeState.items : LocalStore.getNotices()),
+    [tick, cloudSchoolId, noticeState.items]
+  );
+  const allQueries = useMemo(
+    () => (cloudSchoolId ? chatState.queries : LocalStore.getQueries()),
+    [tick, cloudSchoolId, chatState.queries]
+  );
+  const allAlerts = useMemo(
+    () => (cloudSchoolId ? alertState.items : LocalStore.getAlerts()),
+    [tick, cloudSchoolId, alertState.items]
+  );
+  const allDatesheets = useMemo(
+    () => (cloudSchoolId ? datesheetState.items : LocalStore.getDatesheets()),
+    [tick, cloudSchoolId, datesheetState.items]
+  );
 
   const diaryInSchool = useMemo(
     () => allDiary.filter((d) => d.school_id === currentSchool?.id),
@@ -231,37 +278,54 @@ export function useSchoolData() {
   // Mark attendance for a batch of students & automatically trigger absence alerts
   const markAttendance = useCallback(
     (records: Array<{ student_id: string; status: AttendanceStatus; date: string }>) => {
-      // Absence alerts have no table yet, so they are generated locally in both modes.
       const allStudentsList = usingRemote ? remote!.students : LocalStore.getStudents();
-      const currentAlerts = LocalStore.getAlerts();
-      const newAlerts = [...currentAlerts];
+      const absentees = records
+        .filter((r) => r.status === 'absent')
+        .map((r) => {
+          const s = allStudentsList.find((st) => st.id === r.student_id);
+          return s ? { ...s, date: r.date } : null;
+        })
+        .filter((s): s is Student & { date: string } => Boolean(s));
 
-      records.forEach((rec) => {
-        if (rec.status !== 'absent') return;
-        const studentObj = allStudentsList.find((s) => s.id === rec.student_id);
-        const alreadyAlerted = newAlerts.some(
-          (al) => al.student_id === rec.student_id && al.date === rec.date
-        );
-        if (studentObj && !alreadyAlerted) {
-          newAlerts.unshift({
-            id: `alert-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-            school_id: studentObj.school_id,
-            student_id: studentObj.id,
-            student_name: studentObj.name,
-            roll_number: studentObj.roll_number,
-            class_id: studentObj.class_id,
-            section: studentObj.section,
-            date: rec.date,
-            parent_id: studentObj.parent_id || '',
-            parent_name: studentObj.parent_name || 'Guardian',
-            parent_email:
-              studentObj.parent_email || `${studentObj.roll_number.toLowerCase()}@parent.edu`,
-            sent_at: new Date().toISOString(),
-            status: 'sent',
-          });
-        }
-      });
-      LocalStore.saveAlerts(newAlerts);
+      if (cloudSchoolId) {
+        // Group by date (normally all the same date, but keep it correct either way).
+        const byDate = new Map<string, typeof absentees>();
+        absentees.forEach((s) => {
+          const list = byDate.get(s.date) ?? [];
+          list.push(s);
+          byDate.set(s.date, list);
+        });
+        byDate.forEach((list, date) => {
+          void alertActions.sendForAbsentees(cloudSchoolId, list, date);
+        });
+      } else {
+        const currentAlerts = LocalStore.getAlerts();
+        const newAlerts = [...currentAlerts];
+        absentees.forEach((studentObj) => {
+          const alreadyAlerted = newAlerts.some(
+            (al) => al.student_id === studentObj.id && al.date === studentObj.date
+          );
+          if (!alreadyAlerted) {
+            newAlerts.unshift({
+              id: `alert-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+              school_id: studentObj.school_id,
+              student_id: studentObj.id,
+              student_name: studentObj.name,
+              roll_number: studentObj.roll_number,
+              class_id: studentObj.class_id,
+              section: studentObj.section,
+              date: studentObj.date,
+              parent_id: studentObj.parent_id || '',
+              parent_name: studentObj.parent_name || 'Guardian',
+              parent_email:
+                studentObj.parent_email || `${studentObj.roll_number.toLowerCase()}@parent.edu`,
+              sent_at: new Date().toISOString(),
+              status: 'sent',
+            });
+          }
+        });
+        LocalStore.saveAlerts(newAlerts);
+      }
 
       if (usingRemote) {
         const supabase = getSupabase();
@@ -312,7 +376,7 @@ export function useSchoolData() {
       });
       LocalStore.saveAttendance(updated);
     },
-    [usingRemote, remote, currentUser, refreshRemote]
+    [usingRemote, remote, currentUser, refreshRemote, cloudSchoolId]
   );
 
   // Pay or update Fee
@@ -694,7 +758,7 @@ export function useSchoolData() {
   }, []);
 
   // ---------------------------------------------------------------------------
-  // Diary / notices / queries / alerts / datesheets - local only for now
+  // Diary (cloud + realtime when signed in, local demo otherwise)
   // ---------------------------------------------------------------------------
   const addDiaryEntry = useCallback(
     (
@@ -703,6 +767,14 @@ export function useSchoolData() {
         'id' | 'school_id' | 'teacher_id' | 'teacher_name' | 'created_at' | 'read_by_parents'
       >
     ) => {
+      if (cloudSchoolId) {
+        return diaryActions.addEntry(entry, {
+          school_id: cloudSchoolId,
+          teacher_id: currentUser?.id ?? '',
+          teacher_name: currentUser?.full_name || 'Class Teacher',
+        });
+      }
+
       const all = LocalStore.getDiary();
       const newEntry: DiaryEntry = {
         ...entry,
@@ -716,11 +788,23 @@ export function useSchoolData() {
       LocalStore.saveDiary([newEntry, ...all]);
       return newEntry;
     },
-    [currentSchool, currentUser]
+    [currentSchool, currentUser, cloudSchoolId]
   );
 
   const markDiaryAsRead = useCallback(
     (diaryId: string, studentId: string, studentName: string) => {
+      if (cloudSchoolId) {
+        if (!currentUser) return;
+        diaryActions.markRead(diaryId, {
+          school_id: cloudSchoolId,
+          parent_id: currentUser.id,
+          parent_name: currentUser.full_name,
+          student_id: studentId,
+          student_name: studentName,
+        });
+        return;
+      }
+
       const all = LocalStore.getDiary();
       const updated = all.map((d) => {
         if (d.id === diaryId) {
@@ -747,16 +831,36 @@ export function useSchoolData() {
       });
       LocalStore.saveDiary(updated);
     },
-    [currentUser]
+    [currentUser, cloudSchoolId]
   );
 
-  const deleteDiaryEntry = useCallback((diaryId: string) => {
-    const all = LocalStore.getDiary();
-    LocalStore.saveDiary(all.filter((d) => d.id !== diaryId));
-  }, []);
+  const deleteDiaryEntry = useCallback(
+    (diaryId: string) => {
+      if (cloudSchoolId) {
+        diaryActions.deleteEntry(diaryId);
+        return;
+      }
+      const all = LocalStore.getDiary();
+      LocalStore.saveDiary(all.filter((d) => d.id !== diaryId));
+    },
+    [cloudSchoolId]
+  );
 
+  // ---------------------------------------------------------------------------
+  // Notices (cloud + realtime when signed in, local demo otherwise)
+  // ---------------------------------------------------------------------------
   const addNotice = useCallback(
     (notice: Omit<Notice, 'id' | 'school_id' | 'author_name' | 'author_role' | 'created_at'>) => {
+      if (cloudSchoolId) {
+        void noticeActions.add(notice, {
+          school_id: cloudSchoolId,
+          author_id: currentUser?.id ?? '',
+          author_name: currentUser?.full_name || 'Administration',
+          author_role: currentUser?.role === 'admin' ? 'Principal / Admin' : 'Faculty Member',
+        });
+        return;
+      }
+
       const all = LocalStore.getNotices();
       const newNotice: Notice = {
         ...notice,
@@ -769,14 +873,24 @@ export function useSchoolData() {
       LocalStore.saveNotices([newNotice, ...all]);
       return newNotice;
     },
-    [currentSchool, currentUser]
+    [currentSchool, currentUser, cloudSchoolId]
   );
 
-  const deleteNotice = useCallback((noticeId: string) => {
-    const all = LocalStore.getNotices();
-    LocalStore.saveNotices(all.filter((n) => n.id !== noticeId));
-  }, []);
+  const deleteNotice = useCallback(
+    (noticeId: string) => {
+      if (cloudSchoolId) {
+        void noticeActions.remove(noticeId);
+        return;
+      }
+      const all = LocalStore.getNotices();
+      LocalStore.saveNotices(all.filter((n) => n.id !== noticeId));
+    },
+    [cloudSchoolId]
+  );
 
+  // ---------------------------------------------------------------------------
+  // Parent-teacher chat (cloud + realtime when signed in, local demo otherwise)
+  // ---------------------------------------------------------------------------
   const createQuery = useCallback(
     (data: {
       student_id: string;
@@ -786,6 +900,18 @@ export function useSchoolData() {
       category: CommunicationQuery['category'];
       initial_message: string;
     }) => {
+      if (cloudSchoolId && currentUser) {
+        const id = newChatId();
+        chatActions.createQuery(id, data, {
+          school_id: cloudSchoolId,
+          parent_id: currentUser.id,
+          parent_name: currentUser.full_name,
+        });
+        // The full row (with the message) arrives moments later via realtime;
+        // callers only need the id to select this thread right away.
+        return { id } as CommunicationQuery;
+      }
+
       const all = LocalStore.getQueries();
       const newQuery: CommunicationQuery = {
         id: `query-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -815,11 +941,21 @@ export function useSchoolData() {
       LocalStore.saveQueries([newQuery, ...all]);
       return newQuery;
     },
-    [currentSchool, currentUser]
+    [currentSchool, currentUser, cloudSchoolId]
   );
 
   const replyToQuery = useCallback(
     (queryId: string, text: string) => {
+      if (cloudSchoolId && currentUser) {
+        void chatActions.reply(queryId, text, {
+          school_id: cloudSchoolId,
+          sender_id: currentUser.id,
+          sender_name: currentUser.full_name,
+          sender_role: currentUser.role,
+        });
+        return;
+      }
+
       const all = LocalStore.getQueries();
       const updated = all.map((q) => {
         if (q.id === queryId) {
@@ -843,11 +979,15 @@ export function useSchoolData() {
       });
       LocalStore.saveQueries(updated);
     },
-    [currentUser]
+    [currentUser, cloudSchoolId]
   );
 
   const updateQueryStatus = useCallback(
     (queryId: string, status: 'open' | 'in_progress' | 'resolved') => {
+      if (cloudSchoolId) {
+        void chatActions.updateStatus(queryId, status);
+        return;
+      }
       const all = LocalStore.getQueries();
       LocalStore.saveQueries(
         all.map((q) =>
@@ -855,27 +995,47 @@ export function useSchoolData() {
         )
       );
     },
-    []
+    [cloudSchoolId]
   );
 
-  const acknowledgeAlert = useCallback((alertId: string) => {
-    const all = LocalStore.getAlerts();
-    LocalStore.saveAlerts(
-      all.map((a) =>
-        a.id === alertId
-          ? { ...a, status: 'acknowledged' as const, acknowledged_at: new Date().toISOString() }
-          : a
-      )
-    );
-  }, []);
+  // ---------------------------------------------------------------------------
+  // Absence alerts (created by markAttendance above; this is just acknowledging one)
+  // ---------------------------------------------------------------------------
+  const acknowledgeAlert = useCallback(
+    (alertId: string) => {
+      if (cloudSchoolId) {
+        void alertActions.acknowledge(alertId);
+        return;
+      }
+      const all = LocalStore.getAlerts();
+      LocalStore.saveAlerts(
+        all.map((a) =>
+          a.id === alertId
+            ? { ...a, status: 'acknowledged' as const, acknowledged_at: new Date().toISOString() }
+            : a
+        )
+      );
+    },
+    [cloudSchoolId]
+  );
 
-  const saveDatesheet = useCallback((datesheet: Datesheet) => {
-    const all = LocalStore.getDatesheets();
-    const index = all.findIndex((d) => d.id === datesheet.id);
-    const updated: Datesheet[] =
-      index >= 0 ? all.map((d) => (d.id === datesheet.id ? datesheet : d)) : [datesheet, ...all];
-    LocalStore.saveDatesheets(updated);
-  }, []);
+  // ---------------------------------------------------------------------------
+  // Datesheets (cloud + realtime when signed in, local demo otherwise)
+  // ---------------------------------------------------------------------------
+  const saveDatesheet = useCallback(
+    (datesheet: Datesheet) => {
+      if (cloudSchoolId) {
+        void datesheetActions.save(cloudSchoolId, datesheet);
+        return;
+      }
+      const all = LocalStore.getDatesheets();
+      const index = all.findIndex((d) => d.id === datesheet.id);
+      const updated: Datesheet[] =
+        index >= 0 ? all.map((d) => (d.id === datesheet.id ? datesheet : d)) : [datesheet, ...all];
+      LocalStore.saveDatesheets(updated);
+    },
+    [cloudSchoolId]
+  );
 
   return {
     schools,
@@ -923,5 +1083,12 @@ export function useSchoolData() {
     remoteError,
     refreshRemote,
     isLoading,
+    // Realtime connection status, in case a screen wants to show it.
+    diaryLive: diaryState.live,
+    diaryError: diaryState.error,
+    noticesLive: noticeState.live,
+    chatLive: chatState.live,
+    alertsLive: alertState.live,
+    datesheetsLive: datesheetState.live,
   };
 }
