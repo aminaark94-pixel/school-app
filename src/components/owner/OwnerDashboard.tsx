@@ -32,8 +32,19 @@ async function callManageAccounts(body: Record<string, unknown>): Promise<{ erro
   if (!supabase) return { error: 'Supabase is not connected.' };
   const { data, error } = await supabase.functions.invoke('manage-accounts', { body });
   if (error) {
-    const context = (error as { context?: { error?: string } }).context;
-    return { error: context?.error || error.message || 'Request failed.' };
+    // supabase-js gives a generic "Edge Function returned a non-2xx status code"
+    // in error.message and puts the raw Response on error.context — the actual
+    // { error: "..." } JSON body the function sent has to be read from there.
+    const context = (error as { context?: Response }).context;
+    if (context && typeof context.json === 'function') {
+      try {
+        const parsed = await context.json();
+        if (parsed?.error) return { error: parsed.error as string };
+      } catch {
+        /* context wasn't JSON — fall through to the generic message below */
+      }
+    }
+    return { error: error.message || 'Request failed.' };
   }
   if (data?.error) return { error: data.error as string };
   return { ...(data || {}) };
