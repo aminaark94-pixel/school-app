@@ -1,4 +1,4 @@
-export type UserRole = 'admin' | 'teacher' | 'parent';
+export type UserRole = 'owner' | 'admin' | 'teacher' | 'parent';
 
 export interface School {
   id: string;
@@ -16,7 +16,8 @@ export interface School {
 
 export interface User {
   id: string;
-  school_id: string;
+  /** null for the platform Owner, who is not scoped to any single school. */
+  school_id: string | null;
   full_name: string;
   role: UserRole;
   email: string;
