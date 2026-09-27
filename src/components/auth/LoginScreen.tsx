@@ -190,7 +190,7 @@ export function LoginScreen() {
                 </div>
 
                 <div>
-                  <label className={labelClass} htmlFor="auth-role">Role</label>
+                  <label className={labelClass} htmlFor="auth-role">I am signing up as</label>
                   <select
                     id="auth-role"
                     className={inputClass}
@@ -199,8 +199,11 @@ export function LoginScreen() {
                   >
                     <option value="teacher">Teacher</option>
                     <option value="parent">Parent</option>
-                    <option value="admin">Admin</option>
                   </select>
+                  <p className="mt-1.5 text-[11px] text-[#5B0202]/70">
+                    School admin accounts aren't created through public signup — an existing
+                    admin can promote any account from the Admin dashboard.
+                  </p>
                 </div>
               </>
             )}
