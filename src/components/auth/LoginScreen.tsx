@@ -1,75 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { GraduationCap, Loader2, LogIn, UserPlus } from 'lucide-react';
-import { useAuth, SchoolOption } from '../../lib/authContext';
-import type { UserRole } from '../../types';
-
-type Mode = 'signin' | 'signup';
+import React, { useState } from 'react';
+import { GraduationCap, Loader2, LogIn } from 'lucide-react';
+import { useAuth } from '../../lib/authContext';
 
 export function LoginScreen() {
-  const { signIn, signUp, listSchools } = useAuth();
-  const [mode, setMode] = useState<Mode>('signin');
+  const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<UserRole>('teacher');
-  const [schoolId, setSchoolId] = useState('');
-  const [schools, setSchools] = useState<SchoolOption[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    listSchools().then((rows) => {
-      if (cancelled) return;
-      setSchools(rows);
-      if (rows.length > 0) setSchoolId((current) => current || rows[0].id);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [listSchools]);
 
   const handleSubmit = async () => {
     setError(null);
-    setNotice(null);
 
     if (!email.trim() || !password) {
       setError('Email and password are both required.');
       return;
     }
 
-    if (mode === 'signup') {
-      if (!fullName.trim()) {
-        setError('Please enter your full name.');
-        return;
-      }
-      if (!schoolId) {
-        setError('Please select a school.');
-        return;
-      }
-      if (password.length < 6) {
-        setError('Password must be at least 6 characters.');
-        return;
-      }
-    }
-
     setBusy(true);
     try {
-      if (mode === 'signin') {
-        const { error: signInError } = await signIn(email, password);
-        if (signInError) setError(signInError);
-      } else {
-        const result = await signUp({ email, password, fullName, schoolId, role });
-        if (result.error) {
-          setError(result.error);
-        } else if (result.needsConfirmation) {
-          setNotice(
-            'Account created. Check your inbox for the confirmation email, then sign in below.'
-          );
-          setMode('signin');
-        }
-      }
+      const { error: signInError } = await signIn(email, password);
+      if (signInError) setError(signInError);
     } finally {
       setBusy(false);
     }
@@ -95,48 +46,12 @@ export function LoginScreen() {
         </div>
 
         <div className="rounded-3xl bg-white border border-[#EDE7C7] shadow-sm p-5 sm:p-6">
-          <div className="grid grid-cols-2 gap-1 p-1 rounded-2xl bg-[#FAF8F2] border border-[#EDE7C7] mb-5">
-            <button
-              type="button"
-              onClick={() => {
-                setMode('signin');
-                setError(null);
-              }}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] rounded-xl text-xs font-bold transition ${
-                mode === 'signin' ? 'bg-[#8B0000] text-[#FAF8F2]' : 'text-[#5B0202]'
-              }`}
-            >
-              <LogIn className="w-3.5 h-3.5" /> Sign in
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode('signup');
-                setError(null);
-              }}
-              className={`flex items-center justify-center gap-1.5 min-h-[44px] rounded-xl text-xs font-bold transition ${
-                mode === 'signup' ? 'bg-[#8B0000] text-[#FAF8F2]' : 'text-[#5B0202]'
-              }`}
-            >
-              <UserPlus className="w-3.5 h-3.5" /> Create account
-            </button>
+          <div className="flex items-center justify-center gap-1.5 mb-5 pb-4 border-b border-[#EDE7C7]">
+            <LogIn className="w-4 h-4 text-[#8B0000]" />
+            <span className="text-xs font-bold text-[#5B0202] uppercase tracking-wide">Sign in</span>
           </div>
 
           <div className="space-y-4">
-            {mode === 'signup' && (
-              <div>
-                <label className={labelClass} htmlFor="auth-full-name">Full name</label>
-                <input
-                  id="auth-full-name"
-                  className={inputClass}
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Ayesha Khan"
-                  autoComplete="name"
-                />
-              </div>
-            )}
-
             <div>
               <label className={labelClass} htmlFor="auth-email">Email</label>
               <input
@@ -163,59 +78,16 @@ export function LoginScreen() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+                autoComplete="current-password"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !busy) handleSubmit();
                 }}
               />
             </div>
 
-            {mode === 'signup' && (
-              <>
-                <div>
-                  <label className={labelClass} htmlFor="auth-school">School</label>
-                  <select
-                    id="auth-school"
-                    className={inputClass}
-                    value={schoolId}
-                    onChange={(e) => setSchoolId(e.target.value)}
-                  >
-                    {schools.length === 0 && <option value="">No schools found</option>}
-                    {schools.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className={labelClass} htmlFor="auth-role">I am signing up as</label>
-                  <select
-                    id="auth-role"
-                    className={inputClass}
-                    value={role}
-                    onChange={(e) => setRole(e.target.value as UserRole)}
-                  >
-                    <option value="teacher">Teacher</option>
-                    <option value="parent">Parent</option>
-                  </select>
-                  <p className="mt-1.5 text-[11px] text-[#5B0202]/70">
-                    School admin accounts aren't created through public signup — an existing
-                    admin can promote any account from the Admin dashboard.
-                  </p>
-                </div>
-              </>
-            )}
-
             {error && (
               <p className="rounded-2xl bg-red-50 border border-red-200 px-3.5 py-2.5 text-xs font-semibold text-red-800">
                 {error}
-              </p>
-            )}
-            {notice && (
-              <p className="rounded-2xl bg-emerald-50 border border-emerald-200 px-3.5 py-2.5 text-xs font-semibold text-emerald-800">
-                {notice}
               </p>
             )}
 
@@ -229,12 +101,15 @@ export function LoginScreen() {
                 <span className="inline-flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" /> Please wait…
                 </span>
-              ) : mode === 'signin' ? (
-                'Sign in'
               ) : (
-                'Create account'
+                'Sign in'
               )}
             </button>
+
+            <p className="text-center text-[11px] text-[#5B0202]/70 pt-1">
+              Don't have login details? Ask your school admin — accounts are created and
+              managed by the school, not through public signup.
+            </p>
           </div>
         </div>
 
