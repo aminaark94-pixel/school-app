@@ -8,6 +8,7 @@ import { ResultCardModule } from './components/results/ResultCardModule';
 import { CommunicationModule } from './components/communication/CommunicationModule';
 import { ExamsDatesheetModule } from './components/datesheets/ExamsDatesheetModule';
 import { AdminDashboard } from './components/admin/AdminDashboard';
+import { OwnerDashboard } from './components/owner/OwnerDashboard';
 import { OfflineIndicator } from './components/OfflineIndicator';
 import { useSchoolData } from './hooks/useSchoolData';
 import { useSkin } from './hooks/useSkin';
@@ -29,6 +30,20 @@ export default function App() {
       setActiveModule('portal');
     }
   }, [currentUser, activeModule]);
+
+  // The platform Owner is not scoped to any single school (school_id is null),
+  // so it gets its own top-level screen instead of the per-school portal below.
+  if (currentUser?.role === 'owner') {
+    return (
+      <div className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex flex-col app-bottom-clear">
+        <RoleSwitcherBar />
+        <main className="flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 lg:p-8">
+          <OwnerDashboard />
+        </main>
+        <OfflineIndicator />
+      </div>
+    );
+  }
 
   return (
     <div
