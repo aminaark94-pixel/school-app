@@ -35,7 +35,7 @@ export const AdminDashboard: React.FC = () => {
     students,
     fees,
     currentSchool,
-    importFullDataset,
+    importSchoolDemoData,
     softDeleteStudent,
     restoreStudent,
     permanentDeleteStudent,
@@ -45,14 +45,11 @@ export const AdminDashboard: React.FC = () => {
   const skin = useSkin();
   const [isDemoLoading, setIsDemoLoading] = useState(false);
 
-  const handleLoadDemoForSchool = async () => {
+  const handleLoadDemoForSchool = () => {
+    if (!currentSchool) return;
     setIsDemoLoading(true);
     try {
-      const res = await fetch('/demo-school-data.json?t=' + Date.now());
-      if (res.ok) {
-        const data = await res.json();
-        importFullDataset(data);
-      }
+      importSchoolDemoData(currentSchool.id, currentSchool.name);
     } finally {
       setIsDemoLoading(false);
     }

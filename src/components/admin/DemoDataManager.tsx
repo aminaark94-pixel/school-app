@@ -24,6 +24,7 @@ export interface DemoDataManagerProps {
 
 export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRoster }) => {
   const {
+    currentSchool,
     students,
     attendance,
     fees,
@@ -33,6 +34,8 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
     datesheets,
     queries,
     alerts,
+    importSchoolDemoData,
+    purgeSchoolData,
     importFullDataset,
     exportFullDataset,
     clearAllDemoData,
@@ -83,25 +86,22 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
   };
 
   // 2. Load 1-Click Built-in Realistic Demo Data
-  const handleLoadRealisticBuiltin = async () => {
+  const handleLoadRealisticBuiltin = () => {
     setErrorMsg(null);
     setSuccessMsg(null);
     setIsProcessing(true);
 
     try {
-      const res = await fetch('/demo-school-data.json?t=' + Date.now());
-      if (res.ok) {
-        const data = await res.json();
-        importFullDataset(data);
-        setSuccessMsg(
-          `Official realistic demonstration dataset loaded! (${data.students?.length || 0} scholars across Cambridge O-Levels, Matric & Primary, ${data.diary?.length || 0} diary lessons & ${data.fees?.length || 0} PKR fee vouchers).`
-        );
-      } else {
-        // Fallback to defaults
-        resetToDefaults();
-        setSuccessMsg('Default demonstration data loaded successfully.');
+      if (!currentSchool) {
+        setErrorMsg('No active institution selected.');
+        return;
       }
-    } catch {
+      const stats = importSchoolDemoData(currentSchool.id, currentSchool.name);
+      setSuccessMsg(
+        `Official demonstration dataset loaded for ${currentSchool.name}! (${stats.studentsCount} scholars across Cambridge O-Levels, Matric & Primary, ${stats.diaryCount} diary lessons & ${stats.feesCount} PKR fee vouchers).`
+      );
+    } catch (err) {
+      console.error('Load demo error:', err);
       resetToDefaults();
       setSuccessMsg('Default demonstration data loaded successfully.');
     } finally {
@@ -128,15 +128,21 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
     }
   };
 
-  // 4. Purge / Wipe All Demo Data
+  // 4. Purge / Wipe Demo Data for Current School
   const handlePurgeDemoData = () => {
+    const targetName = currentSchool?.name || 'this school';
     const confirmed = window.confirm(
-      'Are you sure you want to remove all demonstration data? This will clear students, attendance, diary entries, fees, and results to leave the app completely clean for real school onboarding.'
+      `Are you sure you want to remove demonstration data for ${targetName}? This will clear its students, attendance, diary entries, fees, and results to leave it completely clean for real school onboarding.`
     );
     if (!confirmed) return;
 
-    clearAllDemoData(true);
-    setSuccessMsg('All demo data has been purged. The school is now in a clean, blank production state.');
+    if (currentSchool) {
+      purgeSchoolData(currentSchool.id);
+      setSuccessMsg(`All demo data for ${targetName} has been purged. The school is now in a clean, blank production state.`);
+    } else {
+      clearAllDemoData(true);
+      setSuccessMsg('All demo data has been purged. The school is now in a clean, blank production state.');
+    }
     setErrorMsg(null);
   };
 

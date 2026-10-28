@@ -13,7 +13,7 @@ import {
   CommunicationQuery,
   Datesheet,
 } from '../types';
-import { LocalStore, FullSchoolDataset } from '../lib/storage';
+import { LocalStore, FullSchoolDataset, SchoolSupabaseConfig } from '../lib/storage';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../lib/authContext';
 import { useDiaryStore, diaryActions } from '../lib/diaryStore';
@@ -183,6 +183,23 @@ export function useSchoolData() {
   const allAttendance = usingRemote ? remote!.attendance : localAttendance;
   const allFees = usingRemote ? remote!.fees : localFees;
   const allResults = usingRemote ? remote!.results : localResults;
+
+  const studentIdsInSchool = useMemo(
+    () => new Set(studentsInSchool.map((s) => s.id)),
+    [studentsInSchool]
+  );
+  const attendanceInSchool = useMemo(
+    () => allAttendance.filter((a) => studentIdsInSchool.has(a.student_id)),
+    [allAttendance, studentIdsInSchool]
+  );
+  const feesInSchool = useMemo(
+    () => allFees.filter((f) => studentIdsInSchool.has(f.student_id)),
+    [allFees, studentIdsInSchool]
+  );
+  const resultsInSchool = useMemo(
+    () => allResults.filter((r) => studentIdsInSchool.has(r.student_id)),
+    [allResults, studentIdsInSchool]
+  );
 
   // Diary, notices, chat, absence alerts and datesheets all live in Supabase (realtime)
   // once signed in; local demo store otherwise. See lib/*Store.ts.
@@ -1041,6 +1058,29 @@ export function useSchoolData() {
     LocalStore.importFullDataset(data);
   }, []);
 
+  const importSchoolDemoData = useCallback((schoolId: string, schoolName?: string) => {
+    return LocalStore.importSchoolDemoData(schoolId, schoolName);
+  }, []);
+
+  const purgeSchoolData = useCallback((schoolId: string) => {
+    LocalStore.purgeSchoolData(schoolId);
+  }, []);
+
+  const getSchoolSupabaseConfigs = useCallback(() => {
+    return LocalStore.getSchoolSupabaseConfigs();
+  }, []);
+
+  const saveSchoolSupabaseConfig = useCallback(
+    (schoolId: string, config: Omit<SchoolSupabaseConfig, 'school_id' | 'updated_at'>) => {
+      LocalStore.saveSchoolSupabaseConfig(schoolId, config);
+    },
+    []
+  );
+
+  const removeSchoolSupabaseConfig = useCallback((schoolId: string) => {
+    LocalStore.removeSchoolSupabaseConfig(schoolId);
+  }, []);
+
   const exportFullDataset = useCallback(() => {
     return LocalStore.exportFullDataset();
   }, []);
@@ -1056,9 +1096,12 @@ export function useSchoolData() {
     usersInSchool,
     students: studentsInSchool,
     allStudents,
-    attendance: allAttendance,
-    fees: allFees,
-    results: allResults,
+    attendance: attendanceInSchool,
+    allAttendance,
+    fees: feesInSchool,
+    allFees,
+    results: resultsInSchool,
+    allResults,
     diary: diaryInSchool,
     allDiary,
     notices: noticesInSchool,
@@ -1067,6 +1110,11 @@ export function useSchoolData() {
     allQueries,
     alerts: alertsInSchool,
     datesheets: datesheetsInSchool,
+    importSchoolDemoData,
+    purgeSchoolData,
+    getSchoolSupabaseConfigs,
+    saveSchoolSupabaseConfig,
+    removeSchoolSupabaseConfig,
     setCurrentSchoolId,
     setCurrentUserId,
     switchRole,

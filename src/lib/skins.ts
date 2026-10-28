@@ -52,7 +52,7 @@ export interface SkinDefinition {
 export const SKINS: Record<SkinId, SkinDefinition> = {
   imperial: {
     id: 'imperial',
-    name: 'Ideas Schooling System',
+    name: 'Aitchisonian Imperial College & Grammar School',
     description:
       'Warm crimson and gold with classic display type, rounded cards, and a traditional campus feel.',
     colors: {

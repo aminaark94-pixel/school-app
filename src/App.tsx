@@ -107,7 +107,7 @@ export default function App() {
                 className="font-bold text-[var(--t-ink)]"
                 style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
               >
-                {skin.name}
+                {currentSchool?.name || skin.name}
               </span>
             </div>
           </div>

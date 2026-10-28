@@ -60,7 +60,7 @@ export const HighStarPortal: React.FC<Props> = ({ setActiveModule }) => {
           Welcome, {currentUser?.full_name || 'Guest'}
         </h2>
         <p className="mt-1 text-sm text-white/75">
-          {getActiveSkin().name} — {currentSchool?.motto || 'digital campus portal'}
+          {currentSchool?.name || getActiveSkin().name} — {currentSchool?.motto || 'digital campus portal'}
         </p>
       </div>
 

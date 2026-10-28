@@ -52,7 +52,7 @@ export const RoleSwitcherBar: React.FC = () => {
     setCurrentSchoolId,
     switchRole,
     resetToDefaults,
-    importFullDataset,
+    importSchoolDemoData,
     isLiveData,
     remoteError,
   } = useSchoolData();
@@ -60,23 +60,21 @@ export const RoleSwitcherBar: React.FC = () => {
   const { signOut } = useAuth();
   const [isDemoLoading, setIsDemoLoading] = useState(false);
 
-  const handleQuickLoadDemo = async () => {
+  const handleQuickLoadDemo = () => {
+    if (!currentSchool) return;
     setIsDemoLoading(true);
     try {
-      const res = await fetch('/demo-school-data.json?t=' + Date.now());
-      if (res.ok) {
-        const data = await res.json();
-        importFullDataset(data);
-        alert(
-          `🎉 Demonstration Dataset Loaded Successfully!\n\n• ${data.students?.length || 26} Scholars (Class 10 O-Levels, Class 9 Matric, Grade 8, Grade 5)\n• ${data.diary?.length || 8} Diary Lessons (with CamScanner PDF Work Planners)\n• ${data.fees?.length || 26} PKR Fee Vouchers (Paid / Unpaid / Defaulter)\n• Academic Results & Cambridge Mock Exam Datesheets`
-        );
-      } else {
-        resetToDefaults();
-        alert('Default demonstration data loaded.');
-      }
-    } catch {
-      resetToDefaults();
-      alert('Default demonstration data loaded.');
+      const stats = importSchoolDemoData(currentSchool.id, currentSchool.name);
+      alert(
+        `🎉 Demonstration Dataset Loaded for ${currentSchool.name}!\n\n` +
+        `• ${stats.studentsCount} Scholars across O-Levels, Matric, Grade 8 & Primary\n` +
+        `• ${stats.diaryCount} Diary Lessons (with CamScanner Work Planners)\n` +
+        `• ${stats.feesCount} PKR Fee Vouchers (Paid & Pending)\n` +
+        `• ${stats.resultsCount} Academic Result Cards & Transcripts\n` +
+        `• ${stats.attendanceCount} Daily Attendance Logs & Mock Timetables`
+      );
+    } catch (e) {
+      alert('Error loading demo data: ' + String(e));
     } finally {
       setIsDemoLoading(false);
     }

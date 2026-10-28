@@ -11,6 +11,15 @@ import {
   AbsenceAlert,
   Datesheet,
 } from '../types';
+import { generateDemoDataForSchool } from './demoDataGenerator';
+
+export interface SchoolSupabaseConfig {
+  school_id: string;
+  url: string;
+  anon_key: string;
+  enabled: boolean;
+  updated_at: string;
+}
 
 const STORAGE_KEYS = {
   SCHOOLS: 'sms_schools_v1',
@@ -26,6 +35,7 @@ const STORAGE_KEYS = {
   DATESHEETS: 'sms_datesheets_v1',
   CURRENT_USER: 'sms_current_user_id_v1',
   CURRENT_SCHOOL: 'sms_current_school_id_v1',
+  SUPABASE_CONFIGS: 'sms_school_supabase_configs_v1',
 };
 
 export const INITIAL_SCHOOLS: School[] = [
@@ -53,9 +63,42 @@ export const INITIAL_SCHOOLS: School[] = [
     skin: 'highstar',
     created_at: new Date('2024-02-01').toISOString(),
   },
+  {
+    id: 'school-ideas',
+    name: 'Ideas Schooling System',
+    motto: 'Learning Today, Leading Tomorrow • Future Ready Education',
+    logo_url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=160&auto=format&fit=crop&q=80',
+    primary_color: '#0C1F38',
+    secondary_color: '#F02434',
+    address: 'Gulberg III, Main Boulevard, Lahore, Pakistan',
+    phone: '+92 (42) 3587-4321',
+    skin: 'ideas',
+    created_at: new Date('2024-03-01').toISOString(),
+  },
+  {
+    id: 'school-leading',
+    name: 'The Leading Schooling System',
+    motto: 'Empowering Young Minds for a Brighter Future',
+    logo_url: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=160&auto=format&fit=crop&q=80',
+    primary_color: '#312E81',
+    secondary_color: '#F59E0B',
+    address: 'DHA Phase 5 Academic Block, Lahore, Pakistan',
+    phone: '+92 (42) 3718-9900',
+    skin: 'leading',
+    created_at: new Date('2024-04-01').toISOString(),
+  },
 ];
 
 export const INITIAL_USERS: User[] = [
+  // Platform Owner (SaaS Seller)
+  {
+    id: 'user-owner-platform',
+    school_id: null,
+    full_name: 'Platform SaaS Owner',
+    role: 'owner',
+    email: 'owner@schoolpwa.com',
+    created_at: new Date('2024-01-01').toISOString(),
+  },
   // Apex Academy Users
   {
     id: 'user-admin-apex',
@@ -89,13 +132,13 @@ export const INITIAL_USERS: User[] = [
     email: 'farooq.siddiqui@example.com',
     created_at: new Date('2024-02-05').toISOString(),
   },
-  // Horizon STEM Users
+  // High Star Users
   {
     id: 'user-admin-horizon',
     school_id: 'school-horizon',
     full_name: 'Principal Dr. Qasim Khan',
     role: 'admin',
-    email: 'admin@crescentmodel.edu.pk',
+    email: 'admin@highstar.edu.pk',
     created_at: new Date('2024-02-01').toISOString(),
   },
   {
@@ -103,8 +146,42 @@ export const INITIAL_USERS: User[] = [
     school_id: 'school-horizon',
     full_name: 'Prof. Zafar Iqbal',
     role: 'teacher',
-    email: 'zafar.iqbal@crescentmodel.edu.pk',
+    email: 'zafar.iqbal@highstar.edu.pk',
     created_at: new Date('2024-02-15').toISOString(),
+  },
+  // Ideas Schooling Users
+  {
+    id: 'user-admin-ideas',
+    school_id: 'school-ideas',
+    full_name: 'Principal Mrs. Naila Batool',
+    role: 'admin',
+    email: 'admin@ideasschooling.edu.pk',
+    created_at: new Date('2024-03-01').toISOString(),
+  },
+  {
+    id: 'user-teacher-ideas',
+    school_id: 'school-ideas',
+    full_name: 'Sir Adnan Haider',
+    role: 'teacher',
+    email: 'adnan.haider@ideasschooling.edu.pk',
+    created_at: new Date('2024-03-05').toISOString(),
+  },
+  // The Leading School Users
+  {
+    id: 'user-admin-leading',
+    school_id: 'school-leading',
+    full_name: 'Director Salman Farooqui',
+    role: 'admin',
+    email: 'director@leadingschool.edu.pk',
+    created_at: new Date('2024-04-01').toISOString(),
+  },
+  {
+    id: 'user-teacher-leading',
+    school_id: 'school-leading',
+    full_name: 'Prof. Tahir Mahmood',
+    role: 'teacher',
+    email: 'tahir.mahmood@leadingschool.edu.pk',
+    created_at: new Date('2024-04-05').toISOString(),
   },
 ];
 
@@ -954,6 +1031,8 @@ export const LocalStore = {
 
   setCurrentSchoolId(schoolId: string) {
     localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, schoolId);
+    // Remove temporary preview override so school's native skin/branding displays
+    localStorage.removeItem('owner_skin_v1');
     // Also adjust current user to match school if needed
     const users = this.getUsers().filter((u) => u.school_id === schoolId);
     if (users.length > 0) {
@@ -972,6 +1051,146 @@ export const LocalStore = {
     if (user && user.school_id) {
       localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, user.school_id);
     }
+    emitChange();
+  },
+
+  getSchoolSupabaseConfigs(): Record<string, SchoolSupabaseConfig> {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.SUPABASE_CONFIGS);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  },
+
+  saveSchoolSupabaseConfig(schoolId: string, config: Omit<SchoolSupabaseConfig, 'school_id' | 'updated_at'>) {
+    const all = this.getSchoolSupabaseConfigs();
+    all[schoolId] = {
+      school_id: schoolId,
+      ...config,
+      updated_at: new Date().toISOString(),
+    };
+    localStorage.setItem(STORAGE_KEYS.SUPABASE_CONFIGS, JSON.stringify(all));
+    emitChange();
+  },
+
+  removeSchoolSupabaseConfig(schoolId: string) {
+    const all = this.getSchoolSupabaseConfigs();
+    delete all[schoolId];
+    localStorage.setItem(STORAGE_KEYS.SUPABASE_CONFIGS, JSON.stringify(all));
+    emitChange();
+  },
+
+  importSchoolDemoData(schoolId: string, schoolName?: string): {
+    studentsCount: number;
+    feesCount: number;
+    diaryCount: number;
+    resultsCount: number;
+    attendanceCount: number;
+  } {
+    const targetSchool = this.getSchools().find((s) => s.id === schoolId);
+    const name = targetSchool?.name || schoolName || 'Demo Campus Academy';
+    const generated = generateDemoDataForSchool(schoolId, name);
+
+    // 1. Ensure school exists in schools list
+    const existingSchools = this.getSchools();
+    if (!existingSchools.some((s) => s.id === schoolId)) {
+      const newSchool: School = {
+        ...generated.school,
+        id: schoolId,
+        name,
+      };
+      this.saveSchools([...existingSchools, newSchool]);
+    }
+
+    // 2. Merge users (keep existing, add missing admin/teacher/parents)
+    const existingUsers = this.getUsers();
+    const existingUserIds = new Set(existingUsers.map((u) => u.id));
+    const newUsers = generated.users.filter((u) => !existingUserIds.has(u.id));
+    if (newUsers.length > 0) {
+      this.saveUsers([...existingUsers, ...newUsers]);
+    }
+
+    // 3. Students: Remove previous students for this school, append 26 new
+    const existingStudents = this.getStudents();
+    const studentsOtherSchools = existingStudents.filter((s) => s.school_id !== schoolId);
+    const oldStudentIdsOfSchool = new Set(existingStudents.filter((s) => s.school_id === schoolId).map((s) => s.id));
+    this.saveStudents([...studentsOtherSchools, ...generated.students]);
+
+    // 4. Fees: Remove fees belonging to old students of this school, append new
+    const existingFees = this.getFees();
+    const feesOtherSchools = existingFees.filter((f) => !oldStudentIdsOfSchool.has(f.student_id));
+    this.saveFees([...feesOtherSchools, ...generated.fees]);
+
+    // 5. Attendance: Remove attendance belonging to old students of this school, append new
+    const existingAtt = this.getAttendance();
+    const attOtherSchools = existingAtt.filter((a) => !oldStudentIdsOfSchool.has(a.student_id));
+    this.saveAttendance([...attOtherSchools, ...generated.attendance]);
+
+    // 6. Results: Remove results belonging to old students of this school, append new
+    const existingRes = this.getResults();
+    const resOtherSchools = existingRes.filter((r) => !oldStudentIdsOfSchool.has(r.student_id));
+    this.saveResults([...resOtherSchools, ...generated.results]);
+
+    // 7. Diary: Remove old diary for this school, append new
+    const existingDiary = this.getDiary();
+    const diaryOtherSchools = existingDiary.filter((d) => d.school_id !== schoolId);
+    this.saveDiary([...diaryOtherSchools, ...generated.diary]);
+
+    // 8. Notices: Remove old notices for this school, append new
+    const existingNotices = this.getNotices();
+    const noticesOtherSchools = existingNotices.filter((n) => n.school_id !== schoolId);
+    this.saveNotices([...noticesOtherSchools, ...generated.notices]);
+
+    // 9. Queries
+    const existingQueries = this.getQueries();
+    const queriesOtherSchools = existingQueries.filter((q) => q.school_id !== schoolId);
+    this.saveQueries([...queriesOtherSchools, ...generated.queries]);
+
+    // 10. Alerts
+    const existingAlerts = this.getAlerts();
+    const alertsOtherSchools = existingAlerts.filter((a) => a.school_id !== schoolId);
+    this.saveAlerts([...alertsOtherSchools, ...generated.alerts]);
+
+    // 11. Datesheets
+    const existingDatesheets = this.getDatesheets();
+    const datesheetsOtherSchools = existingDatesheets.filter((d) => d.school_id !== schoolId);
+    this.saveDatesheets([...datesheetsOtherSchools, ...generated.datesheets]);
+
+    // 12. Set active school & admin user
+    localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, schoolId);
+    localStorage.removeItem('owner_skin_v1');
+    const adminUser =
+      this.getUsers().find((u) => u.school_id === schoolId && u.role === 'admin') ||
+      generated.users.find((u) => u.role === 'admin');
+    if (adminUser) {
+      localStorage.setItem(STORAGE_KEYS.CURRENT_USER, adminUser.id);
+    }
+
+    emitChange();
+
+    return {
+      studentsCount: generated.students.length,
+      feesCount: generated.fees.length,
+      diaryCount: generated.diary.length,
+      resultsCount: generated.results.length,
+      attendanceCount: generated.attendance.length,
+    };
+  },
+
+  purgeSchoolData(schoolId: string) {
+    const existingStudents = this.getStudents();
+    const schoolStudentIds = new Set(existingStudents.filter((s) => s.school_id === schoolId).map((s) => s.id));
+
+    this.saveStudents(existingStudents.filter((s) => s.school_id !== schoolId));
+    this.saveFees(this.getFees().filter((f) => !schoolStudentIds.has(f.student_id)));
+    this.saveAttendance(this.getAttendance().filter((a) => !schoolStudentIds.has(a.student_id)));
+    this.saveResults(this.getResults().filter((r) => !schoolStudentIds.has(r.student_id)));
+    this.saveDiary(this.getDiary().filter((d) => d.school_id !== schoolId));
+    this.saveNotices(this.getNotices().filter((n) => n.school_id !== schoolId));
+    this.saveQueries(this.getQueries().filter((q) => q.school_id !== schoolId));
+    this.saveAlerts(this.getAlerts().filter((a) => a.school_id !== schoolId));
+    this.saveDatesheets(this.getDatesheets().filter((d) => d.school_id !== schoolId));
     emitChange();
   },
 

@@ -44,7 +44,7 @@ function allowedItems(role?: string) {
  * here (or point Header/Portal at entirely new components).
  */
 const ReferenceHeader: React.FC<Props> = ({ activeModule = 'portal', setActiveModule, style }) => {
-  const { currentUser } = useSchoolData();
+  const { currentUser, currentSchool } = useSchoolData();
   const [menuOpen, setMenuOpen] = useState(false);
   const nav = allowedItems(currentUser?.role);
   const ideas = style === 'ideas';
@@ -72,7 +72,7 @@ const ReferenceHeader: React.FC<Props> = ({ activeModule = 'portal', setActiveMo
               <GraduationCap className="h-6 w-6" />
             </span>
             <span className="min-w-0">
-              <span className="block truncate text-sm font-black tracking-tight sm:text-lg">{getActiveSkin().name}</span>
+              <span className="block truncate text-sm font-black tracking-tight sm:text-lg">{currentSchool?.name || getActiveSkin().name}</span>
               <span className={ideas ? 'block truncate text-[10px] font-bold uppercase tracking-[.16em] text-slate-300' : 'block truncate text-[10px] font-black uppercase tracking-[.16em] text-amber-300'}>
                 {ideas ? 'Parent & Student System' : 'Learning starts here'}
               </span>
@@ -119,7 +119,7 @@ const ReferenceHeader: React.FC<Props> = ({ activeModule = 'portal', setActiveMo
 };
 
 const ReferencePortal: React.FC<Pick<Props, 'setActiveModule' | 'style'>> = ({ setActiveModule, style }) => {
-  const { currentUser } = useSchoolData();
+  const { currentUser, currentSchool } = useSchoolData();
   const ideas = style === 'ideas';
   const brand = BRANDS[style];
   const actions = allowedItems(currentUser?.role).filter((item) => item.id !== 'portal');
@@ -137,7 +137,7 @@ const ReferencePortal: React.FC<Pick<Props, 'setActiveModule' | 'style'>> = ({ s
           </span>
           <h1 className="mt-4 text-2xl font-black leading-tight sm:text-4xl">Hello, {currentUser?.full_name?.split(' ')[0] || 'there'}!</h1>
           <p className={ideas ? 'mt-2 text-sm leading-relaxed text-slate-300 sm:text-base' : 'mt-2 text-sm leading-relaxed text-slate-700 sm:text-base'}>{featured}</p>
-          <p className={ideas ? 'mt-4 text-xs font-bold text-slate-400' : 'mt-4 text-xs font-bold text-slate-600'}>{getActiveSkin().name} · {brand.tagline}</p>
+          <p className={ideas ? 'mt-4 text-xs font-bold text-slate-400' : 'mt-4 text-xs font-bold text-slate-600'}>{currentSchool?.name || getActiveSkin().name} · {brand.tagline}</p>
         </div>
       </section>
 
