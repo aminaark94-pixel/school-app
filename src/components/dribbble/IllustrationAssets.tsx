@@ -149,10 +149,10 @@ export const AttendanceIllustration: React.FC<{ className?: string }> = ({ class
     {/* Soft mint cyan background */}
     <rect width="120" height="120" rx="24" fill="#D7F9F5" opacity="0.4" />
 
-    {/* Classroom chalkboard in background */}
-    <rect x="22" y="16" width="76" height="42" rx="6" fill="#1B5E20" stroke="#8D6E63" strokeWidth="3" />
-    <text x="32" y="32" fill="#E8F5E9" fontSize="7" fontWeight="bold" fontFamily="sans-serif">TODAY: 100%</text>
-    <polyline points="32,44 40,40 48,46 58,36 68,42" stroke="#81C784" strokeWidth="2" strokeLinecap="round" />
+    {/* Classroom whiteboard in background */}
+    <rect x="22" y="16" width="76" height="42" rx="6" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="2.5" />
+    <text x="32" y="32" fill="#1E293B" fontSize="7" fontWeight="bold" fontFamily="sans-serif">TODAY: 100%</text>
+    <polyline points="32,44 40,40 48,46 58,36 68,42" stroke="#0284C7" strokeWidth="2" strokeLinecap="round" />
 
     {/* Desk row */}
     <rect x="15" y="78" width="90" height="6" rx="3" fill="#A1887F" />
