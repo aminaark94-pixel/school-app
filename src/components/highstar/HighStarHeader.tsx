@@ -90,7 +90,7 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
             </span>
             <span className="min-w-0">
               <span className="block text-sm sm:text-xl font-black leading-tight tracking-wide text-white truncate">
-                {getActiveSkin().name}
+                {currentSchool?.name || getActiveSkin().name}
               </span>
               <span
                 className="mt-0.5 text-[10px] sm:text-xs font-bold tracking-wide flex items-center gap-1.5"
