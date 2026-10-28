@@ -130,7 +130,8 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
                     {entry.homework}
                   </span>
                   <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-semibold text-[#5B0202]/80">
-                    {entry.due_date && (\n                      <span className="inline-flex items-center gap-1">
+                    {entry.due_date && (
+                      <span className="inline-flex items-center gap-1">
                         <Clock className="w-3 h-3" /> Due: {entry.due_date}
                       </span>
                     )}
@@ -151,7 +152,7 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
 
         <button
           onClick={onOpenDiary}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-[#8B0000] text-[#EDE7C7] font-black text-xs hover:bg-[#700000] transition active:scale-95 border border-[#D4AF37]/50"
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-[#8B0000] text-[#EDE7C7] font-black text-xs hover:opacity-90 transition active:scale-95 border border-[#D4AF37]/50"
         >
           <BookOpen className="w-4 h-4 text-[#D4AF37]" />
           <span>Poori Diary kholein &amp; Sign karein</span>
