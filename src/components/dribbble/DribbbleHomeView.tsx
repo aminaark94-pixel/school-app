@@ -156,7 +156,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
                 {getActiveSkin().name}
               </h2>
               <p className="text-xs sm:text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-                Welcome to the unified student and parent academic portal. Track syllabus milestones, daily chalkboard assignments, laboratory practicals, and certified Cambridge terminal exam cards.
+                Welcome to the unified student and parent academic portal. Track syllabus milestones, daily class work assignments, work planner PDF scans, laboratory practicals, and certified Cambridge terminal exam cards.
               </p>
             </div>
 
@@ -238,7 +238,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-[#8B0000] bg-[#FAF8F2] hover:bg-[#EDE7C7] px-3.5 py-2 rounded-xl transition border border-[#EDE7C7]"
               >
                 <Camera className="w-3.5 h-3.5 text-[#8B0000]" />
-                <span>Lab Blackboard Notes</span>
+                <span>Class Work & Planner Notes</span>
               </button>
             </div>
           </div>
@@ -316,20 +316,20 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
           </div>
         </div>
 
-        {/* 5. Blackboard Photo Diary Banner */}
+        {/* 5. Class Work & Daily Planner PDF Diary Banner */}
         <div className="bg-gradient-to-r from-[#5B0202] via-[#8B0000] to-[#200E01] text-[#EDE7C7] rounded-[30px] p-5 sm:p-7 shadow-lg border-2 border-[#D4AF37]/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="space-y-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#D4AF37] animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37] font-['Cinzel',serif]">
-                Digital Blackboard Diary Feed
+                Digital Class Work & Planner Diary Feed
               </span>
             </div>
             <h4 className="text-xl sm:text-2xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
-              Daily Classwork & Blackboard Homework Snapshots
+              Daily Class Work & Work Planner PDF Snapshots
             </h4>
             <p className="text-xs text-[#EDE7C7]/80 max-w-xl">
-              Teachers snap daily chalkboards after each period. Parents can view derivations, verified exercise numbers, and sign read receipts.
+              Teachers upload scanned daily work planners (CamScanner PDF) and class work snapshots. Parents can view derivations, verified exercise numbers, and sign read receipts.
             </p>
           </div>
 
@@ -338,7 +338,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
             className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#EDE7C7] text-[#8B0000] font-black text-xs hover:bg-white shadow-md transition active:scale-95 border border-[#D4AF37] whitespace-nowrap"
           >
             <Camera className="w-4 h-4 text-[#8B0000]" />
-            <span>Open Chalkboard Diary</span>
+            <span>Open Class Work Diary</span>
           </button>
         </div>
       </div>
