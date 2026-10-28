@@ -80,7 +80,7 @@ export const DribbbleChatView: React.FC<DribbbleChatViewProps> = ({ onBack }) =>
         {
           id: 'm1',
           sender: 'other',
-          text: 'Homework for Urdu Nazm tashreeh is uploaded in the Digital Blackboard Diary.',
+          text: 'Homework for Urdu Nazm tashreeh is uploaded in the Digital Class Work Diary.',
           time: '10:00 AM',
         },
       ],
