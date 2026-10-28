@@ -1,5 +1,5 @@
-import React from 'react';
-import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database, Crown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database, Crown, Sparkles } from 'lucide-react';
 import { useSchoolData } from '../hooks/useSchoolData';
 import { useSkin } from '../hooks/useSkin';
 import { useAuth } from '../lib/authContext';
@@ -52,11 +52,35 @@ export const RoleSwitcherBar: React.FC = () => {
     setCurrentSchoolId,
     switchRole,
     resetToDefaults,
+    importFullDataset,
     isLiveData,
     remoteError,
   } = useSchoolData();
   const skin = useSkin();
   const { signOut } = useAuth();
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
+
+  const handleQuickLoadDemo = async () => {
+    setIsDemoLoading(true);
+    try {
+      const res = await fetch('/demo-school-data.json?t=' + Date.now());
+      if (res.ok) {
+        const data = await res.json();
+        importFullDataset(data);
+        alert(
+          `🎉 Demonstration Dataset Loaded Successfully!\n\n• ${data.students?.length || 26} Scholars (Class 10 O-Levels, Class 9 Matric, Grade 8, Grade 5)\n• ${data.diary?.length || 8} Diary Lessons (with CamScanner PDF Work Planners)\n• ${data.fees?.length || 26} PKR Fee Vouchers (Paid / Unpaid / Defaulter)\n• Academic Results & Cambridge Mock Exam Datesheets`
+        );
+      } else {
+        resetToDefaults();
+        alert('Default demonstration data loaded.');
+      }
+    } catch {
+      resetToDefaults();
+      alert('Default demonstration data loaded.');
+    } finally {
+      setIsDemoLoading(false);
+    }
+  };
 
   // ---------------------------------------------------------------------
   // Signed in against Supabase: school and role come from the account and
@@ -182,6 +206,16 @@ export const RoleSwitcherBar: React.FC = () => {
               </button>
             );
           })}
+
+          <button
+            onClick={handleQuickLoadDemo}
+            disabled={isDemoLoading}
+            title="1-Click Load Realistic Demo Data: 26 Pakistani scholars across O-Levels, Matric, primary, fees, and CamScanner homework planners"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 hover:from-amber-500 hover:to-amber-700 text-[#EDE7C7] border border-amber-400 font-extrabold shadow-sm transition disabled:opacity-50 cursor-pointer text-xs"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+            <span>{isDemoLoading ? 'Loading...' : '✨ 1-Click Demo (26 Students)'}</span>
+          </button>
 
           <button
             onClick={() => {
