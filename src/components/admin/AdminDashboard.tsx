@@ -12,6 +12,7 @@ import {
   Link2,
   AlertTriangle,
   Database,
+  Sparkles,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { useSkin } from '../../hooks/useSkin';
@@ -33,6 +34,8 @@ export const AdminDashboard: React.FC = () => {
   const {
     students,
     fees,
+    currentSchool,
+    importFullDataset,
     softDeleteStudent,
     restoreStudent,
     permanentDeleteStudent,
@@ -40,6 +43,20 @@ export const AdminDashboard: React.FC = () => {
     linkParentToStudent,
   } = useSchoolData();
   const skin = useSkin();
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
+
+  const handleLoadDemoForSchool = async () => {
+    setIsDemoLoading(true);
+    try {
+      const res = await fetch('/demo-school-data.json?t=' + Date.now());
+      if (res.ok) {
+        const data = await res.json();
+        importFullDataset(data);
+      }
+    } finally {
+      setIsDemoLoading(false);
+    }
+  };
 
   const [activeTab, setActiveTab] = useState<AdminTab>('roster');
   const [showTrash, setShowTrash] = useState(false);
@@ -233,10 +250,10 @@ export const AdminDashboard: React.FC = () => {
               <span>Registrar &amp; Bursar Secretariat</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              {skin.name} Administration
+              {currentSchool?.name || skin.name} Administration
             </h2>
             <p className="hidden sm:block text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Manage student enrollment, CSV admissions, school branding, and fee records for {skin.name}.
+              Manage student enrollment, CSV admissions, school branding, and fee records for {currentSchool?.name || skin.name}.
             </p>
           </div>
 
@@ -324,7 +341,20 @@ export const AdminDashboard: React.FC = () => {
           {/* Phones: one card per scholar, everything reachable without sideways scrolling */}
           <div className="md:hidden divide-y divide-[#EDE7C7]">
             {filteredStudents.length === 0 ? (
-              <div className="py-8 px-4 text-center text-xs text-[#5B0202]/60">{emptyMessage}</div>
+              <div className="p-8 text-center flex flex-col items-center justify-center gap-3">
+                <Users className="w-8 h-8 text-[#8B0000]/40" />
+                <p className="text-[#5B0202]/70 font-bold text-xs">{emptyMessage}</p>
+                {!showTrash && (
+                  <button
+                    onClick={handleLoadDemoForSchool}
+                    disabled={isDemoLoading}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-[#EDE7C7] font-extrabold text-xs shadow-md cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4 text-amber-200" />
+                    <span>{isDemoLoading ? 'Loading...' : `✨ Load 26 Scholars for ${currentSchool?.name || 'this School'}`}</span>
+                  </button>
+                )}
+              </div>
             ) : (
               filteredStudents.map((student) => (
                 <div
@@ -379,8 +409,23 @@ export const AdminDashboard: React.FC = () => {
               <tbody className="divide-y divide-[#EDE7C7]">
                 {filteredStudents.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-[#5B0202]/60">
-                      {emptyMessage}
+                    <td colSpan={6} className="py-12 text-center">
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <Users className="w-8 h-8 text-[#8B0000]/40" />
+                        <p className="text-[#5B0202]/70 font-bold text-sm">
+                          {emptyMessage}
+                        </p>
+                        {!showTrash && (
+                          <button
+                            onClick={handleLoadDemoForSchool}
+                            disabled={isDemoLoading}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-[#EDE7C7] font-extrabold text-xs shadow-md transition cursor-pointer"
+                          >
+                            <Sparkles className="w-4 h-4 text-amber-200" />
+                            <span>{isDemoLoading ? 'Loading...' : `✨ Load 26 Scholars for ${currentSchool?.name || 'this School'}`}</span>
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ) : (
