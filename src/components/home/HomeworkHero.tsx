@@ -11,7 +11,7 @@ interface HomeworkHeroProps {
 
 /**
  * The most important card on the home screen.
- * - Teachers / admins: one big button to send today's homework, classwork and blackboard photos.
+ * - Teachers / admins: one big button to send today's homework, classwork, work planner PDF and class work photos.
  * - Parents: today's homework for their child at a glance, with a way to open and sign the diary.
  */
 export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary }) => {
@@ -43,7 +43,7 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
               Aaj ka Homework &amp; Classwork bhejein
             </h2>
             <p className="text-xs sm:text-sm text-[#EDE7C7]/85 leading-relaxed">
-              Board ki photo kheenchein ya likh kar bhej dein. Parents ko foran mil jata hai aur woh sign bhi kar dete
+              Work Planner PDF upload karein ya Class Work ki photo kheenchein. Parents ko foran mil jata hai aur woh sign bhi kar dete
               hain.
             </p>
 
@@ -130,8 +130,7 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
                     {entry.homework}
                   </span>
                   <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-semibold text-[#5B0202]/80">
-                    {entry.due_date && (
-                      <span className="inline-flex items-center gap-1">
+                    {entry.due_date && (\n                      <span className="inline-flex items-center gap-1">
                         <Clock className="w-3 h-3" /> Due: {entry.due_date}
                       </span>
                     )}
