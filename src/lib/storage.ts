@@ -960,6 +960,15 @@ export const LocalStore = {
     if (data.datesheets && Array.isArray(data.datesheets)) {
       localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(data.datesheets));
     }
+    if (data.schools && data.schools.length > 0) {
+      localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, data.schools[0].id);
+      const admin = data.users?.find(
+        (u) => u.school_id === data.schools![0].id && (u.role === 'admin' || u.role === 'owner')
+      );
+      if (admin) {
+        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, admin.id);
+      }
+    }
     emitChange();
   },
 
