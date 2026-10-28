@@ -11,19 +11,22 @@ import {
   Building2,
   Link2,
   AlertTriangle,
+  Database,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { useSkin } from '../../hooks/useSkin';
 import { CsvStudentImport } from './CsvStudentImport';
 import { SchoolBrandingSettings } from './SchoolBrandingSettings';
+import { DemoDataManager } from './DemoDataManager';
 import { Student } from '../../types';
 
-type AdminTab = 'roster' | 'import' | 'branding';
+type AdminTab = 'roster' | 'import' | 'branding' | 'demo';
 
 const TABS = [
   { id: 'roster', domId: 'tab-admin-roster', Icon: Users, full: 'Scholar Management', short: 'Roster' },
   { id: 'import', domId: 'tab-admin-import', Icon: FileSpreadsheet, full: 'CSV Batch Enrollment', short: 'Import' },
   { id: 'branding', domId: 'tab-admin-branding', Icon: Palette, full: 'School Branding', short: 'Branding' },
+  { id: 'demo', domId: 'tab-admin-demo', Icon: Database, full: 'Demo & Sample Data', short: 'Demo Data' },
 ] as const;
 
 export const AdminDashboard: React.FC = () => {
@@ -420,6 +423,7 @@ export const AdminDashboard: React.FC = () => {
 
       {activeTab === 'import' && <CsvStudentImport />}
       {activeTab === 'branding' && <SchoolBrandingSettings />}
+      {activeTab === 'demo' && <DemoDataManager />}
     </div>
   );
 };
