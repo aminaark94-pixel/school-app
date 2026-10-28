@@ -39,11 +39,15 @@ const THEME_RE = new RegExp(
 );
 
 function rewriteThemeColors(css: string): string {
-  return css.replace(THEME_RE, (_match: string, hex: string, alpha?: string) => {
-    const expr = THEME_MAP[hex.toLowerCase()];
-    if (!alpha) return expr;
-    const pct = Math.round((parseInt(alpha, 16) / 255) * 100);
-    return `color-mix(in srgb, ${expr} ${pct}%, transparent)`;
+  // Replace only inside CSS declaration blocks { ... }, preserving class selectors like .bg-[#8B0000]
+  return css.replace(/\{([^{}]+)\}/g, (_block, declarationContent) => {
+    const rewritten = declarationContent.replace(THEME_RE, (_match: string, hex: string, alpha?: string) => {
+      const expr = THEME_MAP[hex.toLowerCase()];
+      if (!alpha) return expr;
+      const pct = Math.round((parseInt(alpha, 16) / 255) * 100);
+      return `color-mix(in srgb, ${expr} ${pct}%, transparent)`;
+    });
+    return `{${rewritten}}`;
   });
 }
 
