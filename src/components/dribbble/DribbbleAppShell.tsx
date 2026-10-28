@@ -49,7 +49,7 @@ export const DribbbleAppShell: React.FC<DribbbleAppShellProps> = () => {
     { id: 'report', label: '📊 Student Report' },
     { id: 'classes', label: '👥 Class Roster' },
     { id: 'chat', label: '💬 Faculty Messages' },
-    { id: 'diary', label: '📸 Blackboard Diary' },
+    { id: 'diary', label: '📸 Class Work & Diary' },
     { id: 'attendance', label: '✅ Attendance' },
   ] as const;
 
@@ -181,7 +181,7 @@ export const DribbbleAppShell: React.FC<DribbbleAppShellProps> = () => {
                   <span>Back to Home</span>
                 </button>
                 <h3 className="text-base font-black text-slate-900 font-['Outfit',sans-serif]">
-                  Digital Blackboard Diary
+                  Digital Class Work & Planner Diary
                 </h3>
               </div>
               <DiaryModule />
