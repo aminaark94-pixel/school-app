@@ -122,6 +122,8 @@ export interface DiaryEntry {
     type: 'image' | 'document';
     url: string;
     caption: string;
+    fileSize?: string;
+    fileName?: string;
   }[];
   read_by_parents: {
     parent_id: string;
@@ -211,7 +213,7 @@ export interface ExamScheduleItem {
 export interface Datesheet {
   id: string;
   school_id: string;
-  title: string; // e.g., "Mid-Term Examinations 2026"
+  title: string; // e.g., \"Mid-Term Examinations 2026\"
   class_id: string;
   term: ExamTerm;
   academic_year: string;
