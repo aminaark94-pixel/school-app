@@ -423,7 +423,7 @@ export const AdminDashboard: React.FC = () => {
 
       {activeTab === 'import' && <CsvStudentImport />}
       {activeTab === 'branding' && <SchoolBrandingSettings />}
-      {activeTab === 'demo' && <DemoDataManager />}
+      {activeTab === 'demo' && <DemoDataManager onNavigateToRoster={() => setActiveTab('roster')} />}
     </div>
   );
 };
