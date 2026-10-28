@@ -1,7 +1,7 @@
 {
-  "version": "2.0-realistic-full",
-  "exported_at": "2026-10-28T16:48:06.456Z",
-  "description": "Complete Pakistani School Demonstration Dataset with 26 scholars, O-Levels, Matric, Primary, fee vouchers, CamScanner planners, report cards, and datesheets.",
+  "version": "2.0-realistic-dual-school",
+  "exported_at": "2026-10-28T17:34:59.254Z",
+  "description": "Complete Pakistani School Demonstration Dataset with 52 scholars (26 per school: Aitchisonian Imperial & High Star Public), O-Levels, Matric, Primary, fee vouchers, CamScanner planners, report cards, and datesheets.",
   "schools": [
     {
       "id": "school-apex",
@@ -17,8 +17,8 @@
     },
     {
       "id": "school-horizon",
-      "name": "Crescent Model Higher Secondary School",
-      "motto": "Excellence in Character, Intellect & Leadership",
+      "name": "High Star Public Secondary School",
+      "motto": "Learn & Serve with Pride • Excellence in Character",
       "logo_url": "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=160&auto=format&fit=crop&q=80",
       "primary_color": "#0A2540",
       "secondary_color": "#041226",
@@ -54,39 +54,31 @@
       "created_at": "2024-02-01T00:00:00.000Z"
     },
     {
-      "id": "user-parent-2",
-      "school_id": "school-apex",
-      "full_name": "Farooq Siddiqui",
-      "role": "parent",
-      "email": "farooq.siddiqui@example.com",
-      "created_at": "2024-02-05T00:00:00.000Z"
-    },
-    {
-      "id": "user-parent-3",
-      "school_id": "school-apex",
-      "full_name": "Dr. Naeem Akhtar",
-      "role": "parent",
-      "email": "naeem.akhtar@example.com",
-      "created_at": "2024-02-08T00:00:00.000Z"
-    },
-    {
       "id": "user-admin-horizon",
       "school_id": "school-horizon",
       "full_name": "Principal Dr. Qasim Khan",
       "role": "admin",
-      "email": "admin@crescentmodel.edu.pk",
+      "email": "admin@highstar.edu.pk",
       "created_at": "2024-02-01T00:00:00.000Z"
+    },
+    {
+      "id": "user-teacher-horizon",
+      "school_id": "school-horizon",
+      "full_name": "Sir Tariq Jamil",
+      "role": "teacher",
+      "email": "tariq.jamil@highstar.edu.pk",
+      "created_at": "2024-02-05T00:00:00.000Z"
     }
   ],
   "students": [
     {
-      "id": "std-1",
+      "id": "std-apx-1",
       "school_id": "school-apex",
       "roll_number": "AIC-101",
       "name": "Muhammad Hamza Tariq",
       "class_id": "Class 10 (O-Levels)",
       "section": "A",
-      "parent_id": "user-parent-1",
+      "parent_id": "user-parent-0",
       "parent_name": "Tariq Mehmood",
       "parent_phone": "+92 300 4589211",
       "parent_email": "muhammad.hamza.tariq@example.com",
@@ -99,13 +91,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-2",
+      "id": "std-apx-2",
       "school_id": "school-apex",
       "roll_number": "AIC-102",
       "name": "Fatima Zahra Farooq",
       "class_id": "Class 10 (O-Levels)",
       "section": "A",
-      "parent_id": "user-parent-2",
+      "parent_id": "user-parent-1",
       "parent_name": "Farooq Siddiqui",
       "parent_phone": "+92 321 7845120",
       "parent_email": "fatima.zahra.farooq@example.com",
@@ -118,13 +110,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-3",
+      "id": "std-apx-3",
       "school_id": "school-apex",
       "roll_number": "AIC-103",
       "name": "Syed Daniyal Mustafa",
       "class_id": "Class 10 (O-Levels)",
       "section": "A",
-      "parent_id": "user-parent-3",
+      "parent_id": "user-parent-2",
       "parent_name": "Syed Mustafa Kamal",
       "parent_phone": "+92 333 9812456",
       "parent_email": "syed.daniyal.mustafa@example.com",
@@ -137,13 +129,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-4",
+      "id": "std-apx-4",
       "school_id": "school-apex",
       "roll_number": "AIC-104",
       "name": "Areeba Noor Akhtar",
       "class_id": "Class 10 (O-Levels)",
       "section": "A",
-      "parent_id": "user-parent-4",
+      "parent_id": "user-parent-3",
       "parent_name": "Dr. Naeem Akhtar",
       "parent_phone": "+92 301 5623984",
       "parent_email": "areeba.noor.akhtar@example.com",
@@ -156,13 +148,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-5",
+      "id": "std-apx-5",
       "school_id": "school-apex",
       "roll_number": "AIC-105",
       "name": "Rayyan Farooq Bajwa",
       "class_id": "Class 10 (O-Levels)",
       "section": "B",
-      "parent_id": "user-parent-gen-4",
+      "parent_id": "user-parent-4",
       "parent_name": "Farooq Bajwa",
       "parent_phone": "+92 322 8945123",
       "parent_email": "rayyan.farooq.bajwa@example.com",
@@ -175,13 +167,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-6",
+      "id": "std-apx-6",
       "school_id": "school-apex",
       "roll_number": "AIC-106",
       "name": "Mahnoor Shah Gilani",
       "class_id": "Class 10 (O-Levels)",
       "section": "B",
-      "parent_id": "user-parent-gen-5",
+      "parent_id": "user-parent-5",
       "parent_name": "Pirzada Gilani",
       "parent_phone": "+92 345 6712398",
       "parent_email": "mahnoor.shah.gilani@example.com",
@@ -194,13 +186,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-7",
+      "id": "std-apx-7",
       "school_id": "school-apex",
       "roll_number": "AIC-107",
       "name": "Zarrar Ahmed Khan",
       "class_id": "Class 10 (O-Levels)",
       "section": "B",
-      "parent_id": "user-parent-gen-6",
+      "parent_id": "user-parent-6",
       "parent_name": "Jahangir Khan",
       "parent_phone": "+92 312 4587963",
       "parent_email": "zarrar.ahmed.khan@example.com",
@@ -213,13 +205,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-8",
+      "id": "std-apx-8",
       "school_id": "school-apex",
       "roll_number": "AIC-108",
       "name": "Zainab Bibi Chaudhry",
       "class_id": "Class 10 (O-Levels)",
       "section": "B",
-      "parent_id": "user-parent-gen-7",
+      "parent_id": "user-parent-7",
       "parent_name": "Chaudhry Riaz",
       "parent_phone": "+92 308 9654123",
       "parent_email": "zainab.bibi.chaudhry@example.com",
@@ -232,13 +224,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-9",
+      "id": "std-apx-9",
       "school_id": "school-apex",
       "roll_number": "AIC-201",
       "name": "Bilal Ahmed Qureshi",
       "class_id": "Class 9 (Matric)",
       "section": "Science-A",
-      "parent_id": "user-parent-gen-8",
+      "parent_id": "user-parent-8",
       "parent_name": "Waseem Qureshi",
       "parent_phone": "+92 300 1234567",
       "parent_email": "bilal.ahmed.qureshi@example.com",
@@ -251,13 +243,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-10",
+      "id": "std-apx-10",
       "school_id": "school-apex",
       "roll_number": "AIC-202",
       "name": "Dua Tariq Bhatti",
       "class_id": "Class 9 (Matric)",
       "section": "Science-A",
-      "parent_id": "user-parent-gen-9",
+      "parent_id": "user-parent-9",
       "parent_name": "Tariq Bhatti",
       "parent_phone": "+92 321 2345678",
       "parent_email": "dua.tariq.bhatti@example.com",
@@ -270,13 +262,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-11",
+      "id": "std-apx-11",
       "school_id": "school-apex",
       "roll_number": "AIC-203",
       "name": "Usman Ghani Rasheed",
       "class_id": "Class 9 (Matric)",
       "section": "Science-A",
-      "parent_id": "user-parent-gen-10",
+      "parent_id": "user-parent-10",
       "parent_name": "Haroon Rasheed",
       "parent_phone": "+92 333 3456789",
       "parent_email": "usman.ghani.rasheed@example.com",
@@ -289,13 +281,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-12",
+      "id": "std-apx-12",
       "school_id": "school-apex",
       "roll_number": "AIC-204",
       "name": "Maryam Nawazish Ali",
       "class_id": "Class 9 (Matric)",
       "section": "Science-B",
-      "parent_id": "user-parent-gen-11",
+      "parent_id": "user-parent-11",
       "parent_name": "Nawazish Ali",
       "parent_phone": "+92 301 4567890",
       "parent_email": "maryam.nawazish.ali@example.com",
@@ -308,13 +300,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-13",
+      "id": "std-apx-13",
       "school_id": "school-apex",
       "roll_number": "AIC-205",
       "name": "Shahmeer Ali Wattoo",
       "class_id": "Class 9 (Matric)",
       "section": "Science-B",
-      "parent_id": "user-parent-gen-12",
+      "parent_id": "user-parent-12",
       "parent_name": "Babar Wattoo",
       "parent_phone": "+92 322 5678901",
       "parent_email": "shahmeer.ali.wattoo@example.com",
@@ -327,13 +319,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-14",
+      "id": "std-apx-14",
       "school_id": "school-apex",
       "roll_number": "AIC-206",
       "name": "Zohaib Hassan Cheema",
       "class_id": "Class 9 (Matric)",
       "section": "Science-B",
-      "parent_id": "user-parent-gen-13",
+      "parent_id": "user-parent-13",
       "parent_name": "Hassan Cheema",
       "parent_phone": "+92 345 6789012",
       "parent_email": "zohaib.hassan.cheema@example.com",
@@ -346,13 +338,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-15",
+      "id": "std-apx-15",
       "school_id": "school-apex",
       "roll_number": "AIC-301",
       "name": "Ibrahim Malik",
       "class_id": "Grade 8",
       "section": "A",
-      "parent_id": "user-parent-gen-14",
+      "parent_id": "user-parent-14",
       "parent_name": "Malik Sohail",
       "parent_phone": "+92 312 7890123",
       "parent_email": "ibrahim.malik@example.com",
@@ -365,13 +357,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-16",
+      "id": "std-apx-16",
       "school_id": "school-apex",
       "roll_number": "AIC-302",
       "name": "Hania Amir Hashmi",
       "class_id": "Grade 8",
       "section": "A",
-      "parent_id": "user-parent-gen-15",
+      "parent_id": "user-parent-15",
       "parent_name": "Amir Hashmi",
       "parent_phone": "+92 308 8901234",
       "parent_email": "hania.amir.hashmi@example.com",
@@ -384,13 +376,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-17",
+      "id": "std-apx-17",
       "school_id": "school-apex",
       "roll_number": "AIC-303",
       "name": "Saad Rafiq Goraya",
       "class_id": "Grade 8",
       "section": "A",
-      "parent_id": "user-parent-gen-16",
+      "parent_id": "user-parent-16",
       "parent_name": "Rafiq Goraya",
       "parent_phone": "+92 300 9012345",
       "parent_email": "saad.rafiq.goraya@example.com",
@@ -403,13 +395,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-18",
+      "id": "std-apx-18",
       "school_id": "school-apex",
       "roll_number": "AIC-304",
       "name": "Anaya Fatima Dar",
       "class_id": "Grade 8",
       "section": "B",
-      "parent_id": "user-parent-gen-17",
+      "parent_id": "user-parent-17",
       "parent_name": "Shahid Dar",
       "parent_phone": "+92 321 0123456",
       "parent_email": "anaya.fatima.dar@example.com",
@@ -422,13 +414,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-19",
+      "id": "std-apx-19",
       "school_id": "school-apex",
       "roll_number": "AIC-305",
       "name": "Rohaan Sheikh",
       "class_id": "Grade 8",
       "section": "B",
-      "parent_id": "user-parent-gen-18",
+      "parent_id": "user-parent-18",
       "parent_name": "Salman Sheikh",
       "parent_phone": "+92 333 1234567",
       "parent_email": "rohaan.sheikh@example.com",
@@ -441,13 +433,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-20",
+      "id": "std-apx-20",
       "school_id": "school-apex",
       "roll_number": "AIC-306",
       "name": "Kinza Hashmi",
       "class_id": "Grade 8",
       "section": "B",
-      "parent_id": "user-parent-gen-19",
+      "parent_id": "user-parent-19",
       "parent_name": "Kashif Hashmi",
       "parent_phone": "+92 301 2345678",
       "parent_email": "kinza.hashmi@example.com",
@@ -460,13 +452,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-21",
+      "id": "std-apx-21",
       "school_id": "school-apex",
       "roll_number": "AIC-401",
       "name": "Zarrar Haider Naqvi",
       "class_id": "Grade 5",
       "section": "Rose",
-      "parent_id": "user-parent-gen-20",
+      "parent_id": "user-parent-20",
       "parent_name": "Haider Naqvi",
       "parent_phone": "+92 322 3456789",
       "parent_email": "zarrar.haider.naqvi@example.com",
@@ -479,13 +471,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-22",
+      "id": "std-apx-22",
       "school_id": "school-apex",
       "roll_number": "AIC-402",
       "name": "Meerab Imran Khan",
       "class_id": "Grade 5",
       "section": "Rose",
-      "parent_id": "user-parent-gen-21",
+      "parent_id": "user-parent-21",
       "parent_name": "Imran Khan Niazi",
       "parent_phone": "+92 345 4567890",
       "parent_email": "meerab.imran.khan@example.com",
@@ -498,13 +490,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-23",
+      "id": "std-apx-23",
       "school_id": "school-apex",
       "roll_number": "AIC-403",
       "name": "Ayaan Babar Azam",
       "class_id": "Grade 5",
       "section": "Tulip",
-      "parent_id": "user-parent-gen-22",
+      "parent_id": "user-parent-22",
       "parent_name": "Babar Azam",
       "parent_phone": "+92 312 5678901",
       "parent_email": "ayaan.babar.azam@example.com",
@@ -517,13 +509,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-24",
+      "id": "std-apx-24",
       "school_id": "school-apex",
       "roll_number": "AIC-404",
       "name": "Hoorain Qureshi",
       "class_id": "Grade 5",
       "section": "Tulip",
-      "parent_id": "user-parent-gen-23",
+      "parent_id": "user-parent-23",
       "parent_name": "Junaid Qureshi",
       "parent_phone": "+92 308 6789012",
       "parent_email": "hoorain.qureshi@example.com",
@@ -536,13 +528,13 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-25",
+      "id": "std-apx-25",
       "school_id": "school-apex",
       "roll_number": "AIC-405",
       "name": "Subhan Tariq",
       "class_id": "Grade 5",
       "section": "Lily",
-      "parent_id": "user-parent-gen-24",
+      "parent_id": "user-parent-24",
       "parent_name": "Tariq Jamil",
       "parent_phone": "+92 300 7890123",
       "parent_email": "subhan.tariq@example.com",
@@ -555,13 +547,507 @@
       "created_at": "2024-01-15T00:00:00.000Z"
     },
     {
-      "id": "std-26",
+      "id": "std-apx-26",
       "school_id": "school-apex",
       "roll_number": "AIC-406",
       "name": "Minahil Kashif",
       "class_id": "Grade 5",
       "section": "Lily",
-      "parent_id": "user-parent-gen-25",
+      "parent_id": "user-parent-25",
+      "parent_name": "Kashif Mehmood",
+      "parent_phone": "+92 321 8901234",
+      "parent_email": "minahil.kashif@example.com",
+      "address": "DHA Phase 5, Lahore",
+      "blood_group": "B+",
+      "gender": "Female",
+      "date_of_birth": "2010-08-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 321 8901234",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-1",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-101",
+      "name": "Muhammad Hamza Tariq",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "A",
+      "parent_id": "user-parent-0",
+      "parent_name": "Tariq Mehmood",
+      "parent_phone": "+92 300 4589211",
+      "parent_email": "muhammad.hamza.tariq@example.com",
+      "address": "DHA Phase 5, Lahore",
+      "blood_group": "B+",
+      "gender": "Male",
+      "date_of_birth": "2010-01-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 300 4589211",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-2",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-102",
+      "name": "Fatima Zahra Farooq",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "A",
+      "parent_id": "user-parent-1",
+      "parent_name": "Farooq Siddiqui",
+      "parent_phone": "+92 321 7845120",
+      "parent_email": "fatima.zahra.farooq@example.com",
+      "address": "Gulberg III, Lahore",
+      "blood_group": "O+",
+      "gender": "Female",
+      "date_of_birth": "2010-02-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 321 7845120",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-3",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-103",
+      "name": "Syed Daniyal Mustafa",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "A",
+      "parent_id": "user-parent-2",
+      "parent_name": "Syed Mustafa Kamal",
+      "parent_phone": "+92 333 9812456",
+      "parent_email": "syed.daniyal.mustafa@example.com",
+      "address": "Model Town Block C, Lahore",
+      "blood_group": "A+",
+      "gender": "Male",
+      "date_of_birth": "2010-03-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 333 9812456",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-4",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-104",
+      "name": "Areeba Noor Akhtar",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "A",
+      "parent_id": "user-parent-3",
+      "parent_name": "Dr. Naeem Akhtar",
+      "parent_phone": "+92 301 5623984",
+      "parent_email": "areeba.noor.akhtar@example.com",
+      "address": "Bahria Town Sector C, Lahore",
+      "blood_group": "AB+",
+      "gender": "Female",
+      "date_of_birth": "2010-04-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 301 5623984",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-5",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-105",
+      "name": "Rayyan Farooq Bajwa",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "B",
+      "parent_id": "user-parent-4",
+      "parent_name": "Farooq Bajwa",
+      "parent_phone": "+92 322 8945123",
+      "parent_email": "rayyan.farooq.bajwa@example.com",
+      "address": "WAPDA Town, Lahore",
+      "blood_group": "O-",
+      "gender": "Male",
+      "date_of_birth": "2010-05-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 322 8945123",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-6",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-106",
+      "name": "Mahnoor Shah Gilani",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "B",
+      "parent_id": "user-parent-5",
+      "parent_name": "Pirzada Gilani",
+      "parent_phone": "+92 345 6712398",
+      "parent_email": "mahnoor.shah.gilani@example.com",
+      "address": "DHA Phase 5, Lahore",
+      "blood_group": "B+",
+      "gender": "Female",
+      "date_of_birth": "2010-06-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 345 6712398",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-7",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-107",
+      "name": "Zarrar Ahmed Khan",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "B",
+      "parent_id": "user-parent-6",
+      "parent_name": "Jahangir Khan",
+      "parent_phone": "+92 312 4587963",
+      "parent_email": "zarrar.ahmed.khan@example.com",
+      "address": "Gulberg III, Lahore",
+      "blood_group": "A+",
+      "gender": "Male",
+      "date_of_birth": "2010-07-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 312 4587963",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-8",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-108",
+      "name": "Zainab Bibi Chaudhry",
+      "class_id": "Class 10 (O-Levels)",
+      "section": "B",
+      "parent_id": "user-parent-7",
+      "parent_name": "Chaudhry Riaz",
+      "parent_phone": "+92 308 9654123",
+      "parent_email": "zainab.bibi.chaudhry@example.com",
+      "address": "Model Town Block C, Lahore",
+      "blood_group": "O+",
+      "gender": "Female",
+      "date_of_birth": "2010-08-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 308 9654123",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-9",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-201",
+      "name": "Bilal Ahmed Qureshi",
+      "class_id": "Class 9 (Matric)",
+      "section": "Science-A",
+      "parent_id": "user-parent-8",
+      "parent_name": "Waseem Qureshi",
+      "parent_phone": "+92 300 1234567",
+      "parent_email": "bilal.ahmed.qureshi@example.com",
+      "address": "Bahria Town Sector C, Lahore",
+      "blood_group": "B+",
+      "gender": "Male",
+      "date_of_birth": "2010-09-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 300 1234567",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-10",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-202",
+      "name": "Dua Tariq Bhatti",
+      "class_id": "Class 9 (Matric)",
+      "section": "Science-A",
+      "parent_id": "user-parent-9",
+      "parent_name": "Tariq Bhatti",
+      "parent_phone": "+92 321 2345678",
+      "parent_email": "dua.tariq.bhatti@example.com",
+      "address": "WAPDA Town, Lahore",
+      "blood_group": "O+",
+      "gender": "Female",
+      "date_of_birth": "2010-01-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 321 2345678",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-11",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-203",
+      "name": "Usman Ghani Rasheed",
+      "class_id": "Class 9 (Matric)",
+      "section": "Science-A",
+      "parent_id": "user-parent-10",
+      "parent_name": "Haroon Rasheed",
+      "parent_phone": "+92 333 3456789",
+      "parent_email": "usman.ghani.rasheed@example.com",
+      "address": "DHA Phase 5, Lahore",
+      "blood_group": "A+",
+      "gender": "Male",
+      "date_of_birth": "2010-02-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 333 3456789",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-12",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-204",
+      "name": "Maryam Nawazish Ali",
+      "class_id": "Class 9 (Matric)",
+      "section": "Science-B",
+      "parent_id": "user-parent-11",
+      "parent_name": "Nawazish Ali",
+      "parent_phone": "+92 301 4567890",
+      "parent_email": "maryam.nawazish.ali@example.com",
+      "address": "Gulberg III, Lahore",
+      "blood_group": "B-",
+      "gender": "Female",
+      "date_of_birth": "2010-03-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 301 4567890",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-13",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-205",
+      "name": "Shahmeer Ali Wattoo",
+      "class_id": "Class 9 (Matric)",
+      "section": "Science-B",
+      "parent_id": "user-parent-12",
+      "parent_name": "Babar Wattoo",
+      "parent_phone": "+92 322 5678901",
+      "parent_email": "shahmeer.ali.wattoo@example.com",
+      "address": "Model Town Block C, Lahore",
+      "blood_group": "O+",
+      "gender": "Male",
+      "date_of_birth": "2010-04-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 322 5678901",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-14",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-206",
+      "name": "Zohaib Hassan Cheema",
+      "class_id": "Class 9 (Matric)",
+      "section": "Science-B",
+      "parent_id": "user-parent-13",
+      "parent_name": "Hassan Cheema",
+      "parent_phone": "+92 345 6789012",
+      "parent_email": "zohaib.hassan.cheema@example.com",
+      "address": "Bahria Town Sector C, Lahore",
+      "blood_group": "AB-",
+      "gender": "Male",
+      "date_of_birth": "2010-05-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 345 6789012",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-15",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-301",
+      "name": "Ibrahim Malik",
+      "class_id": "Grade 8",
+      "section": "A",
+      "parent_id": "user-parent-14",
+      "parent_name": "Malik Sohail",
+      "parent_phone": "+92 312 7890123",
+      "parent_email": "ibrahim.malik@example.com",
+      "address": "WAPDA Town, Lahore",
+      "blood_group": "B+",
+      "gender": "Male",
+      "date_of_birth": "2010-06-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 312 7890123",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-16",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-302",
+      "name": "Hania Amir Hashmi",
+      "class_id": "Grade 8",
+      "section": "A",
+      "parent_id": "user-parent-15",
+      "parent_name": "Amir Hashmi",
+      "parent_phone": "+92 308 8901234",
+      "parent_email": "hania.amir.hashmi@example.com",
+      "address": "DHA Phase 5, Lahore",
+      "blood_group": "O+",
+      "gender": "Female",
+      "date_of_birth": "2010-07-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 308 8901234",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-17",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-303",
+      "name": "Saad Rafiq Goraya",
+      "class_id": "Grade 8",
+      "section": "A",
+      "parent_id": "user-parent-16",
+      "parent_name": "Rafiq Goraya",
+      "parent_phone": "+92 300 9012345",
+      "parent_email": "saad.rafiq.goraya@example.com",
+      "address": "Gulberg III, Lahore",
+      "blood_group": "A-",
+      "gender": "Male",
+      "date_of_birth": "2010-08-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 300 9012345",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-18",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-304",
+      "name": "Anaya Fatima Dar",
+      "class_id": "Grade 8",
+      "section": "B",
+      "parent_id": "user-parent-17",
+      "parent_name": "Shahid Dar",
+      "parent_phone": "+92 321 0123456",
+      "parent_email": "anaya.fatima.dar@example.com",
+      "address": "Model Town Block C, Lahore",
+      "blood_group": "O+",
+      "gender": "Female",
+      "date_of_birth": "2010-09-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 321 0123456",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-19",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-305",
+      "name": "Rohaan Sheikh",
+      "class_id": "Grade 8",
+      "section": "B",
+      "parent_id": "user-parent-18",
+      "parent_name": "Salman Sheikh",
+      "parent_phone": "+92 333 1234567",
+      "parent_email": "rohaan.sheikh@example.com",
+      "address": "Bahria Town Sector C, Lahore",
+      "blood_group": "B+",
+      "gender": "Male",
+      "date_of_birth": "2010-01-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 333 1234567",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-20",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-306",
+      "name": "Kinza Hashmi",
+      "class_id": "Grade 8",
+      "section": "B",
+      "parent_id": "user-parent-19",
+      "parent_name": "Kashif Hashmi",
+      "parent_phone": "+92 301 2345678",
+      "parent_email": "kinza.hashmi@example.com",
+      "address": "WAPDA Town, Lahore",
+      "blood_group": "A+",
+      "gender": "Female",
+      "date_of_birth": "2010-02-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 301 2345678",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-21",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-401",
+      "name": "Zarrar Haider Naqvi",
+      "class_id": "Grade 5",
+      "section": "Rose",
+      "parent_id": "user-parent-20",
+      "parent_name": "Haider Naqvi",
+      "parent_phone": "+92 322 3456789",
+      "parent_email": "zarrar.haider.naqvi@example.com",
+      "address": "DHA Phase 5, Lahore",
+      "blood_group": "O+",
+      "gender": "Male",
+      "date_of_birth": "2010-03-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 322 3456789",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-22",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-402",
+      "name": "Meerab Imran Khan",
+      "class_id": "Grade 5",
+      "section": "Rose",
+      "parent_id": "user-parent-21",
+      "parent_name": "Imran Khan Niazi",
+      "parent_phone": "+92 345 4567890",
+      "parent_email": "meerab.imran.khan@example.com",
+      "address": "Gulberg III, Lahore",
+      "blood_group": "B+",
+      "gender": "Female",
+      "date_of_birth": "2010-04-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 345 4567890",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-23",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-403",
+      "name": "Ayaan Babar Azam",
+      "class_id": "Grade 5",
+      "section": "Tulip",
+      "parent_id": "user-parent-22",
+      "parent_name": "Babar Azam",
+      "parent_phone": "+92 312 5678901",
+      "parent_email": "ayaan.babar.azam@example.com",
+      "address": "Model Town Block C, Lahore",
+      "blood_group": "A+",
+      "gender": "Male",
+      "date_of_birth": "2010-05-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 312 5678901",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-24",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-404",
+      "name": "Hoorain Qureshi",
+      "class_id": "Grade 5",
+      "section": "Tulip",
+      "parent_id": "user-parent-23",
+      "parent_name": "Junaid Qureshi",
+      "parent_phone": "+92 308 6789012",
+      "parent_email": "hoorain.qureshi@example.com",
+      "address": "Bahria Town Sector C, Lahore",
+      "blood_group": "O-",
+      "gender": "Female",
+      "date_of_birth": "2010-06-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 308 6789012",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-25",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-405",
+      "name": "Subhan Tariq",
+      "class_id": "Grade 5",
+      "section": "Lily",
+      "parent_id": "user-parent-24",
+      "parent_name": "Tariq Jamil",
+      "parent_phone": "+92 300 7890123",
+      "parent_email": "subhan.tariq@example.com",
+      "address": "WAPDA Town, Lahore",
+      "blood_group": "AB+",
+      "gender": "Male",
+      "date_of_birth": "2010-07-15",
+      "admission_date": "2022-08-15",
+      "emergency_contact": "+92 300 7890123",
+      "created_at": "2024-01-15T00:00:00.000Z"
+    },
+    {
+      "id": "std-hrz-26",
+      "school_id": "school-horizon",
+      "roll_number": "HSS-406",
+      "name": "Minahil Kashif",
+      "class_id": "Grade 5",
+      "section": "Lily",
+      "parent_id": "user-parent-25",
       "parent_name": "Kashif Mehmood",
       "parent_phone": "+92 321 8901234",
       "parent_email": "minahil.kashif@example.com",
@@ -576,218 +1062,426 @@
   ],
   "attendance": [
     {
-      "id": "att-std-1",
-      "student_id": "std-1",
+      "id": "att-std-apx-1",
+      "student_id": "std-apx-1",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "absent",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-2",
-      "student_id": "std-2",
+      "id": "att-std-apx-2",
+      "student_id": "std-apx-2",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-3",
-      "student_id": "std-3",
+      "id": "att-std-apx-3",
+      "student_id": "std-apx-3",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-4",
-      "student_id": "std-4",
+      "id": "att-std-apx-4",
+      "student_id": "std-apx-4",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-5",
-      "student_id": "std-5",
+      "id": "att-std-apx-5",
+      "student_id": "std-apx-5",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-6",
-      "student_id": "std-6",
+      "id": "att-std-apx-6",
+      "student_id": "std-apx-6",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-7",
-      "student_id": "std-7",
+      "id": "att-std-apx-7",
+      "student_id": "std-apx-7",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-8",
-      "student_id": "std-8",
+      "id": "att-std-apx-8",
+      "student_id": "std-apx-8",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "absent",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-9",
-      "student_id": "std-9",
+      "id": "att-std-apx-9",
+      "student_id": "std-apx-9",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-10",
-      "student_id": "std-10",
+      "id": "att-std-apx-10",
+      "student_id": "std-apx-10",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-11",
-      "student_id": "std-11",
+      "id": "att-std-apx-11",
+      "student_id": "std-apx-11",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-12",
-      "student_id": "std-12",
+      "id": "att-std-apx-12",
+      "student_id": "std-apx-12",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "late",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-13",
-      "student_id": "std-13",
+      "id": "att-std-apx-13",
+      "student_id": "std-apx-13",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-14",
-      "student_id": "std-14",
+      "id": "att-std-apx-14",
+      "student_id": "std-apx-14",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-15",
-      "student_id": "std-15",
+      "id": "att-std-apx-15",
+      "student_id": "std-apx-15",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "absent",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-16",
-      "student_id": "std-16",
+      "id": "att-std-apx-16",
+      "student_id": "std-apx-16",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-17",
-      "student_id": "std-17",
+      "id": "att-std-apx-17",
+      "student_id": "std-apx-17",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-18",
-      "student_id": "std-18",
+      "id": "att-std-apx-18",
+      "student_id": "std-apx-18",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-19",
-      "student_id": "std-19",
+      "id": "att-std-apx-19",
+      "student_id": "std-apx-19",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-20",
-      "student_id": "std-20",
+      "id": "att-std-apx-20",
+      "student_id": "std-apx-20",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-21",
-      "student_id": "std-21",
+      "id": "att-std-apx-21",
+      "student_id": "std-apx-21",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-22",
-      "student_id": "std-22",
+      "id": "att-std-apx-22",
+      "student_id": "std-apx-22",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "absent",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-23",
-      "student_id": "std-23",
+      "id": "att-std-apx-23",
+      "student_id": "std-apx-23",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "late",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-24",
-      "student_id": "std-24",
+      "id": "att-std-apx-24",
+      "student_id": "std-apx-24",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-25",
-      "student_id": "std-25",
+      "id": "att-std-apx-25",
+      "student_id": "std-apx-25",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
     },
     {
-      "id": "att-std-26",
-      "student_id": "std-26",
+      "id": "att-std-apx-26",
+      "student_id": "std-apx-26",
       "school_id": "school-apex",
       "date": "2026-10-28",
       "status": "present",
-      "recorded_by": "Prof. Asim Munir"
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-1",
+      "student_id": "std-hrz-1",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "absent",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-2",
+      "student_id": "std-hrz-2",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-3",
+      "student_id": "std-hrz-3",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-4",
+      "student_id": "std-hrz-4",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-5",
+      "student_id": "std-hrz-5",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-6",
+      "student_id": "std-hrz-6",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-7",
+      "student_id": "std-hrz-7",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-8",
+      "student_id": "std-hrz-8",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "absent",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-9",
+      "student_id": "std-hrz-9",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-10",
+      "student_id": "std-hrz-10",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-11",
+      "student_id": "std-hrz-11",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-12",
+      "student_id": "std-hrz-12",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "late",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-13",
+      "student_id": "std-hrz-13",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-14",
+      "student_id": "std-hrz-14",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-15",
+      "student_id": "std-hrz-15",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "absent",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-16",
+      "student_id": "std-hrz-16",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-17",
+      "student_id": "std-hrz-17",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-18",
+      "student_id": "std-hrz-18",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-19",
+      "student_id": "std-hrz-19",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-20",
+      "student_id": "std-hrz-20",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-21",
+      "student_id": "std-hrz-21",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-22",
+      "student_id": "std-hrz-22",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "absent",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-23",
+      "student_id": "std-hrz-23",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "late",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-24",
+      "student_id": "std-hrz-24",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-25",
+      "student_id": "std-hrz-25",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
+    },
+    {
+      "id": "att-std-hrz-26",
+      "student_id": "std-hrz-26",
+      "school_id": "school-horizon",
+      "date": "2026-10-28",
+      "status": "present",
+      "recorded_by": "Faculty Teacher"
     }
   ],
   "fees": [
     {
-      "id": "fee-ch-std-1",
-      "student_id": "std-1",
+      "id": "fee-ch-std-apx-1",
+      "student_id": "std-apx-1",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-11-10",
@@ -797,8 +1491,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-2",
-      "student_id": "std-2",
+      "id": "fee-ch-std-apx-2",
+      "student_id": "std-apx-2",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-11-10",
@@ -808,8 +1502,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-3",
-      "student_id": "std-3",
+      "id": "fee-ch-std-apx-3",
+      "student_id": "std-apx-3",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-09-10",
@@ -819,8 +1513,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-4",
-      "student_id": "std-4",
+      "id": "fee-ch-std-apx-4",
+      "student_id": "std-apx-4",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-11-10",
@@ -830,8 +1524,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-5",
-      "student_id": "std-5",
+      "id": "fee-ch-std-apx-5",
+      "student_id": "std-apx-5",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-11-10",
@@ -841,8 +1535,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-6",
-      "student_id": "std-6",
+      "id": "fee-ch-std-apx-6",
+      "student_id": "std-apx-6",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-09-10",
@@ -852,8 +1546,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-7",
-      "student_id": "std-7",
+      "id": "fee-ch-std-apx-7",
+      "student_id": "std-apx-7",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-11-10",
@@ -863,8 +1557,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-8",
-      "student_id": "std-8",
+      "id": "fee-ch-std-apx-8",
+      "student_id": "std-apx-8",
       "school_id": "school-apex",
       "amount": 35000,
       "due_date": "2026-11-10",
@@ -874,8 +1568,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-9",
-      "student_id": "std-9",
+      "id": "fee-ch-std-apx-9",
+      "student_id": "std-apx-9",
       "school_id": "school-apex",
       "amount": 22000,
       "due_date": "2026-09-10",
@@ -885,8 +1579,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-10",
-      "student_id": "std-10",
+      "id": "fee-ch-std-apx-10",
+      "student_id": "std-apx-10",
       "school_id": "school-apex",
       "amount": 22000,
       "due_date": "2026-11-10",
@@ -896,8 +1590,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-11",
-      "student_id": "std-11",
+      "id": "fee-ch-std-apx-11",
+      "student_id": "std-apx-11",
       "school_id": "school-apex",
       "amount": 22000,
       "due_date": "2026-11-10",
@@ -907,8 +1601,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-12",
-      "student_id": "std-12",
+      "id": "fee-ch-std-apx-12",
+      "student_id": "std-apx-12",
       "school_id": "school-apex",
       "amount": 22000,
       "due_date": "2026-09-10",
@@ -918,8 +1612,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-13",
-      "student_id": "std-13",
+      "id": "fee-ch-std-apx-13",
+      "student_id": "std-apx-13",
       "school_id": "school-apex",
       "amount": 22000,
       "due_date": "2026-11-10",
@@ -929,8 +1623,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-14",
-      "student_id": "std-14",
+      "id": "fee-ch-std-apx-14",
+      "student_id": "std-apx-14",
       "school_id": "school-apex",
       "amount": 22000,
       "due_date": "2026-11-10",
@@ -940,8 +1634,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-15",
-      "student_id": "std-15",
+      "id": "fee-ch-std-apx-15",
+      "student_id": "std-apx-15",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-09-10",
@@ -951,8 +1645,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-16",
-      "student_id": "std-16",
+      "id": "fee-ch-std-apx-16",
+      "student_id": "std-apx-16",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-11-10",
@@ -962,8 +1656,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-17",
-      "student_id": "std-17",
+      "id": "fee-ch-std-apx-17",
+      "student_id": "std-apx-17",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-11-10",
@@ -973,8 +1667,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-18",
-      "student_id": "std-18",
+      "id": "fee-ch-std-apx-18",
+      "student_id": "std-apx-18",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-09-10",
@@ -984,8 +1678,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-19",
-      "student_id": "std-19",
+      "id": "fee-ch-std-apx-19",
+      "student_id": "std-apx-19",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-11-10",
@@ -995,8 +1689,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-20",
-      "student_id": "std-20",
+      "id": "fee-ch-std-apx-20",
+      "student_id": "std-apx-20",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-11-10",
@@ -1006,8 +1700,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-21",
-      "student_id": "std-21",
+      "id": "fee-ch-std-apx-21",
+      "student_id": "std-apx-21",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-09-10",
@@ -1017,8 +1711,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-22",
-      "student_id": "std-22",
+      "id": "fee-ch-std-apx-22",
+      "student_id": "std-apx-22",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-11-10",
@@ -1028,8 +1722,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-23",
-      "student_id": "std-23",
+      "id": "fee-ch-std-apx-23",
+      "student_id": "std-apx-23",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-11-10",
@@ -1039,8 +1733,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-24",
-      "student_id": "std-24",
+      "id": "fee-ch-std-apx-24",
+      "student_id": "std-apx-24",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-09-10",
@@ -1050,8 +1744,8 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-25",
-      "student_id": "std-25",
+      "id": "fee-ch-std-apx-25",
+      "student_id": "std-apx-25",
       "school_id": "school-apex",
       "amount": 18000,
       "due_date": "2026-11-10",
@@ -1061,9 +1755,295 @@
       "created_at": "2026-09-01T00:00:00.000Z"
     },
     {
-      "id": "fee-ch-std-26",
-      "student_id": "std-26",
+      "id": "fee-ch-std-apx-26",
+      "student_id": "std-apx-26",
       "school_id": "school-apex",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102955",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-1",
+      "student_id": "std-hrz-1",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849102",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-2",
+      "student_id": "std-hrz-2",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102931",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-3",
+      "student_id": "std-hrz-3",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-4",
+      "student_id": "std-hrz-4",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849105",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-5",
+      "student_id": "std-hrz-5",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102934",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-6",
+      "student_id": "std-hrz-6",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-7",
+      "student_id": "std-hrz-7",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849108",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-8",
+      "student_id": "std-hrz-8",
+      "school_id": "school-horizon",
+      "amount": 35000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102937",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-9",
+      "student_id": "std-hrz-9",
+      "school_id": "school-horizon",
+      "amount": 22000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-10",
+      "student_id": "std-hrz-10",
+      "school_id": "school-horizon",
+      "amount": 22000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849111",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-11",
+      "student_id": "std-hrz-11",
+      "school_id": "school-horizon",
+      "amount": 22000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102940",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-12",
+      "student_id": "std-hrz-12",
+      "school_id": "school-horizon",
+      "amount": 22000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-13",
+      "student_id": "std-hrz-13",
+      "school_id": "school-horizon",
+      "amount": 22000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849114",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-14",
+      "student_id": "std-hrz-14",
+      "school_id": "school-horizon",
+      "amount": 22000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102943",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-15",
+      "student_id": "std-hrz-15",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-16",
+      "student_id": "std-hrz-16",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849117",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-17",
+      "student_id": "std-hrz-17",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102946",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-18",
+      "student_id": "std-hrz-18",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-19",
+      "student_id": "std-hrz-19",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849120",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-20",
+      "student_id": "std-hrz-20",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102949",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-21",
+      "student_id": "std-hrz-21",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-22",
+      "student_id": "std-hrz-22",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849123",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-23",
+      "student_id": "std-hrz-23",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "pending",
+      "title": "Term Fee • November 2026 (Active)",
+      "bank_reference": "MEEZAN-CHALLAN-102952",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-24",
+      "student_id": "std-hrz-24",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-09-10",
+      "status": "overdue",
+      "title": "Term Fee • September 2026 (Defaulter Lock)",
+      "bank_reference": "OVERDUE-PENALTY-500",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-25",
+      "student_id": "std-hrz-25",
+      "school_id": "school-horizon",
+      "amount": 18000,
+      "due_date": "2026-11-10",
+      "status": "paid",
+      "title": "Term Fee • October 2026 (Settled)",
+      "bank_reference": "HBL-PKR-849126",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "fee-ch-std-hrz-26",
+      "student_id": "std-hrz-26",
+      "school_id": "school-horizon",
       "amount": 18000,
       "due_date": "2026-11-10",
       "status": "pending",
@@ -1074,14 +2054,14 @@
   ],
   "results": [
     {
-      "id": "res-std-1",
-      "student_id": "std-1",
+      "id": "res-std-apx-1",
+      "student_id": "std-apx-1",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A*",
       "percentage": 92,
       "position": 1,
-      "remarks": "Outstanding academic distinction. Exemplary discipline and conceptual grasp.",
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1111,14 +2091,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-2",
-      "student_id": "std-2",
+      "id": "res-std-apx-2",
+      "student_id": "std-apx-2",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A*",
       "percentage": 93,
       "position": 2,
-      "remarks": "Outstanding academic distinction. Exemplary discipline and conceptual grasp.",
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1148,14 +2128,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-3",
-      "student_id": "std-3",
+      "id": "res-std-apx-3",
+      "student_id": "std-apx-3",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A*",
       "percentage": 94,
       "position": 3,
-      "remarks": "Outstanding academic distinction. Exemplary discipline and conceptual grasp.",
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1185,14 +2165,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-4",
-      "student_id": "std-4",
+      "id": "res-std-apx-4",
+      "student_id": "std-apx-4",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A*",
       "percentage": 86,
       "position": 4,
-      "remarks": "Outstanding academic distinction. Exemplary discipline and conceptual grasp.",
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1222,14 +2202,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-5",
-      "student_id": "std-5",
+      "id": "res-std-apx-5",
+      "student_id": "std-apx-5",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A*",
       "percentage": 87,
       "position": 5,
-      "remarks": "Outstanding academic distinction. Exemplary discipline and conceptual grasp.",
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1259,14 +2239,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-6",
-      "student_id": "std-6",
+      "id": "res-std-apx-6",
+      "student_id": "std-apx-6",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A*",
       "percentage": 88,
       "position": 6,
-      "remarks": "Outstanding academic distinction. Exemplary discipline and conceptual grasp.",
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1296,8 +2276,8 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-7",
-      "student_id": "std-7",
+      "id": "res-std-apx-7",
+      "student_id": "std-apx-7",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A",
@@ -1333,8 +2313,8 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-8",
-      "student_id": "std-8",
+      "id": "res-std-apx-8",
+      "student_id": "std-apx-8",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A",
@@ -1370,8 +2350,8 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-9",
-      "student_id": "std-9",
+      "id": "res-std-apx-9",
+      "student_id": "std-apx-9",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A",
@@ -1407,14 +2387,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-10",
-      "student_id": "std-10",
+      "id": "res-std-apx-10",
+      "student_id": "std-apx-10",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "B",
       "percentage": 74,
       "position": 2,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1444,8 +2424,8 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-11",
-      "student_id": "std-11",
+      "id": "res-std-apx-11",
+      "student_id": "std-apx-11",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A",
@@ -1481,8 +2461,8 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-12",
-      "student_id": "std-12",
+      "id": "res-std-apx-12",
+      "student_id": "std-apx-12",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "A",
@@ -1518,14 +2498,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-13",
-      "student_id": "std-13",
+      "id": "res-std-apx-13",
+      "student_id": "std-apx-13",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "B",
       "percentage": 68,
       "position": 5,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1555,14 +2535,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-14",
-      "student_id": "std-14",
+      "id": "res-std-apx-14",
+      "student_id": "std-apx-14",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "B",
       "percentage": 69,
       "position": 6,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1592,14 +2572,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-15",
-      "student_id": "std-15",
+      "id": "res-std-apx-15",
+      "student_id": "std-apx-15",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "B",
       "percentage": 70,
       "position": 7,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1629,14 +2609,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-16",
-      "student_id": "std-16",
+      "id": "res-std-apx-16",
+      "student_id": "std-apx-16",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 62,
       "position": 8,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1666,14 +2646,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-17",
-      "student_id": "std-17",
+      "id": "res-std-apx-17",
+      "student_id": "std-apx-17",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 63,
       "position": 1,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1703,14 +2683,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-18",
-      "student_id": "std-18",
+      "id": "res-std-apx-18",
+      "student_id": "std-apx-18",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 64,
       "position": 2,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1740,14 +2720,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-19",
-      "student_id": "std-19",
+      "id": "res-std-apx-19",
+      "student_id": "std-apx-19",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 56,
       "position": 3,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1777,14 +2757,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-20",
-      "student_id": "std-20",
+      "id": "res-std-apx-20",
+      "student_id": "std-apx-20",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 57,
       "position": 4,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1814,14 +2794,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-21",
-      "student_id": "std-21",
+      "id": "res-std-apx-21",
+      "student_id": "std-apx-21",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 58,
       "position": 5,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1851,14 +2831,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-22",
-      "student_id": "std-22",
+      "id": "res-std-apx-22",
+      "student_id": "std-apx-22",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 55,
       "position": 6,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1888,14 +2868,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-23",
-      "student_id": "std-23",
+      "id": "res-std-apx-23",
+      "student_id": "std-apx-23",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 55,
       "position": 7,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1925,14 +2905,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-24",
-      "student_id": "std-24",
+      "id": "res-std-apx-24",
+      "student_id": "std-apx-24",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 55,
       "position": 8,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1962,14 +2942,14 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-25",
-      "student_id": "std-25",
+      "id": "res-std-apx-25",
+      "student_id": "std-apx-25",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 55,
       "position": 1,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -1999,14 +2979,976 @@
       "published_at": "2026-10-15T00:00:00.000Z"
     },
     {
-      "id": "res-std-26",
-      "student_id": "std-26",
+      "id": "res-std-apx-26",
+      "student_id": "std-apx-26",
       "school_id": "school-apex",
       "term": "Mid-Term Cambridge & Board Assessment 2026",
       "grade": "C",
       "percentage": 55,
       "position": 2,
-      "remarks": "Satisfactory progress. Needs targeted revision in numerical problem solving.",
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 43,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 46,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 44,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 42,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-1",
+      "student_id": "std-hrz-1",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A*",
+      "percentage": 92,
+      "position": 1,
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 87,
+          "grade": "A*"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 94,
+          "grade": "A*"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 90,
+          "grade": "A*"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 86,
+          "grade": "A*"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-2",
+      "student_id": "std-hrz-2",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A*",
+      "percentage": 93,
+      "position": 2,
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 88,
+          "grade": "A*"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 95,
+          "grade": "A*"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 91,
+          "grade": "A*"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 87,
+          "grade": "A*"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-3",
+      "student_id": "std-hrz-3",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A*",
+      "percentage": 94,
+      "position": 3,
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 89,
+          "grade": "A*"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 96,
+          "grade": "A*"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 92,
+          "grade": "A*"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 88,
+          "grade": "A*"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-4",
+      "student_id": "std-hrz-4",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A*",
+      "percentage": 86,
+      "position": 4,
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 82,
+          "grade": "A*"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 88,
+          "grade": "A*"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 84,
+          "grade": "A*"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 81,
+          "grade": "A*"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-5",
+      "student_id": "std-hrz-5",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A*",
+      "percentage": 87,
+      "position": 5,
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 83,
+          "grade": "A*"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 89,
+          "grade": "A*"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 85,
+          "grade": "A*"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 82,
+          "grade": "A*"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-6",
+      "student_id": "std-hrz-6",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A*",
+      "percentage": 88,
+      "position": 6,
+      "remarks": "Outstanding academic distinction. Exemplary discipline.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 84,
+          "grade": "A*"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 90,
+          "grade": "A*"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 86,
+          "grade": "A*"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 83,
+          "grade": "A*"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-7",
+      "student_id": "std-hrz-7",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A",
+      "percentage": 80,
+      "position": 7,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 76,
+          "grade": "A"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 82,
+          "grade": "A"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 78,
+          "grade": "A"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 75,
+          "grade": "A"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-8",
+      "student_id": "std-hrz-8",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A",
+      "percentage": 81,
+      "position": 8,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 77,
+          "grade": "A"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 83,
+          "grade": "A"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 79,
+          "grade": "A"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 76,
+          "grade": "A"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-9",
+      "student_id": "std-hrz-9",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A",
+      "percentage": 82,
+      "position": 1,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 78,
+          "grade": "A"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 84,
+          "grade": "A"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 80,
+          "grade": "A"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 77,
+          "grade": "A"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-10",
+      "student_id": "std-hrz-10",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "B",
+      "percentage": 74,
+      "position": 2,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 70,
+          "grade": "B"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 75,
+          "grade": "B"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 73,
+          "grade": "B"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 70,
+          "grade": "B"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-11",
+      "student_id": "std-hrz-11",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A",
+      "percentage": 75,
+      "position": 3,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 71,
+          "grade": "A"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 77,
+          "grade": "A"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 74,
+          "grade": "A"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 71,
+          "grade": "A"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-12",
+      "student_id": "std-hrz-12",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "A",
+      "percentage": 76,
+      "position": 4,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 72,
+          "grade": "A"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 78,
+          "grade": "A"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 74,
+          "grade": "A"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 71,
+          "grade": "A"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-13",
+      "student_id": "std-hrz-13",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "B",
+      "percentage": 68,
+      "position": 5,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 65,
+          "grade": "B"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 69,
+          "grade": "B"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 67,
+          "grade": "B"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 64,
+          "grade": "B"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-14",
+      "student_id": "std-hrz-14",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "B",
+      "percentage": 69,
+      "position": 6,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 66,
+          "grade": "B"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 70,
+          "grade": "B"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 68,
+          "grade": "B"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 65,
+          "grade": "B"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-15",
+      "student_id": "std-hrz-15",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "B",
+      "percentage": 70,
+      "position": 7,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 67,
+          "grade": "B"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 71,
+          "grade": "B"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 69,
+          "grade": "B"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 66,
+          "grade": "B"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-16",
+      "student_id": "std-hrz-16",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 62,
+      "position": 8,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 59,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 63,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 61,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 58,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-17",
+      "student_id": "std-hrz-17",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 63,
+      "position": 1,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 60,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 64,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 62,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 59,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-18",
+      "student_id": "std-hrz-18",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 64,
+      "position": 2,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 61,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 65,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 63,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 60,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-19",
+      "student_id": "std-hrz-19",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 56,
+      "position": 3,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 53,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 57,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 55,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 53,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-20",
+      "student_id": "std-hrz-20",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 57,
+      "position": 4,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 54,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 58,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 56,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 54,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-21",
+      "student_id": "std-hrz-21",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 58,
+      "position": 5,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 55,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 59,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 57,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 55,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-22",
+      "student_id": "std-hrz-22",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 55,
+      "position": 6,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 48,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 51,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 49,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 47,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-23",
+      "student_id": "std-hrz-23",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 55,
+      "position": 7,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 48,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 52,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 50,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 48,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-24",
+      "student_id": "std-hrz-24",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 55,
+      "position": 8,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 49,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 53,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 51,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 49,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-25",
+      "student_id": "std-hrz-25",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 55,
+      "position": 1,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
+      "subject_marks": [
+        {
+          "subject": "English",
+          "total": 100,
+          "obtained": 42,
+          "grade": "C"
+        },
+        {
+          "subject": "Mathematics",
+          "total": 100,
+          "obtained": 45,
+          "grade": "C"
+        },
+        {
+          "subject": "Sciences",
+          "total": 100,
+          "obtained": 43,
+          "grade": "C"
+        },
+        {
+          "subject": "Pakistan Studies & Islamiyat",
+          "total": 100,
+          "obtained": 41,
+          "grade": "C"
+        }
+      ],
+      "published_at": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "res-std-hrz-26",
+      "student_id": "std-hrz-26",
+      "school_id": "school-horizon",
+      "term": "Mid-Term Cambridge & Board Assessment 2026",
+      "grade": "C",
+      "percentage": 55,
+      "position": 2,
+      "remarks": "Very good performance. Shows strong diligence in homework.",
       "subject_marks": [
         {
           "subject": "English",
@@ -2038,7 +3980,7 @@
   ],
   "diary": [
     {
-      "id": "diary-demo-1",
+      "id": "diary-school-apex-1",
       "school_id": "school-apex",
       "class_id": "Class 10 (O-Levels)",
       "subject": "Chemistry (5070)",
@@ -2049,10 +3991,10 @@
       "due_date": "2026-10-30",
       "attachment_url": "/sample-daily-work-planner.pdf",
       "attachment_name": "CamScanner-Chemistry-Work-Planner.pdf",
-      "created_by": "Prof. Asim Munir (HOD Sciences)"
+      "created_by": "Prof. Asim Munir"
     },
     {
-      "id": "diary-demo-2",
+      "id": "diary-school-apex-2",
       "school_id": "school-apex",
       "class_id": "Class 10 (O-Levels)",
       "subject": "Mathematics Syllabus D (4024)",
@@ -2066,31 +4008,7 @@
       "created_by": "Sir Zafar Iqbal"
     },
     {
-      "id": "diary-demo-3",
-      "school_id": "school-apex",
-      "class_id": "Class 10 (O-Levels)",
-      "subject": "English Language (1123)",
-      "title": "Directed Writing: Speech on Digital Literacy & Artificial Intelligence",
-      "content": "Draft a 250-word formal speech for the morning assembly highlighting benefits and pitfalls of AI in student learning. Use persuasive techniques.",
-      "homework": "Submit clean draft in assignment folder by Thursday 8:00 AM.",
-      "assigned_date": "2026-10-27",
-      "due_date": "2026-10-31",
-      "created_by": "Ms. Ayesha Siddiqua"
-    },
-    {
-      "id": "diary-demo-4",
-      "school_id": "school-apex",
-      "class_id": "Class 10 (O-Levels)",
-      "subject": "Urdu (3248)",
-      "title": "Ghazaliyat Tashreeh: Allama Iqbal (Bang-e-Dara)",
-      "content": "Allama Iqbal ki ghazal 'Sitaron se aagay jahan aur bhi hain' ke pehle 4 ashaar ki tashreeh aur hawala-e-kalam khushkhat tehreer karein.",
-      "homework": "Urdu notebook page 45 par sawalat 1 ta 5 mukammal karein.",
-      "assigned_date": "2026-10-28",
-      "due_date": "2026-10-31",
-      "created_by": "Maulana Shabbir Ahmed"
-    },
-    {
-      "id": "diary-demo-5",
+      "id": "diary-school-apex-3",
       "school_id": "school-apex",
       "class_id": "Class 9 (Matric)",
       "subject": "Physics (Matric Board)",
@@ -2104,32 +4022,62 @@
       "created_by": "Sir Tariq Jamil"
     },
     {
-      "id": "diary-demo-6",
+      "id": "diary-school-apex-4",
       "school_id": "school-apex",
-      "class_id": "Class 9 (Matric)",
-      "subject": "Biology (Matric Board)",
-      "title": "Cell Biology & Electron Microscope Diagrams",
-      "content": "Draw neat labeled diagram of Plant and Animal Cell highlighting Mitochondria, Golgi Apparatus & Nucleus with HB pencil.",
-      "homework": "Memorize differences between Prokaryotes and Eukaryotes for surprise quiz tomorrow.",
+      "class_id": "Grade 5",
+      "subject": "Mathematics",
+      "title": "Fractions & Long Division Practice",
+      "content": "Solve Exercise 3.4: Addition and Subtraction of unlike fractions with LCM method.",
+      "homework": "Page 58 questions 1 to 10 in Math notebook.",
       "assigned_date": "2026-10-28",
       "due_date": "2026-10-29",
-      "created_by": "Dr. Fauzia Batool"
+      "created_by": "Ms. Saima Noor"
     },
     {
-      "id": "diary-demo-7",
-      "school_id": "school-apex",
-      "class_id": "Grade 8",
-      "subject": "General Science",
-      "title": "Periodic Table & Chemical Bonding",
-      "content": "Study first 20 elements of the periodic table with chemical symbols, atomic numbers, and mass numbers.",
-      "homework": "Draw electron configuration diagrams for Carbon, Oxygen, and Sodium.",
+      "id": "diary-school-horizon-1",
+      "school_id": "school-horizon",
+      "class_id": "Class 10 (O-Levels)",
+      "subject": "Chemistry (5070)",
+      "title": "Organic Chemistry: Hydrocarbons & Fractional Distillation",
+      "content": "Review Chapter 14: Fractional Distillation of Crude Oil. Solve Past Paper Worksheets questions 1 to 14. CamScanner scanned lecture planner and lab observation table attached below.",
+      "homework": "Complete Workbook Exercise 14.2 on page 112. Memorize structural formulas of Alkanes & Alkenes.",
       "assigned_date": "2026-10-28",
       "due_date": "2026-10-30",
-      "created_by": "Ms. Hina Altaf"
+      "attachment_url": "/sample-daily-work-planner.pdf",
+      "attachment_name": "CamScanner-Chemistry-Work-Planner.pdf",
+      "created_by": "Prof. Asim Munir"
     },
     {
-      "id": "diary-demo-8",
-      "school_id": "school-apex",
+      "id": "diary-school-horizon-2",
+      "school_id": "school-horizon",
+      "class_id": "Class 10 (O-Levels)",
+      "subject": "Mathematics Syllabus D (4024)",
+      "title": "Trigonometry & 3D Vectors Practice",
+      "content": "Past Papers Oct/Nov 2024 Paper 2 questions on Sine rule, Cosine rule and Angle of Elevation. Step-by-step working required on loose ledger sheets.",
+      "homework": "Exercise 9C questions 7, 10, 14 & 18 in textbook D3.",
+      "assigned_date": "2026-10-28",
+      "due_date": "2026-10-29",
+      "attachment_url": "/sample-daily-work-planner.pdf",
+      "attachment_name": "CamScanner-Math-Exercise-Planner.pdf",
+      "created_by": "Sir Zafar Iqbal"
+    },
+    {
+      "id": "diary-school-horizon-3",
+      "school_id": "school-horizon",
+      "class_id": "Class 9 (Matric)",
+      "subject": "Physics (Matric Board)",
+      "title": "Kinematics & Newton Laws of Motion Numericals",
+      "content": "Solve Board Questions on Equations of Uniformly Accelerated Motion (v = u + at, s = ut + 0.5at^2). CamScanner work planner page is uploaded.",
+      "homework": "Numericals 2.1 to 2.7 from Punjab Textbook Board Physics Class 9.",
+      "assigned_date": "2026-10-28",
+      "due_date": "2026-10-30",
+      "attachment_url": "/sample-daily-work-planner.pdf",
+      "attachment_name": "CamScanner-Physics-Numericals.pdf",
+      "created_by": "Sir Tariq Jamil"
+    },
+    {
+      "id": "diary-school-horizon-4",
+      "school_id": "school-horizon",
       "class_id": "Grade 5",
       "subject": "Mathematics",
       "title": "Fractions & Long Division Practice",
@@ -2140,76 +4088,8 @@
       "created_by": "Ms. Saima Noor"
     }
   ],
-  "notices": [
-    {
-      "id": "notice-demo-1",
-      "school_id": "school-apex",
-      "title": "Mid-Term Examinations Schedule & Hall Tickets Notice",
-      "content": "Mid-Term Assessment will commence from Monday, 17th November 2026. Students must carry original school identity card and fee clearance voucher.",
-      "audience": "all",
-      "priority": "high",
-      "created_at": "2026-10-25T00:00:00.000Z"
-    },
-    {
-      "id": "notice-demo-2",
-      "school_id": "school-apex",
-      "title": "Annual Inter-House Sports Gala & Swimming Championship",
-      "content": "Trials for Babar, Iqbal, Sir Syed, and Jinnah houses will take place this Saturday on the Main Sports Pavilion from 9:00 AM to 1:00 PM.",
-      "audience": "students",
-      "priority": "medium",
-      "created_at": "2026-10-20T00:00:00.000Z"
-    },
-    {
-      "id": "notice-demo-3",
-      "school_id": "school-apex",
-      "title": "Winter Uniform Mandatory Transition",
-      "content": "Blazers, imperial neckties, and woolen sweaters are mandatory starting 1st November 2026. Available at official campus uniform stores.",
-      "audience": "parents",
-      "priority": "normal",
-      "created_at": "2026-10-18T00:00:00.000Z"
-    }
-  ],
+  "notices": [],
   "queries": [],
   "alerts": [],
-  "datesheets": [
-    {
-      "id": "ds-demo-1",
-      "school_id": "school-apex",
-      "class_id": "Class 10 (O-Levels)",
-      "title": "Cambridge CAIE Mock Examination Datesheet - Winter 2026",
-      "exam_window": "Nov 17 - Nov 28, 2026",
-      "papers": [
-        {
-          "date": "2026-11-17",
-          "subject": "English Language 1123/12",
-          "time": "08:30 AM - 10:30 AM",
-          "room": "Hall A"
-        },
-        {
-          "date": "2026-11-19",
-          "subject": "Mathematics 4024/22",
-          "time": "08:30 AM - 11:00 AM",
-          "room": "Hall A"
-        },
-        {
-          "date": "2026-11-21",
-          "subject": "Physics 5054/22",
-          "time": "08:30 AM - 10:15 AM",
-          "room": "Hall B"
-        },
-        {
-          "date": "2026-11-24",
-          "subject": "Chemistry 5070/22",
-          "time": "08:30 AM - 10:00 AM",
-          "room": "Hall B"
-        },
-        {
-          "date": "2026-11-26",
-          "subject": "Biology 5090/22 / CS 2210",
-          "time": "08:30 AM - 10:15 AM",
-          "room": "Hall C"
-        }
-      ]
-    }
-  ]
+  "datesheets": []
 }
