@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database } from 'lucide-react';
+import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database, Crown } from 'lucide-react';
 import { useSchoolData } from '../hooks/useSchoolData';
 import { useSkin } from '../hooks/useSkin';
 import { useAuth } from '../lib/authContext';
@@ -9,11 +9,17 @@ const roleConfigs: Record<
   UserRole,
   { label: string; icon: React.ReactNode; color: string; desc: string }
 > = {
+  owner: {
+    label: 'Platform Owner',
+    icon: <Crown className="w-3.5 h-3.5 text-amber-300" />,
+    color: 'bg-amber-700 text-[#EDE7C7] border-amber-400',
+    desc: 'Platform owner: Multi-tenant control, licensing, branding & demo data management',
+  },
   admin: {
     label: 'School Admin',
     icon: <Shield className="w-3.5 h-3.5" />,
     color: 'bg-[#8B0000] text-[#EDE7C7] border-[#D4AF37]',
-    desc: 'Full access: Student roster, CSV import, soft delete, fees, branding',
+    desc: 'Full access: Student roster, CSV import, soft delete, fees, branding & demo data',
   },
   teacher: {
     label: 'Faculty Teacher',
@@ -30,7 +36,9 @@ const roleConfigs: Record<
 };
 
 const roleBadgeClass = (role?: UserRole) =>
-  role === 'admin'
+  role === 'owner'
+    ? 'bg-amber-600 text-[#EDE7C7] border border-amber-400'
+    : role === 'admin'
     ? 'bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37]'
     : role === 'teacher'
     ? 'bg-[#5B0202] text-[#EDE7C7] border border-[#D4AF37]/50'
@@ -155,7 +163,7 @@ export const RoleSwitcherBar: React.FC = () => {
         {/* Right: Quick Role Switcher Buttons & Reset */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           <span className="text-[#EDE7C7]/60 font-semibold hidden lg:inline font-['Cinzel',serif] text-[11px]">Role:</span>
-          {(['admin', 'teacher', 'parent'] as UserRole[]).map((role) => {
+          {(['owner', 'admin', 'teacher', 'parent'] as UserRole[]).map((role) => {
             const isCurrent = currentUser?.role === role;
             const config = roleConfigs[role];
             return (
