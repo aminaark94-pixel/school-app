@@ -651,6 +651,23 @@ function emitChange() {
   listeners.forEach((listener) => listener());
 }
 
+export interface FullSchoolDataset {
+  version: string;
+  exported_at: string;
+  description?: string;
+  schools?: School[];
+  users?: User[];
+  students?: Student[];
+  attendance?: Attendance[];
+  fees?: Fee[];
+  results?: Result[];
+  diary?: DiaryEntry[];
+  notices?: Notice[];
+  queries?: CommunicationQuery[];
+  alerts?: AbsenceAlert[];
+  datesheets?: Datesheet[];
+}
+
 export const LocalStore = {
   subscribe(listener: StorageListener) {
     listeners.add(listener);
@@ -693,6 +710,11 @@ export const LocalStore = {
       return INITIAL_USERS;
     }
     return JSON.parse(raw);
+  },
+
+  saveUsers(users: User[]) {
+    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    emitChange();
   },
 
   getStudents(): Student[] {
@@ -882,6 +904,79 @@ export const LocalStore = {
 
   resetDiaryToSample() {
     localStorage.setItem(STORAGE_KEYS.DIARY, JSON.stringify(INITIAL_DIARY));
+    emitChange();
+  },
+
+  exportFullDataset(): FullSchoolDataset {
+    return {
+      version: '2.0-realistic',
+      exported_at: new Date().toISOString(),
+      description: 'Exported school application state',
+      schools: this.getSchools(),
+      users: this.getUsers(),
+      students: this.getStudents(),
+      attendance: this.getAttendance(),
+      fees: this.getFees(),
+      results: this.getResults(),
+      diary: this.getDiary(),
+      notices: this.getNotices(),
+      queries: this.getQueries(),
+      alerts: this.getAlerts(),
+      datesheets: this.getDatesheets(),
+    };
+  },
+
+  importFullDataset(data: Partial<FullSchoolDataset>) {
+    if (data.schools && Array.isArray(data.schools)) {
+      localStorage.setItem(STORAGE_KEYS.SCHOOLS, JSON.stringify(data.schools));
+    }
+    if (data.users && Array.isArray(data.users)) {
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(data.users));
+    }
+    if (data.students && Array.isArray(data.students)) {
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(data.students));
+    }
+    if (data.attendance && Array.isArray(data.attendance)) {
+      localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify(data.attendance));
+    }
+    if (data.fees && Array.isArray(data.fees)) {
+      localStorage.setItem(STORAGE_KEYS.FEES, JSON.stringify(data.fees));
+    }
+    if (data.results && Array.isArray(data.results)) {
+      localStorage.setItem(STORAGE_KEYS.RESULTS, JSON.stringify(data.results));
+    }
+    if (data.diary && Array.isArray(data.diary)) {
+      localStorage.setItem(STORAGE_KEYS.DIARY, JSON.stringify(data.diary));
+    }
+    if (data.notices && Array.isArray(data.notices)) {
+      localStorage.setItem(STORAGE_KEYS.NOTICES, JSON.stringify(data.notices));
+    }
+    if (data.queries && Array.isArray(data.queries)) {
+      localStorage.setItem(STORAGE_KEYS.QUERIES, JSON.stringify(data.queries));
+    }
+    if (data.alerts && Array.isArray(data.alerts)) {
+      localStorage.setItem(STORAGE_KEYS.ALERTS, JSON.stringify(data.alerts));
+    }
+    if (data.datesheets && Array.isArray(data.datesheets)) {
+      localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(data.datesheets));
+    }
+    emitChange();
+  },
+
+  clearAllDemoData(keepSchoolOnly: boolean = true) {
+    localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.FEES, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.RESULTS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.DIARY, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.NOTICES, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.QUERIES, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.ALERTS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify([]));
+    if (!keepSchoolOnly) {
+      localStorage.setItem(STORAGE_KEYS.SCHOOLS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify([]));
+    }
     emitChange();
   },
 
