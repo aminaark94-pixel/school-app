@@ -18,7 +18,11 @@ import {
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { FullSchoolDataset } from '../../lib/storage';
 
-export const DemoDataManager: React.FC = () => {
+export interface DemoDataManagerProps {
+  onNavigateToRoster?: () => void;
+}
+
+export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRoster }) => {
   const {
     students,
     attendance,
@@ -85,12 +89,12 @@ export const DemoDataManager: React.FC = () => {
     setIsProcessing(true);
 
     try {
-      const res = await fetch('/demo-school-data.json');
+      const res = await fetch('/demo-school-data.json?t=' + Date.now());
       if (res.ok) {
         const data = await res.json();
         importFullDataset(data);
         setSuccessMsg(
-          `Official realistic demonstration dataset loaded! (${data.students?.length || 0} scholars, Cambridge O-Levels, CamScanner planners & PKR fee vouchers).`
+          `Official realistic demonstration dataset loaded! (${data.students?.length || 0} scholars across Cambridge O-Levels, Matric & Primary, ${data.diary?.length || 0} diary lessons & ${data.fees?.length || 0} PKR fee vouchers).`
         );
       } else {
         // Fallback to defaults
@@ -165,9 +169,20 @@ export const DemoDataManager: React.FC = () => {
 
       {/* Notifications */}
       {successMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold flex items-center gap-2.5 animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>{successMsg}</span>
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-bold flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 animate-in fade-in">
+          <div className="flex items-center gap-2.5">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <span>{successMsg}</span>
+          </div>
+          {onNavigateToRoster && (
+            <button
+              onClick={onNavigateToRoster}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8B0000] hover:bg-[#5B0202] text-[#EDE7C7] text-xs font-bold transition shadow-xs shrink-0 self-start sm:self-auto cursor-pointer"
+            >
+              <span>View Roster ({students.length} Scholars)</span>
+              <span>→</span>
+            </button>
+          )}
         </div>
       )}
       {errorMsg && (
@@ -302,3 +317,4 @@ export const DemoDataManager: React.FC = () => {
     </div>
   );
 };
+
