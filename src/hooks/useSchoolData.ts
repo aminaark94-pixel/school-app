@@ -13,7 +13,7 @@ import {
   CommunicationQuery,
   Datesheet,
 } from '../types';
-import { LocalStore } from '../lib/storage';
+import { LocalStore, FullSchoolDataset } from '../lib/storage';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../lib/authContext';
 import { useDiaryStore, diaryActions } from '../lib/diaryStore';
@@ -1037,6 +1037,18 @@ export function useSchoolData() {
     [cloudSchoolId]
   );
 
+  const importFullDataset = useCallback((data: Partial<FullSchoolDataset>) => {
+    LocalStore.importFullDataset(data);
+  }, []);
+
+  const exportFullDataset = useCallback(() => {
+    return LocalStore.exportFullDataset();
+  }, []);
+
+  const clearAllDemoData = useCallback((keepSchoolOnly: boolean = true) => {
+    LocalStore.clearAllDemoData(keepSchoolOnly);
+  }, []);
+
   return {
     schools,
     currentSchool,
@@ -1068,6 +1080,9 @@ export function useSchoolData() {
     linkParentToStudent,
     updateSchoolBranding,
     resetToDefaults,
+    importFullDataset,
+    exportFullDataset,
+    clearAllDemoData,
     addDiaryEntry,
     markDiaryAsRead,
     deleteDiaryEntry,
