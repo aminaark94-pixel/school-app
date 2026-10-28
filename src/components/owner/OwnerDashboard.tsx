@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { getSupabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/authContext';
+import { DemoDataManager } from '../admin/DemoDataManager';
 
 interface SchoolRow {
   id: string;
@@ -305,6 +306,9 @@ export const OwnerDashboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Demo & Sample Data Operations Center */}
+      <DemoDataManager />
     </div>
   );
 };
