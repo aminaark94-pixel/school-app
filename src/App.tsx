@@ -59,8 +59,7 @@ export default function App() {
       {/* 3. Main workspace */}
       <main className={`skin-content skin-content-${skin.id} flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6`}>
         {/* Module title (sub-modules only). Compact on phones: no long blurb, no duplicate school pill. */}
-        {activeModule !== 'portal' && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 pb-1 sm:pb-2">
+        {activeModule !== 'portal' && (\n          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 pb-1 sm:pb-2">
             <div className="min-w-0">
               <button
                 onClick={() => setActiveModule('portal')}
@@ -72,7 +71,7 @@ export default function App() {
               </button>
               <h2
                 className="text-lg sm:text-2xl font-bold tracking-tight text-[var(--t-ink)] italic leading-snug"
-                style={{ fontFamily: 'var(--t-font-display, "Cormorant Garamond", serif)' }}
+                style={{ fontFamily: 'var(--t-font-display, \"Cormorant Garamond\", serif)' }}
               >
                 {activeModule === 'diary' && 'Digital Student Diary & Homework Feed'}
                 {activeModule === 'attendance' && 'Attendance Register'}
@@ -83,7 +82,7 @@ export default function App() {
               </h2>
               <p className="hidden sm:block text-sm text-[var(--t-ink)]/70 mt-1 font-medium">
                 {activeModule === 'diary' &&
-                  'Daily classwork & homework log with chalkboard photos, absent student catch-up, and verified parent read receipts.'}
+                  'Daily classwork & homework log with Class Work & Planner PDF scans, absent student catch-up, and verified parent read receipts.'}
                 {activeModule === 'attendance' &&
                   'Record, review, and maintain daily class attendance for your school.'}
                 {activeModule === 'results' &&
@@ -105,7 +104,7 @@ export default function App() {
               />
               <span
                 className="font-bold text-[var(--t-ink)]"
-                style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
+                style={{ fontFamily: 'var(--t-font-display, \"Cinzel\", serif)' }}
               >
                 {skin.name}
               </span>
@@ -143,12 +142,12 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span
             className="font-bold text-[var(--t-ink)]"
-            style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
+            style={{ fontFamily: 'var(--t-font-display, \"Cinzel\", serif)' }}
           >
             {skin.name} • School Management PWA
           </span>
           <span className="hidden sm:inline text-[11px] text-[var(--t-primary)] font-semibold">
-            Digital Diary • Blackboard Photo Capture • Zero Paper Circulars • Fee-Locked Reports
+            Digital Diary • Class Work & Planner PDF • Zero Paper Circulars • Fee-Locked Reports
           </span>
         </div>
       </footer>
