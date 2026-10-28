@@ -398,7 +398,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
   {
     id: 'diary-1',
     school_id: 'school-apex',
-    class_id: 'Grade 10',
+    class_id: 'Class 10 (O-Levels)',
     section: 'A',
     subject: 'Mathematics',
     date: TODAY_STR,
@@ -406,7 +406,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     homework: 'Solve textbook Questions 5, 8, 12 on neat registers. Prepare Theorem 4.1 for tomorrow morning test.',
     due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
     teacher_id: 'user-teacher-apex',
-    teacher_name: 'Prof. Marcus Brody',
+    teacher_name: 'Prof. Asim Munir',
     attachments: [
       {
         id: 'att-101',
@@ -417,18 +417,18 @@ export const INITIAL_DIARY: DiaryEntry[] = [
       {
         id: 'att-101-pdf',
         type: 'document',
-        url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        url: '/sample-daily-work-planner.pdf',
         caption: 'Daily Work Planner (CamScanner Scanned PDF) - Full Schedule',
         fileSize: '142.5 KB',
-        fileName: 'Grade10_Daily_Work_Planner_Math.pdf',
+        fileName: 'sample-daily-work-planner.pdf',
       },
     ],
     read_by_parents: [
       {
         parent_id: 'user-parent-1',
-        parent_name: 'Sarah Jenkins',
+        parent_name: 'Tariq Mehmood',
         student_id: 'student-1',
-        student_name: 'Liam Jenkins',
+        student_name: 'Muhammad Hamza',
         read_at: new Date(Date.now() - 3600000).toISOString(),
       },
     ],
@@ -437,7 +437,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
   {
     id: 'diary-2',
     school_id: 'school-apex',
-    class_id: 'Grade 10',
+    class_id: 'Class 10 (O-Levels)',
     section: 'A',
     subject: 'Physics',
     date: TODAY_STR,
@@ -445,7 +445,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     homework: 'Write practical observations in Physics Lab Journal (Experiment 6). Complete numerical problems 1 to 4 on page 142.',
     due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
     teacher_id: 'user-teacher-apex',
-    teacher_name: 'Prof. Marcus Brody',
+    teacher_name: 'Prof. Asim Munir',
     attachments: [
       {
         id: 'att-102',
@@ -460,7 +460,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
   {
     id: 'diary-3',
     school_id: 'school-apex',
-    class_id: 'Grade 10',
+    class_id: 'Class 10 (O-Levels)',
     section: 'A',
     subject: 'English Literature',
     date: TODAY_STR,
@@ -468,13 +468,13 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     homework: 'Write a 250-word critique analyzing Antony persuasive techniques. Memorize lines 75-90.',
     due_date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
     teacher_id: 'user-teacher-apex',
-    teacher_name: 'Prof. Marcus Brody',
+    teacher_name: 'Prof. Asim Munir',
     read_by_parents: [
       {
         parent_id: 'user-parent-1',
-        parent_name: 'Sarah Jenkins',
+        parent_name: 'Tariq Mehmood',
         student_id: 'student-1',
-        student_name: 'Liam Jenkins',
+        student_name: 'Muhammad Hamza',
         read_at: new Date(Date.now() - 1800000).toISOString(),
       },
     ],
@@ -529,12 +529,12 @@ export const INITIAL_QUERIES: CommunicationQuery[] = [
     id: 'query-1',
     school_id: 'school-apex',
     student_id: 'student-1',
-    student_name: 'Liam Jenkins',
-    student_class: 'Grade 10 - Section A',
+    student_name: 'Muhammad Hamza',
+    student_class: 'Class 10 (O-Levels) - Section A',
     parent_id: 'user-parent-1',
-    parent_name: 'Sarah Jenkins',
+    parent_name: 'Tariq Mehmood',
     teacher_id: 'user-teacher-apex',
-    teacher_name: 'Prof. Marcus Brody',
+    teacher_name: 'Prof. Asim Munir',
     subject: 'Catch-up help for Physics practical experiment',
     status: 'open',
     category: 'academic',
@@ -566,14 +566,14 @@ export const INITIAL_ALERTS: AbsenceAlert[] = [
     id: 'alert-1',
     school_id: 'school-apex',
     student_id: 'student-3',
-    student_name: 'Ethan Miller',
-    roll_number: 'APX-103',
-    class_id: 'Grade 10',
+    student_name: 'Danial Qureshi',
+    roll_number: 'AIC-103',
+    class_id: 'Class 10 (O-Levels)',
     section: 'A',
     date: TODAY_STR,
-    parent_id: 'user-parent-3',
-    parent_name: 'Robert Miller',
-    parent_email: 'robert.miller@example.com',
+    parent_id: 'user-parent-1',
+    parent_name: 'Tariq Mehmood',
+    parent_email: 'tariq.mehmood@example.com',
     sent_at: new Date().toISOString(),
     status: 'sent',
   },
@@ -584,7 +584,7 @@ export const INITIAL_DATESHEETS: Datesheet[] = [
     id: 'datesheet-apex-10',
     school_id: 'school-apex',
     title: 'Mid-Term Examinations 2026',
-    class_id: 'Grade 10',
+    class_id: 'Class 10 (O-Levels)',
     term: 'mid_term',
     academic_year: '2025-2026',
     instructions: [
@@ -757,7 +757,39 @@ export const LocalStore = {
       localStorage.setItem(STORAGE_KEYS.DIARY, JSON.stringify(INITIAL_DIARY));
       return INITIAL_DIARY;
     }
-    return JSON.parse(raw);
+    try {
+      const parsed: DiaryEntry[] = JSON.parse(raw);
+      // Auto-migrate cached entries if they have legacy class_id 'Grade 10' or old external PDF URL
+      let changed = false;
+      const migrated = parsed.map((e) => {
+        let entryChanged = false;
+        let class_id = e.class_id;
+        if (class_id === 'Grade 10') {
+          class_id = 'Class 10 (O-Levels)';
+          entryChanged = true;
+        }
+        const attachments = (e.attachments || []).map((att) => {
+          if (att.url && att.url.includes('dummy.pdf')) {
+            entryChanged = true;
+            return { ...att, url: '/sample-daily-work-planner.pdf', fileName: 'sample-daily-work-planner.pdf' };
+          }
+          return att;
+        });
+        if (entryChanged) {
+          changed = true;
+          return { ...e, class_id, attachments };
+        }
+        return e;
+      });
+      if (changed) {
+        localStorage.setItem(STORAGE_KEYS.DIARY, JSON.stringify(migrated));
+        return migrated;
+      }
+      return parsed;
+    } catch {
+      localStorage.setItem(STORAGE_KEYS.DIARY, JSON.stringify(INITIAL_DIARY));
+      return INITIAL_DIARY;
+    }
   },
 
   saveDiary(entries: DiaryEntry[]) {
@@ -845,6 +877,11 @@ export const LocalStore = {
     if (user && user.school_id) {
       localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, user.school_id);
     }
+    emitChange();
+  },
+
+  resetDiaryToSample() {
+    localStorage.setItem(STORAGE_KEYS.DIARY, JSON.stringify(INITIAL_DIARY));
     emitChange();
   },
 
