@@ -19,9 +19,11 @@ import {
   FileText,
   Download,
   Maximize2,
+  RefreshCw,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { DiaryEntry } from '../../types';
+import { LocalStore } from '../../lib/storage';
 
 interface AttachmentItem {
   id: string;
@@ -33,9 +35,8 @@ interface AttachmentItem {
   isPdf?: boolean;
 }
 
-// Sample clean printable work planner PDF data URL for instant zero-dependency testing
-const SAMPLE_PLANNER_PDF =
-  'data:application/pdf;base64,JVBERi0xLjQKJcTl8uXrCjEgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovS2lkcyBbMyAwIFJdCi9Db3VudCAxCj4+CmVuZG9iagozIDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKL01lZGlhQm94IFswIDAgNjEyIDc5Ml0KL0NvbnRlbnRzIDQgMCBSCi9SZXNvdXJjZXMgPDwKL0ZvbnQgPDwKL0YxIDUgMCBSCj4+Cj4+Cj4+CmVuZG9iago0IDAgb2JqCjw8Ci9MZW5ndGggMzE0Cj4+CnN0cmVhbQpCVAovRjEgMTggVGYKNTAgNzQwIFRkCihEQUlMWSBXT1JLIFBMQU5ORVIgLSBDQU1TQ0FOTkVSClNDQU4pIFRqCi9GMSAxMiBUZgowIC0zMCBUZgooQ2xhc3M6IEdyYWRlIDEwIC0gU2VjdGlvbiBBIHwgRGF0ZTogMjAyNi0xMC0yOCkgVGoKMCAtMjAgVGQKKFRlYWNoZXI6IFByb2YuIE1hcmN1cyBCcm9keSB8IFRlcm06IEZpbmFsIFRlcm0pIFRqCjAgLTMwIFRkCihTVUJKRUNUOiBNYXRoZW1hdGljcykgVGoKMCAtMTUgVGQKKkNsYXNzd29yazogQ29tcGxldGVkIEV4ZXJjaXNlIDQuMyBRdWFkcmF0aWMgRXF1YXRpb25zICg3LTExKS4pIFRqCjAgLTE1IFRkCigqSG9tZXdvcms6IFNvbHZlIFF1ZXN0aW9ucyA1LCA4LCAxMiBvbiBuZWF0IHJlZ2lzdGVycy4pIFRqCjAgLTI1IFRkCihTdGF0dXM6IFZlcmlmaWVkIGJ5IFNjaG9vbCBJbmNoYXJnZSkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovQmFzZUZvbnQgL0hlbHZldGljYQo+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDAwNjYgMDAwMDAgbiAKMDAwMDAwMDEyMCAwMDAwMCBuIAowMDAwMDAwMjI1IDAwMDAwIG4gCjAwMDAwMDA1OTAgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA2Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgowMDAwMDAwNjYzCiUlRU9GCg==';
+// Sample clean printable work planner PDF for testing & upload
+const SAMPLE_PLANNER_PDF = '/sample-daily-work-planner.pdf';
 
 export const DiaryModule: React.FC = () => {
   const {
@@ -351,6 +352,14 @@ export const DiaryModule: React.FC = () => {
     markDiaryAsRead(entry.id, currentStudentObj.id, currentStudentObj.name);
   };
 
+  // Load fresh sample diary data (clears stale localStorage diary cache)
+  const handleLoadSampleData = () => {
+    LocalStore.resetDiaryToSample();
+    // Also reset selected class to match the sample data class
+    setSelectedClass('Class 10 (O-Levels)');
+    setSelectedSubject('All');
+  };
+
   return (
     <div className="space-y-6">
       {/* 1. Academic Banner: Class Work & Work Planner PDF */}
@@ -368,14 +377,14 @@ export const DiaryModule: React.FC = () => {
           <div className="max-w-xl space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
               <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Class Work & Work Planner PDF • Daily Academic Log</span>
+              <span>Class Work &amp; Work Planner PDF • Daily Academic Log</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              Digital Student Diary & Work Planner Feed
+              Digital Student Diary &amp; Work Planner Feed
             </h2>
             <p className="text-xs sm:text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
               Instant Class Work snapshots, daily work planner PDFs (CamScanner), laboratory worksheets, absent student
-              syllabus catch-up, and verified parent signatures for Cambridge & Matric streams.
+              syllabus catch-up, and verified parent signatures for Cambridge &amp; Matric streams.
             </p>
           </div>
 
@@ -413,7 +422,7 @@ export const DiaryModule: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-lg sm:text-xl font-bold text-[#200E01] tracking-tight font-['Cormorant_Garamond',serif] italic">
-                Active Curriculum & Planner Feed
+                Active Curriculum &amp; Planner Feed
               </h3>
               <span className="hidden sm:inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]/40 font-['Cinzel',serif]">
                 Digital Roster
@@ -437,6 +446,27 @@ export const DiaryModule: React.FC = () => {
               <span>Upload Work Planner PDF / Class Work</span>
             </button>
           )}
+
+          {/* Load Sample Data Button — always visible for quick testing */}
+          <button
+            onClick={handleLoadSampleData}
+            title="Reset diary to built-in sample entries (3 subjects with PDF & photos)"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl font-bold text-xs text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/50 hover:bg-[#F0E8D0] transition active:scale-95 shadow-sm"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Load Sample Data</span>
+          </button>
+
+          {/* Download Sample PDF file for quick test uploading */}
+          <a
+            href="/sample-daily-work-planner.pdf"
+            download="sample-daily-work-planner.pdf"
+            title="Download sample CamScanner Work Planner PDF to test uploading from phone"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl font-bold text-xs text-amber-900 bg-amber-50 border border-amber-300 hover:bg-amber-100 transition active:scale-95 shadow-sm"
+          >
+            <Download className="w-3.5 h-3.5 text-amber-700" />
+            <span>Sample PDF File</span>
+          </a>
 
           {/* Sub Tab Switcher */}
           <div className="flex items-center p-1 bg-[#F4F4F4] rounded-2xl border border-slate-200/80 text-xs font-bold">
@@ -504,7 +534,7 @@ export const DiaryModule: React.FC = () => {
 
           <div className="text-xs text-[#8B0000] bg-white/90 px-3.5 py-2 rounded-2xl border border-[#D4AF37/40] font-medium">
             <span className="font-bold">Verifiable Signatures:</span> Review your child's daily work planner PDF, check
-            class work notes, and tap "Sign & Mark as Read" to timestamp acknowledgment.
+            class work notes, and tap "Sign &amp; Mark as Read" to timestamp acknowledgment.
           </div>
         </div>
       )}
@@ -561,7 +591,7 @@ export const DiaryModule: React.FC = () => {
             </div>
             <div>
               <h4 className="font-black text-amber-900 text-sm sm:text-base font-['Outfit',sans-serif]">
-                Absent Student Catch-Up Portal (Ghar Baithe Classwork & Work Planner PDF)
+                Absent Student Catch-Up Portal (Ghar Baithe Classwork &amp; Work Planner PDF)
               </h4>
               <p className="text-xs text-amber-800 mt-1 leading-relaxed">
                 Jo bachay kisi wajah se school nahi aa sake, unka syllabus peeche na rahe. Neeche teachers ki share ki
@@ -581,7 +611,7 @@ export const DiaryModule: React.FC = () => {
               <p className="text-base font-black text-slate-900 mt-0.5">{filteredDiary.length} Recorded</p>
             </div>
             <div className="bg-white/90 p-3.5 rounded-2xl border border-amber-200 shadow-2xs">
-              <p className="text-[10px] uppercase tracking-wider text-amber-700 font-extrabold">Planner & Class Work Scans</p>
+              <p className="text-[10px] uppercase tracking-wider text-amber-700 font-extrabold">Planner &amp; Class Work Scans</p>
               <p className="text-base font-black text-emerald-600 mt-0.5">
                 {filteredDiary.filter((d) => d.attachments && d.attachments.length > 0).length} Scans / Docs Available
               </p>
@@ -611,6 +641,25 @@ export const DiaryModule: React.FC = () => {
               Upload Work Planner PDF or Class Work Notes
             </button>
           )}
+          {/* Quick fix: load sample demo data */}
+          <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-center gap-2">
+            <p className="w-full text-[11px] text-slate-400 mb-1">First time? Load sample entries or download test file:</p>
+            <button
+              onClick={handleLoadSampleData}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/50 hover:bg-[#F0E8D0] transition shadow-xs"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              Load Sample Diary Data (3 Subjects)
+            </button>
+            <a
+              href="/sample-daily-work-planner.pdf"
+              download="sample-daily-work-planner.pdf"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 border border-amber-300 hover:bg-amber-100 transition shadow-xs"
+            >
+              <Download className="w-3.5 h-3.5 text-amber-700" />
+              Download Test Sample PDF
+            </a>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-5">
@@ -681,7 +730,7 @@ export const DiaryModule: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-black uppercase tracking-wider text-[#8B0000] flex items-center gap-2 font-['Outfit',sans-serif]">
                           <FileText className="w-4 h-4 text-[#8B0000]" />
-                          Work Planner PDFs & Class Work Notes ({entry.attachments.length})
+                          Work Planner PDFs &amp; Class Work Notes ({entry.attachments.length})
                         </span>
                         <span className="text-[10px] text-slate-500 font-semibold">
                           Tap PDF to read multi-page planner or view notes
@@ -816,7 +865,7 @@ export const DiaryModule: React.FC = () => {
                         {hasParentRead ? (
                           <span className="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
                             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                            Acknowledged by you (Diary & Planner Viewed)
+                            Acknowledged by you (Diary &amp; Planner Viewed)
                           </span>
                         ) : (
                           <span className="text-slate-500 italic">
@@ -856,7 +905,7 @@ export const DiaryModule: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-lg font-extrabold text-slate-900 font-['Outfit',sans-serif]">
-                    Post Class Diary & Work Planner
+                    Post Class Diary &amp; Work Planner
                   </h3>
                   <p className="text-xs text-slate-500">
                     Upload your daily work planner PDF (CamScanner) or snap class work photos.
@@ -978,6 +1027,16 @@ export const DiaryModule: React.FC = () => {
                         <span>Upload PDF or Photo</span>
                       </button>
 
+                      <a
+                        href="/sample-daily-work-planner.pdf"
+                        download="sample-daily-work-planner.pdf"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-xs bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition"
+                        title="Download test sample PDF to phone to test uploading"
+                      >
+                        <Download className="w-3.5 h-3.5 text-white" />
+                        <span>Download Sample PDF</span>
+                      </a>
+
                       <button
                         type="button"
                         onClick={() => setIsCameraActive(!isCameraActive)}
@@ -1091,12 +1150,21 @@ export const DiaryModule: React.FC = () => {
                     >
                       + Worksheet Sample
                     </button>
+                    <a
+                      href="/sample-daily-work-planner.pdf"
+                      download="sample-daily-work-planner.pdf"
+                      className="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 font-extrabold hover:bg-amber-100 flex items-center gap-1"
+                      title="Download sample PDF file to your phone to test the real file upload"
+                    >
+                      <Download className="w-3 h-3 text-amber-700" />
+                      <span>Download Test PDF</span>
+                    </a>
                   </div>
 
                   {/* Attached Files & Gallery Preview */}
                   {uploadedAttachments.length > 0 && (
                     <div className="space-y-2 pt-2 border-t border-slate-200">
-                      <p className="font-bold text-slate-700">Attached Documents & Photos ({uploadedAttachments.length}):</p>
+                      <p className="font-bold text-slate-700">Attached Documents &amp; Photos ({uploadedAttachments.length}):</p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
                         {uploadedAttachments.map((att) => (
                           <div
