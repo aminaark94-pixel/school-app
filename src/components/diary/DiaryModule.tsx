@@ -1,36 +1,44 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   BookOpen,
-  Plus,
   Calendar,
   Clock,
   Eye,
   CheckCheck,
-  Paperclip,
   Image as ImageIcon,
   Camera,
   Upload,
   Send,
   AlertCircle,
-  Filter,
   CheckCircle2,
   ExternalLink,
-  ChevronDown,
   Trash2,
   Sparkles,
-  UserCheck,
   FileEdit,
   X,
-  RefreshCw,
-  Layers,
-  ArrowRight,
+  FileText,
+  Download,
+  Maximize2,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { DiaryEntry } from '../../types';
 
+interface AttachmentItem {
+  id: string;
+  url: string;
+  caption: string;
+  type: 'planner_pdf' | 'classwork_photo' | 'worksheet' | 'handwritten' | 'document' | 'image';
+  fileSize?: string;
+  fileName?: string;
+  isPdf?: boolean;
+}
+
+// Sample clean printable work planner PDF data URL for instant zero-dependency testing
+const SAMPLE_PLANNER_PDF =
+  'data:application/pdf;base64,JVBERi0xLjQKJcTl8uXrCjEgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovS2lkcyBbMyAwIFJdCi9Db3VudCAxCj4+CmVuZG9iagozIDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKL01lZGlhQm94IFswIDAgNjEyIDc5Ml0KL0NvbnRlbnRzIDQgMCBSCi9SZXNvdXJjZXMgPDwKL0ZvbnQgPDwKL0YxIDUgMCBSCj4+Cj4+Cj4+CmVuZG9iago0IDAgb2JqCjw8Ci9MZW5ndGggMzE0Cj4+CnN0cmVhbQpCVAovRjEgMTggVGYKNTAgNzQwIFRkCihEQUlMWSBXT1JLIFBMQU5ORVIgLSBDQU1TQ0FOTkVSClNDQU4pIFRqCi9GMSAxMiBUZgowIC0zMCBUZgooQ2xhc3M6IEdyYWRlIDEwIC0gU2VjdGlvbiBBIHwgRGF0ZTogMjAyNi0xMC0yOCkgVGoKMCAtMjAgVGQKKFRlYWNoZXI6IFByb2YuIE1hcmN1cyBCcm9keSB8IFRlcm06IEZpbmFsIFRlcm0pIFRqCjAgLTMwIFRkCihTVUJKRUNUOiBNYXRoZW1hdGljcykgVGoKMCAtMTUgVGQKKkNsYXNzd29yazogQ29tcGxldGVkIEV4ZXJjaXNlIDQuMyBRdWFkcmF0aWMgRXF1YXRpb25zICg3LTExKS4pIFRqCjAgLTE1IFRkCigqSG9tZXdvcms6IFNvbHZlIFF1ZXN0aW9ucyA1LCA4LCAxMiBvbiBuZWF0IHJlZ2lzdGVycy4pIFRqCjAgLTI1IFRkCihTdGF0dXM6IFZlcmlmaWVkIGJ5IFNjaG9vbCBJbmNoYXJnZSkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8Ci9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovQmFzZUZvbnQgL0hlbHZldGljYQo+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDAwNjYgMDAwMDAgbiAKMDAwMDAwMDEyMCAwMDAwMCBuIAowMDAwMDAwMjI1IDAwMDAwIG4gCjAwMDAwMDA1OTAgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA2Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgowMDAwMDAwNjYzCiUlRU9GCg==';
+
 export const DiaryModule: React.FC = () => {
   const {
-    currentSchool,
     currentUser,
     students,
     diary,
@@ -57,7 +65,7 @@ export const DiaryModule: React.FC = () => {
   const [isComposeOpen, setIsComposeOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'feed' | 'absent_catchup'>('feed');
 
-  // Input Mode: 'photo' (Primary - Take picture / upload) vs 'text' (Secondary - Type / write)
+  // Input Mode: 'photo' (Primary - Upload Planner PDF / Class Work) vs 'text' (Secondary - Type / write)
   const [primaryInputMode, setPrimaryInputMode] = useState<'photo' | 'text'>('photo');
 
   // New Diary Form State
@@ -70,17 +78,24 @@ export const DiaryModule: React.FC = () => {
     new Date(Date.now() + 86400000).toISOString().split('T')[0]
   );
 
-  // Photo & Attachment State (Primary Option)
-  const [uploadedImages, setUploadedImages] = useState<
-    Array<{ id: string; url: string; caption: string; type: 'blackboard' | 'worksheet' | 'handwritten' }>
-  >([]);
-  const [attachmentCaption, setAttachmentCaption] = useState<string>('Blackboard & Notes Capture');
-  const [imageCategory, setImageCategory] = useState<'blackboard' | 'worksheet' | 'handwritten'>('blackboard');
+  // Attachment State (PDF / Class Work Photo)
+  const [uploadedAttachments, setUploadedAttachments] = useState<AttachmentItem[]>([]);
+  const [attachmentCaption, setAttachmentCaption] = useState<string>('Daily Work Planner & Class Work Notes');
+  const [attachmentCategory, setAttachmentCategory] = useState<
+    'planner_pdf' | 'classwork_photo' | 'worksheet' | 'handwritten'
+  >('planner_pdf');
 
-  // Camera Live Capture State
+  // Camera Live Capture & In-App CamScanner Enhancer State
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
+  const [enableMagicFilter, setEnableMagicFilter] = useState<boolean>(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Modals for PDF and Photo Inspection
+  const [activePdfModal, setActivePdfModal] = useState<{ url: string; title: string; fileName?: string } | null>(
+    null
+  );
+  const [activeImageModal, setActiveImageModal] = useState<{ url: string; caption: string } | null>(null);
   const [readReceiptModalEntry, setReadReceiptModalEntry] = useState<DiaryEntry | null>(null);
 
   const subjectsList = [
@@ -95,6 +110,24 @@ export const DiaryModule: React.FC = () => {
     'Islamiat',
     'Social Studies',
   ];
+
+  // Helper to determine if an attachment URL or object is a PDF
+  const isPdfAttachment = (att: {
+    type?: string;
+    url: string;
+    caption?: string;
+    fileName?: string;
+    isPdf?: boolean;
+  }): boolean => {
+    if (att.isPdf) return true;
+    if (att.type === 'document' || att.type === 'planner_pdf') return true;
+    if (att.url.startsWith('data:application/pdf')) return true;
+    if (att.url.toLowerCase().split('?')[0].endsWith('.pdf')) return true;
+    if (att.fileName && att.fileName.toLowerCase().endsWith('.pdf')) return true;
+    if (att.caption && (att.caption.toLowerCase().includes('pdf') || att.caption.toLowerCase().includes('planner')))
+      return true;
+    return false;
+  };
 
   // Camera Stream Handler
   useEffect(() => {
@@ -111,7 +144,9 @@ export const DiaryModule: React.FC = () => {
         .catch((err) => {
           console.warn('Camera access unavailable or declined:', err);
           setIsCameraActive(false);
-          alert('Camera could not be accessed in this browser. You can still use the "Upload from Device" or Preset Photo buttons!');
+          alert(
+            'Camera could not be accessed in this browser. You can still use the "Upload Work Planner PDF" or choose file button!'
+          );
         });
     }
 
@@ -122,7 +157,7 @@ export const DiaryModule: React.FC = () => {
     };
   }, [isCameraActive]);
 
-  // Capture frame from webcam / phone camera
+  // Capture frame from webcam / phone camera with optional CamScanner Magic Filter
   const capturePhotoFromCamera = () => {
     if (!videoRef.current) return;
     const canvas = document.createElement('canvas');
@@ -130,37 +165,55 @@ export const DiaryModule: React.FC = () => {
     canvas.height = videoRef.current.videoHeight || 480;
     const ctx = canvas.getContext('2d');
     if (ctx) {
+      if (enableMagicFilter) {
+        // CamScanner style enhancement: high contrast, boosted whites, crisp dark ink
+        ctx.filter = 'contrast(140%) brightness(110%) saturate(70%)';
+      }
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-      setUploadedImages((prev) => [
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      setUploadedAttachments((prev) => [
         ...prev,
         {
-          id: `img-${Date.now()}`,
+          id: `att-cam-${Date.now()}`,
           url: dataUrl,
-          caption: attachmentCaption || 'Live Blackboard Capture',
-          type: imageCategory,
+          caption:
+            attachmentCaption ||
+            (enableMagicFilter ? 'Class Work Capture (CamScanner Enhanced)' : 'Live Class Work Photo'),
+          type: 'classwork_photo',
+          isPdf: false,
+          fileSize: 'Camera Snap',
+          fileName: 'ClassWork_Live_Snap.jpg',
         },
       ]);
       setIsCameraActive(false);
     }
   };
 
-  // File picker handler (Upload image file from mobile gallery or desktop files)
+  // File picker handler: Accepts both scanned Work Planner PDFs (from CamScanner) and class work photos
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     Array.from(files).forEach((file) => {
+      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
       const reader = new FileReader();
       reader.onload = (event) => {
         if (event.target?.result) {
-          setUploadedImages((prev) => [
+          const fileSizeKb = (file.size / 1024).toFixed(1) + ' KB';
+          setUploadedAttachments((prev) => [
             ...prev,
             {
-              id: `img-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+              id: `att-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
               url: event.target!.result as string,
-              caption: attachmentCaption || file.name,
-              type: imageCategory,
+              caption:
+                attachmentCaption ||
+                (isPdf
+                  ? `Daily Work Planner (${file.name})`
+                  : `Class Work Notes - ${file.name.replace(/\.[^/.]+$/, '')}`),
+              type: isPdf ? 'planner_pdf' : attachmentCategory,
+              fileSize: fileSizeKb,
+              fileName: file.name,
+              isPdf,
             },
           ]);
         }
@@ -171,31 +224,53 @@ export const DiaryModule: React.FC = () => {
     if (e.target) e.target.value = '';
   };
 
-  // Quick Preset Blackboard / Worksheet samples for demo convenience
-  const addPresetBlackboard = (presetType: 'blackboard' | 'worksheet' | 'handwritten') => {
+  // Quick Presets: Scanned Work Planner PDF, Class Work Notes, Practice Worksheet
+  const addPresetAttachment = (presetType: 'planner_pdf' | 'classwork_photo' | 'worksheet' | 'handwritten') => {
+    if (presetType === 'planner_pdf') {
+      setUploadedAttachments((prev) => [
+        ...prev,
+        {
+          id: `preset-pdf-${Date.now()}`,
+          url: SAMPLE_PLANNER_PDF,
+          caption: 'Daily Work Planner (CamScanner Scanned PDF) - Full Page Schedule',
+          type: 'planner_pdf',
+          fileSize: '142.5 KB',
+          fileName: 'Grade10_Daily_Work_Planner.pdf',
+          isPdf: true,
+        },
+      ]);
+      return;
+    }
+
     const presets = {
-      blackboard: {
-        url: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&auto=format&fit=crop&q=80',
-        caption: 'Blackboard Lecture Notes: Theorem proofs & key formulas',
+      classwork_photo: {
+        url: 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=800&auto=format&fit=crop&q=80',
+        caption: 'Class Work Notes - Formula derivations & step-by-step example',
+        fileName: 'Class_Work_Lecture.jpg',
       },
       worksheet: {
         url: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=800&auto=format&fit=crop&q=80',
         caption: 'Class Exercise Practice Worksheet (Questions 1 to 10)',
+        fileName: 'Practice_Worksheet_Ch4.jpg',
       },
       handwritten: {
         url: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&auto=format&fit=crop&q=80',
         caption: 'Teacher Handwritten Class Notes & Derivations',
+        fileName: 'Teacher_Handwritten_Notes.jpg',
       },
     };
 
     const chosen = presets[presetType];
-    setUploadedImages((prev) => [
+    setUploadedAttachments((prev) => [
       ...prev,
       {
-        id: `img-preset-${Date.now()}`,
+        id: `preset-img-${Date.now()}`,
         url: chosen.url,
         caption: chosen.caption,
         type: presetType,
+        fileName: chosen.fileName,
+        fileSize: 'Sample',
+        isPdf: false,
       },
     ]);
   };
@@ -216,7 +291,6 @@ export const DiaryModule: React.FC = () => {
     return matchesClass && matchesSubject;
   });
 
-  // Active student status for Absent Catch-up helper
   const currentStudentObj = students.find((s) => s.id === selectedStudentId);
   const todayDateStr = new Date().toISOString().split('T')[0];
   const isCurrentStudentAbsentToday = attendance.some(
@@ -226,30 +300,32 @@ export const DiaryModule: React.FC = () => {
   const handleCreateEntry = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation: Must have either photos or text
-    if (uploadedImages.length === 0 && !formClasswork.trim() && !formHomework.trim()) {
-      alert('Please either snap/upload a picture of blackboard/work OR write the classwork text!');
+    // Validation: Must have either attachments (PDF/photos) or written text
+    if (uploadedAttachments.length === 0 && !formClasswork.trim() && !formHomework.trim()) {
+      alert('Please either upload a Work Planner PDF / Class Work photo OR write the classwork text!');
       return;
     }
 
-    const attachments = uploadedImages.map((img) => ({
-      id: img.id,
-      type: 'image' as const,
-      url: img.url,
-      caption: img.caption,
+    const attachments = uploadedAttachments.map((att) => ({
+      id: att.id,
+      type: (att.isPdf ? 'document' : 'image') as 'document' | 'image',
+      url: att.url,
+      caption: att.caption,
+      fileSize: att.fileSize,
+      fileName: att.fileName,
     }));
 
-    // Auto-fill fallback text if teacher primarily uploaded photos
+    // Auto-fill fallback text if teacher primarily uploaded files/PDFs
     const finalClasswork =
       formClasswork.trim() ||
-      (uploadedImages.length > 0
-        ? `[See attached ${uploadedImages.length} whiteboard / classwork photo(s)]\nCovered textbook curriculum as captured on the blackboard.`
+      (uploadedAttachments.length > 0
+        ? `[See attached ${uploadedAttachments.length} Work Planner PDF / Class Work note(s)]\nCovered textbook curriculum as recorded in daily work planner.`
         : 'Daily class exercises and guided textbook discussions.');
 
     const finalHomework =
       formHomework.trim() ||
-      (uploadedImages.length > 0
-        ? `[Review attached board photos]\nComplete textbook homework questions and replicate notes into homework register.`
+      (uploadedAttachments.length > 0
+        ? `[Review attached Work Planner PDF / Class Work notes]\nComplete daily questions and transcribe assigned exercises into homework register.`
         : 'Complete daily exercises and practice workbook questions.');
 
     addDiaryEntry({
@@ -266,7 +342,7 @@ export const DiaryModule: React.FC = () => {
     // Reset Form
     setFormClasswork('');
     setFormHomework('');
-    setUploadedImages([]);
+    setUploadedAttachments([]);
     setIsComposeOpen(false);
   };
 
@@ -277,13 +353,13 @@ export const DiaryModule: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Prestigious Classroom Blackboard & Study Banner */}
+      {/* 1. Academic Banner: Class Work & Work Planner PDF */}
       <div className="relative rounded-[32px] overflow-hidden shadow-lg border border-[#EDE7C7] bg-[#200E01] text-[#EDE7C7]">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&auto=format&fit=crop&q=80"
-            alt="School Classroom Blackboard"
-            className="w-full h-full object-cover opacity-35"
+            alt="School Class Work"
+            className="w-full h-full object-cover opacity-30"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#200E01] via-[#200E01]/85 to-transparent" />
         </div>
@@ -292,13 +368,14 @@ export const DiaryModule: React.FC = () => {
           <div className="max-w-xl space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
               <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Chalkboard & Lecture Notes • Daily Academic Log</span>
+              <span>Class Work & Work Planner PDF • Daily Academic Log</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              Digital Student Diary & Homework Feed
+              Digital Student Diary & Work Planner Feed
             </h2>
             <p className="text-xs sm:text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Instant blackboard snapshots, laboratory worksheets, absent student syllabus catch-up, and verified parent signatures for Cambridge & Matric streams.
+              Instant Class Work snapshots, daily work planner PDFs (CamScanner), laboratory worksheets, absent student
+              syllabus catch-up, and verified parent signatures for Cambridge & Matric streams.
             </p>
           </div>
 
@@ -336,14 +413,14 @@ export const DiaryModule: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-lg sm:text-xl font-bold text-[#200E01] tracking-tight font-['Cormorant_Garamond',serif] italic">
-                Active Curriculum Feed
+                Active Curriculum & Planner Feed
               </h3>
               <span className="hidden sm:inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]/40 font-['Cinzel',serif]">
                 Digital Roster
               </span>
             </div>
             <p className="text-xs text-[#5B0202]/70 mt-0.5 font-medium">
-              Review assigned homework, textbook exercises, and laboratory submissions.
+              Review assigned homework, work planner PDFs, and class work derivations.
             </p>
           </div>
         </div>
@@ -356,8 +433,8 @@ export const DiaryModule: React.FC = () => {
               onClick={() => setIsComposeOpen(true)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-white bg-[#8B0000] hover:bg-[#700000] shadow-sm shadow-[#8B0000]/20 transition active:scale-95"
             >
-              <Camera className="w-4 h-4" />
-              <span>Post Diary (Snap or Write)</span>
+              <Upload className="w-4 h-4" />
+              <span>Upload Work Planner PDF / Class Work</span>
             </button>
           )}
 
@@ -388,7 +465,7 @@ export const DiaryModule: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Parent Persona Context Bar */}
+      {/* Parent Persona Context Bar */}
       {isParent && (
         <div className="bg-[#FAF8F2] border border-[#E7E0EE] rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-2xs">
           <div className="flex items-center gap-3.5">
@@ -426,12 +503,13 @@ export const DiaryModule: React.FC = () => {
           </div>
 
           <div className="text-xs text-[#8B0000] bg-white/90 px-3.5 py-2 rounded-2xl border border-[#D4AF37/40] font-medium">
-            <span className="font-bold">Verifiable Signatures:</span> Clicking "Sign & Mark as Read" logs an official timestamp to end communication arguments.
+            <span className="font-bold">Verifiable Signatures:</span> Review your child's daily work planner PDF, check
+            class work notes, and tap "Sign & Mark as Read" to timestamp acknowledgment.
           </div>
         </div>
       )}
 
-      {/* 3. Class & Subject Filter Bar */}
+      {/* Class & Subject Filter Bar */}
       <div className="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-3">
           {!isParent && (
@@ -469,26 +547,26 @@ export const DiaryModule: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-slate-500 font-semibold text-[11px] flex items-center gap-1.5">
-          <Calendar className="w-3.5 h-3.5 text-[#8B0000]" />
-          <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}</span>
+        <div className="text-[11px] font-semibold text-slate-400">
+          Showing {filteredDiary.length} entries for today
         </div>
       </div>
 
-      {/* 4. Absent Student Catch-Up Portal Banner */}
+      {/* 4. Absent Student Syllabus Catch-up Tab */}
       {activeTab === 'absent_catchup' && (
-        <div className="bg-linear-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
+        <div className="bg-amber-50 border-2 border-amber-300/80 rounded-3xl p-5 sm:p-6 space-y-4 shadow-sm animate-in fade-in">
           <div className="flex items-start gap-3.5">
             <div className="p-2.5 bg-amber-500 text-white rounded-2xl shadow-xs">
               <AlertCircle className="w-5 h-5" />
             </div>
             <div>
               <h4 className="font-black text-amber-900 text-sm sm:text-base font-['Outfit',sans-serif]">
-                Absent Student Catch-Up Portal (Ghar Baithe Classwork & Blackboard Notes)
+                Absent Student Catch-Up Portal (Ghar Baithe Classwork & Work Planner PDF)
               </h4>
               <p className="text-xs text-amber-800 mt-1 leading-relaxed">
-                Jo bachay kisi wajah se school nahi aa sake, unka syllabus peeche na rahe. 
-                Neeche teachers ki share ki hui blackboard ki pictures, derivations, aur daily homework dekh kar bachay ghar bethe register par kaam complete kar sakte hain.
+                Jo bachay kisi wajah se school nahi aa sake, unka syllabus peeche na rahe. Neeche teachers ki share ki
+                hui pure daily work planner PDF (CamScanner), class work derivations, aur daily homework dekh kar bachay
+                ghar bethe register par kaam complete kar sakte hain.
               </p>
             </div>
           </div>
@@ -503,9 +581,9 @@ export const DiaryModule: React.FC = () => {
               <p className="text-base font-black text-slate-900 mt-0.5">{filteredDiary.length} Recorded</p>
             </div>
             <div className="bg-white/90 p-3.5 rounded-2xl border border-amber-200 shadow-2xs">
-              <p className="text-[10px] uppercase tracking-wider text-amber-700 font-extrabold">Board Photos Available</p>
+              <p className="text-[10px] uppercase tracking-wider text-amber-700 font-extrabold">Planner & Class Work Scans</p>
               <p className="text-base font-black text-emerald-600 mt-0.5">
-                {filteredDiary.filter((d) => d.attachments && d.attachments.length > 0).length} Photo Logs
+                {filteredDiary.filter((d) => d.attachments && d.attachments.length > 0).length} Scans / Docs Available
               </p>
             </div>
           </div>
@@ -518,17 +596,19 @@ export const DiaryModule: React.FC = () => {
           <div className="w-14 h-14 rounded-2xl bg-[#FAF8F2] text-[#8B0000] mx-auto flex items-center justify-center shadow-xs">
             <BookOpen className="w-7 h-7" />
           </div>
-          <h4 className="font-extrabold text-slate-800 text-sm font-['Outfit',sans-serif]">No Diary Entries For This Selection Yet</h4>
+          <h4 className="font-extrabold text-slate-800 text-sm font-['Outfit',sans-serif]">
+            No Diary Entries For This Selection Yet
+          </h4>
           <p className="text-xs text-slate-500 max-w-md mx-auto">
-            Teachers haven't posted notes for this class/subject today. You can snap a blackboard picture or write an entry.
+            Teachers haven't posted notes or work planner PDFs for this class/subject today.
           </p>
           {isTeacherOrAdmin && (
             <button
               onClick={() => setIsComposeOpen(true)}
               className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#8B0000] hover:bg-[#700000] transition shadow-xs"
             >
-              <Camera className="w-4 h-4" />
-              Post Blackboard Picture or Notes
+              <Upload className="w-4 h-4" />
+              Upload Work Planner PDF or Class Work Notes
             </button>
           )}
         </div>
@@ -541,51 +621,51 @@ export const DiaryModule: React.FC = () => {
                 )
               : false;
 
-            const readCount = entry.read_by_parents.length;
-
             return (
               <article
                 key={entry.id}
-                id={`diary-card-${entry.id}`}
-                className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(121,82,179,0.06)] hover:shadow-md transition overflow-hidden"
+                className="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden transition hover:shadow-md"
               >
                 {/* Entry Header */}
-                <div className="px-5 sm:px-6 py-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-[#FAF8F2]/50">
+                <div className="p-5 sm:p-6 bg-gradient-to-r from-[#FAF8F2] via-white to-slate-50 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="w-3 h-9 rounded-full bg-[#8B0000]" />
+                    <span className="w-3 h-3 rounded-full bg-[#8B0000]" />
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-extrabold text-slate-900 text-base font-['Outfit',sans-serif]">
+                        <span className="text-base sm:text-lg font-black text-slate-900 font-['Outfit',sans-serif]">
                           {entry.subject}
                         </span>
-                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000]">
-                          {entry.class_id} • Sec {entry.section}
+                        <span className="text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-[#8B0000]/10 text-[#8B0000]">
+                          {entry.class_id} (Sec {entry.section})
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        Teacher: <span className="font-semibold text-slate-700">{entry.teacher_name}</span> • {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                        Recorded by {entry.teacher_name} • {entry.date}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    {/* Read Receipts Indicator */}
-                    <button
-                      id={`btn-read-receipts-${entry.id}`}
-                      onClick={() => setReadReceiptModalEntry(entry)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-[#FAF8F2] text-slate-700 text-xs font-bold transition shadow-2xs"
-                      title="View parents who have read this diary entry"
-                    >
-                      <CheckCheck className={`w-4 h-4 ${readCount > 0 ? 'text-[#8B0000]' : 'text-slate-400'}`} />
-                      <span>{readCount} Parent{readCount === 1 ? '' : 's'} Signed</span>
-                    </button>
-
-                    {/* Delete for Author / Admin */}
+                    {/* Read Receipts count for teachers */}
                     {isTeacherOrAdmin && (
                       <button
-                        onClick={() => deleteDiaryEntry(entry.id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition"
-                        title="Delete diary entry"
+                        onClick={() => setReadReceiptModalEntry(entry)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-100 text-xs font-bold transition border border-purple-200 shadow-2xs"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>{entry.read_by_parents.length} Parents Signed</span>
+                      </button>
+                    )}
+
+                    {isTeacherOrAdmin && (
+                      <button
+                        onClick={() => {
+                          if (confirm('Are you sure you want to delete this diary entry?')) {
+                            deleteDiaryEntry(entry.id);
+                          }
+                        }}
+                        className="p-2 text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 transition"
+                        title="Delete Entry"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -595,45 +675,102 @@ export const DiaryModule: React.FC = () => {
 
                 {/* Main Content Area */}
                 <div className="p-5 sm:p-6 space-y-5">
-                  {/* Photo & Attachment Sharing (PRIMARY EMPHASIS) */}
+                  {/* Attachments Section: Work Planner PDF & Class Work Photos */}
                   {entry.attachments && entry.attachments.length > 0 && (
                     <div className="space-y-3 bg-[#FAF8F2] p-4 sm:p-5 rounded-2xl border border-[#ECE5F4]">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-black uppercase tracking-wider text-[#8B0000] flex items-center gap-2 font-['Outfit',sans-serif]">
-                          <Camera className="w-4 h-4 text-[#8B0000]" />
-                          Whiteboard & Work Photos ({entry.attachments.length})
+                          <FileText className="w-4 h-4 text-[#8B0000]" />
+                          Work Planner PDFs & Class Work Notes ({entry.attachments.length})
                         </span>
                         <span className="text-[10px] text-slate-500 font-semibold">
-                          Tap image to zoom or copy notes
+                          Tap PDF to read multi-page planner or view notes
                         </span>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        {entry.attachments.map((att) => (
-                          <div
-                            key={att.id}
-                            className="group relative rounded-2xl border border-slate-200 overflow-hidden bg-slate-900 shadow-2xs"
-                          >
-                            <img
-                              src={att.url}
-                              alt={att.caption}
-                              className="w-full h-48 object-cover group-hover:scale-105 transition duration-300 opacity-90 group-hover:opacity-100"
-                              referrerPolicy="no-referrer"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent flex flex-col justify-end p-3 text-white">
-                              <span className="text-xs font-bold line-clamp-1">{att.caption}</span>
-                              <a
-                                href={att.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-purple-200 hover:text-white"
+                        {entry.attachments.map((att) => {
+                          const isPdf = isPdfAttachment(att);
+
+                          if (isPdf) {
+                            return (
+                              <div
+                                key={att.id}
+                                className="group relative rounded-2xl border-2 border-rose-200/90 bg-white p-4 shadow-sm hover:shadow-md hover:border-[#8B0000] transition flex flex-col justify-between"
                               >
-                                <span>Inspect Full Resolution</span>
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
+                                <div>
+                                  <div className="flex items-center justify-between mb-3">
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-rose-100 text-rose-800 text-[10px] font-black uppercase tracking-wider">
+                                      <FileText className="w-3 h-3 text-rose-700" />
+                                      PDF Document
+                                    </span>
+                                    <span className="text-[10px] font-bold text-slate-400">
+                                      {att.fileSize || 'CamScanner Scan'}
+                                    </span>
+                                  </div>
+                                  <h5 className="font-extrabold text-slate-900 text-xs line-clamp-2 leading-tight">
+                                    {att.caption}
+                                  </h5>
+                                  <p className="text-[10px] text-slate-500 truncate mt-1">
+                                    {att.fileName || 'Daily_Work_Planner.pdf'}
+                                  </p>
+                                </div>
+
+                                <div className="pt-4 flex items-center gap-2 border-t border-slate-100 mt-3">
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      setActivePdfModal({
+                                        url: att.url,
+                                        title: att.caption,
+                                        fileName: att.fileName,
+                                      })
+                                    }
+                                    className="flex-1 py-1.5 px-2.5 rounded-xl bg-[#8B0000] hover:bg-[#700000] text-white text-[11px] font-extrabold flex items-center justify-center gap-1.5 shadow-xs transition"
+                                  >
+                                    <Maximize2 className="w-3 h-3" />
+                                    <span>Read Full PDF</span>
+                                  </button>
+                                  <a
+                                    href={att.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    download={att.fileName || 'Daily_Work_Planner.pdf'}
+                                    className="p-1.5 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition"
+                                    title="Open / Download"
+                                  >
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                  </a>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          // Class Work Photo
+                          return (
+                            <div
+                              key={att.id}
+                              className="group relative rounded-2xl border border-slate-200 overflow-hidden bg-slate-900 shadow-2xs cursor-pointer"
+                              onClick={() => setActiveImageModal({ url: att.url, caption: att.caption })}
+                            >
+                              <img
+                                src={att.url}
+                                alt={att.caption}
+                                className="w-full h-44 object-cover group-hover:scale-105 transition duration-300 opacity-90 group-hover:opacity-100"
+                                referrerPolicy="no-referrer"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent flex flex-col justify-end p-3 text-white">
+                                <span className="text-xs font-bold line-clamp-1">{att.caption}</span>
+                                <div className="mt-1 flex items-center justify-between text-[10px] text-purple-200 font-semibold">
+                                  <span>Class Work Note</span>
+                                  <span className="flex items-center gap-1 text-white underline">
+                                    <Maximize2 className="w-3 h-3" /> Zoom
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -679,11 +816,11 @@ export const DiaryModule: React.FC = () => {
                         {hasParentRead ? (
                           <span className="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
                             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                            Acknowledged by you (Diary Viewed & Signed)
+                            Acknowledged by you (Diary & Planner Viewed)
                           </span>
                         ) : (
                           <span className="text-slate-500 italic">
-                            Please confirm that you have reviewed your child's diary today.
+                            Please review today's work planner PDF and class work notes.
                           </span>
                         )}
                       </div>
@@ -707,7 +844,7 @@ export const DiaryModule: React.FC = () => {
         </div>
       )}
 
-      {/* 6. Compose Diary Entry Modal with PRIMARY IMAGE / BLACKBOARD CAPTURE */}
+      {/* 6. Compose Diary Entry Modal with PRIMARY PDF & CLASS WORK SCAN */}
       {isComposeOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs">
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200 p-5 sm:p-7 space-y-5 animate-in fade-in zoom-in-95">
@@ -715,14 +852,14 @@ export const DiaryModule: React.FC = () => {
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-[#8B0000] text-white flex items-center justify-center shadow-xs">
-                  <Camera className="w-5 h-5" />
+                  <Upload className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-lg font-extrabold text-slate-900 font-['Outfit',sans-serif]">
-                    Post Class Diary & Blackboard Work
+                    Post Class Diary & Work Planner
                   </h3>
                   <p className="text-xs text-slate-500">
-                    Snap or upload blackboard pictures first, with option to type details.
+                    Upload your daily work planner PDF (CamScanner) or snap class work photos.
                   </p>
                 </div>
               </div>
@@ -748,8 +885,8 @@ export const DiaryModule: React.FC = () => {
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
-                <Camera className="w-4 h-4" />
-                <span>PRIMARY: Snap / Upload Blackboard Photo</span>
+                <FileText className="w-4 h-4" />
+                <span>PRIMARY: Upload Work Planner PDF / Class Work</span>
                 <span className="px-1.5 py-0.2 rounded-md bg-white/20 text-[10px]">Instant</span>
               </button>
               <button
@@ -816,47 +953,48 @@ export const DiaryModule: React.FC = () => {
                 </div>
               </div>
 
-              {/* PRIMARY OPTION: CAMERA SNAP & IMAGE UPLOADER */}
+              {/* PRIMARY OPTION: WORK PLANNER PDF UPLOADER & CLASS WORK CAPTURE */}
               {primaryInputMode === 'photo' && (
                 <div className="bg-[#FAF8F2] border-2 border-dashed border-[#8B0000]/40 rounded-3xl p-5 space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div>
                       <h4 className="text-sm font-extrabold text-slate-900 flex items-center gap-2 font-['Outfit',sans-serif]">
-                        <ImageIcon className="w-4 h-4 text-[#8B0000]" />
-                        Capture Blackboard or Upload Worksheet Photo
+                        <FileText className="w-4 h-4 text-[#8B0000]" />
+                        Upload Daily Work Planner PDF or Class Work Photo
                       </h4>
                       <p className="text-[11px] text-slate-500">
-                        Take a photo of the board directly with your phone camera or select from device files.
+                        Scan your daily work planner using CamScanner and upload the PDF directly, or snap a class work
+                        photo.
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       <button
                         type="button"
-                        onClick={() => setIsCameraActive(!isCameraActive)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition ${
-                          isCameraActive
-                            ? 'bg-rose-600 text-white'
-                            : 'bg-[#8B0000] text-white hover:bg-[#700000]'
-                        }`}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-extrabold text-xs bg-[#8B0000] text-white hover:bg-[#700000] shadow-sm transition"
                       >
-                        <Camera className="w-3.5 h-3.5" />
-                        <span>{isCameraActive ? 'Close Camera' : 'Snap with Camera'}</span>
+                        <Upload className="w-3.5 h-3.5 text-white" />
+                        <span>Upload PDF or Photo</span>
                       </button>
 
                       <button
                         type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 shadow-2xs"
+                        onClick={() => setIsCameraActive(!isCameraActive)}
+                        className={`flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-xs transition border ${
+                          isCameraActive
+                            ? 'bg-rose-600 text-white border-rose-600'
+                            : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 shadow-2xs'
+                        }`}
                       >
-                        <Upload className="w-3.5 h-3.5 text-[#8B0000]" />
-                        <span>Upload Image</span>
+                        <Camera className="w-3.5 h-3.5 text-[#8B0000]" />
+                        <span>{isCameraActive ? 'Close Camera' : 'Snap Class Work'}</span>
                       </button>
 
                       <input
                         ref={fileInputRef}
                         type="file"
-                        accept="image/*"
+                        accept="application/pdf,image/*,.pdf"
                         multiple
                         className="hidden"
                         onChange={handleFileChange}
@@ -864,15 +1002,29 @@ export const DiaryModule: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Live Camera Viewfinder */}
+                  {/* Live Camera Viewfinder with CamScanner Magic Filter toggle */}
                   {isCameraActive && (
                     <div className="relative rounded-2xl overflow-hidden bg-black border-2 border-[#8B0000] p-1 flex flex-col items-center">
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        className="w-full max-h-64 object-cover rounded-xl"
-                      />
+                      <video ref={videoRef} autoPlay playsInline className="w-full max-h-64 object-cover rounded-xl" />
+                      <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs px-3 py-1 rounded-full text-white text-[10px] font-bold flex items-center gap-1.5">
+                        <Camera className="w-3 h-3 text-red-400" />
+                        <span>Live Viewfinder</span>
+                      </div>
+
+                      {/* CamScanner Magic Filter Toggle */}
+                      <button
+                        type="button"
+                        onClick={() => setEnableMagicFilter(!enableMagicFilter)}
+                        className={`absolute top-3 right-3 px-3 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-md transition ${
+                          enableMagicFilter
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-slate-800/80 text-slate-300 border border-slate-600'
+                        }`}
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        <span>CamScanner Enhance: {enableMagicFilter ? 'ON' : 'OFF'}</span>
+                      </button>
+
                       <div className="absolute bottom-3 flex items-center gap-3">
                         <button
                           type="button"
@@ -880,86 +1032,99 @@ export const DiaryModule: React.FC = () => {
                           className="px-5 py-2.5 rounded-full font-black text-xs text-white bg-[#8B0000] hover:bg-[#700000] shadow-lg flex items-center gap-2"
                         >
                           <Camera className="w-4 h-4" />
-                          <span>Capture Photo Now</span>
+                          <span>Capture Class Work Now</span>
                         </button>
                       </div>
                     </div>
                   )}
 
-                  {/* Photo Category Picker & Caption */}
+                  {/* Category Picker & Caption */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Image Type:</label>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Doc / File Type:</label>
                       <select
-                        value={imageCategory}
-                        onChange={(e) => setImageCategory(e.target.value as any)}
+                        value={attachmentCategory}
+                        onChange={(e) => setAttachmentCategory(e.target.value as any)}
                         className="w-full bg-white border border-slate-300 rounded-xl p-2 font-bold focus:ring-2 focus:ring-[#8B0000]"
                       >
-                        <option value="blackboard">Blackboard Lecture</option>
+                        <option value="planner_pdf">Daily Work Planner (CamScanner PDF)</option>
+                        <option value="classwork_photo">Class Work Notes</option>
                         <option value="worksheet">Practice Worksheet</option>
                         <option value="handwritten">Handwritten Notes</option>
                       </select>
                     </div>
 
                     <div className="sm:col-span-2">
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Photo Caption:</label>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Document Caption:</label>
                       <input
                         type="text"
                         value={attachmentCaption}
                         onChange={(e) => setAttachmentCaption(e.target.value)}
-                        placeholder="e.g. Chapter 5 Theorem derivation & diagram on board"
+                        placeholder="e.g. Daily Work Planner Grade 10 or Chapter 5 Class Work notes"
                         className="w-full bg-white border border-slate-300 rounded-xl p-2 font-medium focus:ring-2 focus:ring-[#8B0000]"
                       />
                     </div>
                   </div>
 
-                  {/* Quick Preset Buttons for Quick Testing */}
+                  {/* Quick Preset Buttons for Instant Testing */}
                   <div className="pt-1 flex flex-wrap items-center gap-2 text-[11px]">
-                    <span className="font-bold text-slate-500">Quick Demo Presets:</span>
+                    <span className="font-bold text-slate-500">Quick Testing Samples:</span>
                     <button
                       type="button"
-                      onClick={() => addPresetBlackboard('blackboard')}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-[#8B0000] font-bold hover:bg-[#FAF8F2]"
+                      onClick={() => addPresetAttachment('planner_pdf')}
+                      className="px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-300 text-rose-800 font-extrabold hover:bg-rose-100 flex items-center gap-1"
                     >
-                      + Blackboard Sample
+                      <FileText className="w-3 h-3 text-rose-700" />
+                      <span>+ Scanned Work Planner PDF</span>
                     </button>
                     <button
                       type="button"
-                      onClick={() => addPresetBlackboard('worksheet')}
+                      onClick={() => addPresetAttachment('classwork_photo')}
+                      className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-[#8B0000] font-bold hover:bg-[#FAF8F2]"
+                    >
+                      + Class Work Sample
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addPresetAttachment('worksheet')}
                       className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-blue-700 font-bold hover:bg-blue-50"
                     >
                       + Worksheet Sample
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => addPresetBlackboard('handwritten')}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-amber-700 font-bold hover:bg-amber-50"
-                    >
-                      + Handwritten Notes Sample
-                    </button>
                   </div>
 
-                  {/* Attached Images Gallery Preview */}
-                  {uploadedImages.length > 0 && (
+                  {/* Attached Files & Gallery Preview */}
+                  {uploadedAttachments.length > 0 && (
                     <div className="space-y-2 pt-2 border-t border-slate-200">
-                      <p className="font-bold text-slate-700">Attached Images ({uploadedImages.length}):</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                        {uploadedImages.map((img) => (
+                      <p className="font-bold text-slate-700">Attached Documents & Photos ({uploadedAttachments.length}):</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                        {uploadedAttachments.map((att) => (
                           <div
-                            key={img.id}
-                            className="relative rounded-xl overflow-hidden border border-slate-200 group bg-slate-900"
+                            key={att.id}
+                            className="relative rounded-xl border border-slate-200 p-2.5 bg-white shadow-2xs flex items-center justify-between gap-2"
                           >
-                            <img src={img.url} alt={img.caption} className="w-full h-24 object-cover" />
-                            <div className="absolute inset-0 bg-black/40 flex items-end justify-between p-1.5 text-white">
-                              <span className="text-[10px] truncate max-w-[80%] font-medium">{img.caption}</span>
-                              <button
-                                type="button"
-                                onClick={() => setUploadedImages((prev) => prev.filter((i) => i.id !== img.id))}
-                                className="p-1 text-white bg-rose-600 rounded-md hover:bg-rose-700"
+                            <div className="flex items-center gap-2 min-w-0">
+                              <div
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                                  att.isPdf ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'
+                                }`}
                               >
-                                <X className="w-3 h-3" />
-                              </button>
+                                {att.isPdf ? <FileText className="w-4 h-4" /> : <ImageIcon className="w-4 h-4" />}
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-xs font-bold text-slate-800 truncate">{att.caption}</p>
+                                <p className="text-[10px] text-slate-400 truncate">{att.fileName || (att.isPdf ? 'Planner.pdf' : 'Image.jpg')}</p>
+                              </div>
                             </div>
+
+                            <button
+                              type="button"
+                              onClick={() => setUploadedAttachments((prev) => prev.filter((i) => i.id !== att.id))}
+                              className="p-1 text-slate-400 hover:text-rose-600 rounded-md hover:bg-rose-50"
+                              title="Remove"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
                           </div>
                         ))}
                       </div>
@@ -976,7 +1141,7 @@ export const DiaryModule: React.FC = () => {
                       Classwork Summary (Aaj Class Mein Kya Parhaya / Karwaya)
                     </label>
                     <span className="text-[10px] text-slate-400">
-                      {primaryInputMode === 'photo' ? 'Optional if photo attached' : 'Required'}
+                      {primaryInputMode === 'photo' ? 'Optional if PDF / photo attached' : 'Required'}
                     </span>
                   </div>
                   <textarea
@@ -986,7 +1151,7 @@ export const DiaryModule: React.FC = () => {
                     onChange={(e) => setFormClasswork(e.target.value)}
                     placeholder={
                       primaryInputMode === 'photo'
-                        ? 'Brief remarks (e.g. Discussed textbook exercises 4.2 questions 1-6 as shown on blackboard)...'
+                        ? 'Brief remarks (e.g. As shown in scanned work planner and class work notes)...'
                         : 'Explain classwork lecture details here...'
                     }
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 font-medium text-slate-900 focus:ring-2 focus:ring-[#8B0000]"
@@ -995,11 +1160,9 @@ export const DiaryModule: React.FC = () => {
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <label className="font-bold text-slate-700">
-                      Homework Assignment (Ghar Ka Kaam)
-                    </label>
+                    <label className="font-bold text-slate-700">Homework Assignment (Ghar Ka Kaam)</label>
                     <span className="text-[10px] text-slate-400">
-                      {primaryInputMode === 'photo' ? 'Optional if photo attached' : 'Required'}
+                      {primaryInputMode === 'photo' ? 'Optional if PDF / photo attached' : 'Required'}
                     </span>
                   </div>
                   <textarea
@@ -1009,8 +1172,8 @@ export const DiaryModule: React.FC = () => {
                     onChange={(e) => setFormHomework(e.target.value)}
                     placeholder={
                       primaryInputMode === 'photo'
-                        ? 'e.g. Complete questions written on board in home homework notebooks...'
-                        : 'Write homework instructions here...'
+                        ? 'Brief homework assignment instructions or reference page numbers...'
+                        : 'List homework tasks, page numbers and exercise questions...'
                     }
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 font-medium text-slate-900 focus:ring-2 focus:ring-[#8B0000]"
                   />
@@ -1054,7 +1217,105 @@ export const DiaryModule: React.FC = () => {
         </div>
       )}
 
-      {/* 7. Read Receipts Verifiable Audit Modal */}
+      {/* 7. Full-Screen Interactive PDF Reader Modal */}
+      {activePdfModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-900/80 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[94vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95">
+            {/* PDF Modal Header */}
+            <div className="p-4 sm:p-5 bg-[#FAF8F2] border-b border-slate-200 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-2xl bg-rose-600 text-white flex items-center justify-center shadow-xs shrink-0">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="font-extrabold text-slate-900 text-sm truncate font-['Outfit',sans-serif]">
+                    {activePdfModal.title}
+                  </h4>
+                  <p className="text-[11px] text-slate-500 truncate">
+                    {activePdfModal.fileName || 'Daily_Work_Planner.pdf'} • CamScanner Scanned Work Planner
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href={activePdfModal.url}
+                  download={activePdfModal.fileName || 'Daily_Work_Planner.pdf'}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-bold shadow-2xs transition"
+                >
+                  <Download className="w-3.5 h-3.5 text-[#8B0000]" />
+                  <span>Download</span>
+                </a>
+                <a
+                  href={activePdfModal.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-bold shadow-2xs transition"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">New Tab</span>
+                </a>
+                <button
+                  onClick={() => setActivePdfModal(null)}
+                  className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Embedded PDF Viewer */}
+            <div className="flex-1 bg-slate-100 p-2 min-h-[60vh] max-h-[75vh] overflow-hidden">
+              <iframe
+                src={activePdfModal.url}
+                className="w-full h-full rounded-2xl border border-slate-300 bg-white shadow-inner"
+                title={activePdfModal.title}
+              />
+            </div>
+
+            {/* PDF Modal Footer */}
+            <div className="p-3.5 bg-white border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span>Tip: You can scroll through all pages, zoom in/out, and print this work planner.</span>
+              <button
+                onClick={() => setActivePdfModal(null)}
+                className="px-4 py-1.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 8. Full-Resolution Class Work Photo Modal */}
+      {activeImageModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-xs cursor-pointer"
+          onClick={() => setActiveImageModal(null)}
+        >
+          <div
+            className="relative max-w-4xl w-full max-h-[92vh] flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setActiveImageModal(null)}
+              className="absolute -top-12 right-0 p-2 text-white/80 hover:text-white rounded-full bg-white/10 hover:bg-white/20 transition"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <img
+              src={activeImageModal.url}
+              alt={activeImageModal.caption}
+              className="max-h-[82vh] w-auto max-w-full rounded-2xl shadow-2xl object-contain border border-white/20"
+            />
+            <div className="mt-3 bg-black/70 px-4 py-2 rounded-xl text-white text-xs font-bold max-w-xl text-center">
+              {activeImageModal.caption}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 9. Read Receipts Verifiable Audit Modal */}
       {readReceiptModalEntry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
           <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 p-6 space-y-4 animate-in fade-in zoom-in-95">
