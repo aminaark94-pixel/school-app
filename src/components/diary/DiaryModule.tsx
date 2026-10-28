@@ -436,15 +436,19 @@ export const DiaryModule: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
-          {isTeacherOrAdmin && (
+          {isTeacherOrAdmin ? (
             <button
               id="btn-new-diary-entry"
               onClick={() => setIsComposeOpen(true)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-white bg-[#8B0000] hover:bg-[#700000] shadow-sm shadow-[#8B0000]/20 transition active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-white bg-[#8B0000] hover:opacity-90 shadow-sm shadow-[#8B0000]/20 transition active:scale-95"
             >
               <Upload className="w-4 h-4" />
-              <span>Upload Work Planner PDF / Class Work</span>
+              <span>Post Diary (Upload PDF / Snap or Write)</span>
             </button>
+          ) : (
+            <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-[11px] font-bold text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/40">
+              <span>Parent View (Switch to Teacher/Admin above to post)</span>
+            </div>
           )}
 
           {/* Load Sample Data Button — always visible for quick testing */}
@@ -511,7 +515,7 @@ export const DiaryModule: React.FC = () => {
                   id="select-parent-student"
                   value={selectedStudentId}
                   onChange={(e) => setSelectedStudentId(e.target.value)}
-                  className="bg-white border border-[#D4AF37/40] text-slate-900 font-extrabold text-sm rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-[#8B0000]"
+                  className="bg-white border border-[#D4AF37]/40 text-slate-900 font-extrabold text-sm rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-[#8B0000]"
                 >
                   {parentStudents.length > 0 ? (
                     parentStudents.map((s) => (
@@ -532,7 +536,7 @@ export const DiaryModule: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-xs text-[#8B0000] bg-white/90 px-3.5 py-2 rounded-2xl border border-[#D4AF37/40] font-medium">
+          <div className="text-xs text-[#8B0000] bg-white/90 px-3.5 py-2 rounded-2xl border border-[#D4AF37]/40 font-medium">
             <span className="font-bold">Verifiable Signatures:</span> Review your child's daily work planner PDF, check
             class work notes, and tap "Sign &amp; Mark as Read" to timestamp acknowledgment.
           </div>
@@ -924,7 +928,7 @@ export const DiaryModule: React.FC = () => {
             </div>
 
             {/* PRIMARY VS SECONDARY MODE SELECTOR */}
-            <div className="flex items-center p-1.5 bg-[#FAF8F2] rounded-2xl border border-[#D4AF37/40]">
+            <div className="flex items-center p-1.5 bg-[#FAF8F2] rounded-2xl border border-[#D4AF37]/40">
               <button
                 type="button"
                 onClick={() => setPrimaryInputMode('photo')}
@@ -935,7 +939,7 @@ export const DiaryModule: React.FC = () => {
                 }`}
               >
                 <FileText className="w-4 h-4" />
-                <span>PRIMARY: Upload Work Planner PDF / Class Work</span>
+                <span>PRIMARY: Upload Work Planner PDF / Snap Notes</span>
                 <span className="px-1.5 py-0.2 rounded-md bg-white/20 text-[10px]">Instant</span>
               </button>
               <button
@@ -1021,7 +1025,7 @@ export const DiaryModule: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-extrabold text-xs bg-[#8B0000] text-white hover:bg-[#700000] shadow-sm transition"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-extrabold text-xs bg-[#8B0000] text-white hover:opacity-90 shadow-sm transition active:scale-95"
                       >
                         <Upload className="w-3.5 h-3.5 text-white" />
                         <span>Upload PDF or Photo</span>
@@ -1274,7 +1278,7 @@ export const DiaryModule: React.FC = () => {
                 <button
                   id="btn-submit-diary-entry"
                   type="submit"
-                  className="px-6 py-2.5 rounded-2xl font-bold text-white bg-[#8B0000] hover:bg-[#700000] transition shadow-md shadow-[#8B0000]/20 flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-2xl font-bold text-white bg-[#8B0000] hover:opacity-90 transition shadow-md shadow-[#8B0000]/20 flex items-center gap-2 active:scale-95 cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
                   <span>Publish to Diary Feed</span>
@@ -1419,7 +1423,7 @@ export const DiaryModule: React.FC = () => {
                   {readReceiptModalEntry.read_by_parents.map((r, i) => (
                     <div
                       key={i}
-                      className="p-3 rounded-2xl bg-[#FAF8F2] border border-[#D4AF37/40] flex items-center justify-between text-xs"
+                      className="p-3 rounded-2xl bg-[#FAF8F2] border border-[#D4AF37]/40 flex items-center justify-between text-xs"
                     >
                       <div>
                         <p className="font-bold text-slate-900">{r.parent_name}</p>
