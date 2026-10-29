@@ -37,6 +37,7 @@ export interface Student {
   created_at: string;
   parent_name?: string;
   parent_email?: string;
+  parent_phone?: string;
 }
 
 export type AttendanceStatus = 'present' | 'absent' | 'late';
@@ -213,7 +214,7 @@ export interface ExamScheduleItem {
 export interface Datesheet {
   id: string;
   school_id: string;
-  title: string; // e.g., \"Mid-Term Examinations 2026\"
+  title: string; // e.g., "Mid-Term Examinations 2026"
   class_id: string;
   term: ExamTerm;
   academic_year: string;
@@ -221,3 +222,22 @@ export interface Datesheet {
   schedule: ExamScheduleItem[];
   created_at: string;
 }
+
+// 5. Direct WhatsApp & Android SMS Broadcast Gateway
+export type NotificationChannel = 'whatsapp' | 'sms' | 'both';
+export type NotificationDeliveryStatus = 'queued' | 'sending' | 'sent' | 'failed';
+
+export interface NotificationLog {
+  id: string;
+  school_id: string;
+  recipient_name: string;
+  student_name: string;
+  phone_number: string;
+  channel: NotificationChannel;
+  message: string;
+  status: NotificationDeliveryStatus;
+  sent_at?: string;
+  error?: string;
+  retry_count: number;
+}
+

@@ -16,9 +16,11 @@ import {
   Lock,
   User,
   CheckCircle,
+  Smartphone,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { Notice, CommunicationQuery } from '../../types';
+import { NotificationDispatcher } from './NotificationDispatcher';
 
 export const CommunicationModule: React.FC = () => {
   const {
@@ -37,8 +39,8 @@ export const CommunicationModule: React.FC = () => {
   const isTeacherOrAdmin = currentUser?.role === 'teacher' || currentUser?.role === 'admin';
   const isParent = currentUser?.role === 'parent';
 
-  // Sub Module Switcher: 'notices' (Digital Circulars) vs 'queries' (Structured Parent-Teacher Chat)
-  const [subModule, setSubModule] = useState<'notices' | 'queries'>('notices');
+  // Sub Module Switcher: 'notices' (Digital Circulars) vs 'queries' (Structured Parent-Teacher Chat) vs 'broadcast' (WhatsApp & SMS Gateway)
+  const [subModule, setSubModule] = useState<'notices' | 'queries' | 'broadcast'>('notices');
 
   // Notice Form Modal
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
@@ -168,7 +170,13 @@ export const CommunicationModule: React.FC = () => {
           <div
             className="w-12 h-12 rounded-2xl flex items-center justify-center text-[#EDE7C7] font-black shadow-xs bg-[#8B0000] border border-[#D4AF37]/40"
           >
-            {subModule === 'notices' ? <Megaphone className="w-5 h-5 text-[#D4AF37]" /> : <MessageSquare className="w-5 h-5 text-[#D4AF37]" />}
+            {subModule === 'notices' ? (
+              <Megaphone className="w-5 h-5 text-[#D4AF37]" />
+            ) : subModule === 'queries' ? (
+              <MessageSquare className="w-5 h-5 text-[#D4AF37]" />
+            ) : (
+              <Smartphone className="w-5 h-5 text-emerald-400" />
+            )}
           </div>
           <div>
             <h3 className="text-lg font-bold text-[#200E01] flex items-center gap-2 font-['Cormorant_Garamond',serif] italic text-xl">
@@ -185,11 +193,11 @@ export const CommunicationModule: React.FC = () => {
 
         {/* Sub-Module Switcher */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center p-1 bg-[#F4F4F4] rounded-2xl border border-slate-200/80 text-xs font-bold">
+          <div className="flex flex-wrap items-center p-1 bg-[#F4F4F4] rounded-2xl border border-slate-200/80 text-xs font-bold">
             <button
               id="tab-digital-circulars"
               onClick={() => setSubModule('notices')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl transition font-extrabold ${
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl transition font-extrabold ${
                 subModule === 'notices'
                   ? 'bg-white text-[#8B0000] shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -201,7 +209,7 @@ export const CommunicationModule: React.FC = () => {
             <button
               id="tab-structured-queries"
               onClick={() => setSubModule('queries')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl transition font-extrabold ${
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl transition font-extrabold ${
                 subModule === 'queries'
                   ? 'bg-white text-[#8B0000] shadow-xs'
                   : 'text-slate-600 hover:text-slate-900'
@@ -210,6 +218,20 @@ export const CommunicationModule: React.FC = () => {
               <MessageSquare className="w-4 h-4 text-[#D4AF37]" />
               <span>Structured Queries ({visibleQueries.length})</span>
             </button>
+            {isTeacherOrAdmin && (
+              <button
+                id="tab-whatsapp-broadcast"
+                onClick={() => setSubModule('broadcast')}
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl transition font-extrabold ${
+                  subModule === 'broadcast'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Smartphone className="w-4 h-4" />
+                <span>WhatsApp &amp; SMS Broadcast</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -516,6 +538,9 @@ export const CommunicationModule: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* 3. WHATSAPP & ANDROID SMS BROADCAST GATEWAY */}
+      {subModule === 'broadcast' && <NotificationDispatcher />}
 
       {/* 4. Compose Digital Circular Modal */}
       {isNoticeModalOpen && (

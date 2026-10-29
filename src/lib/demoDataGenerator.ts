@@ -137,6 +137,7 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
         parent_id: parentId,
         parent_name: person.parent,
         parent_email: parentUser.email,
+        parent_phone: person.phone,
         created_at: new Date(now.getTime() - 50 * 86400000).toISOString(),
       };
       students.push(student);
@@ -506,3 +507,4 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
     datesheets,
   };
 }
+
