@@ -63,7 +63,11 @@ const DEFAULT_TEMPLATES = [
   },
 ];
 
-export const NotificationDispatcher: React.FC = () => {
+interface NotificationDispatcherProps {
+  initialMessageText?: string;
+}
+
+export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ initialMessageText }) => {
   const { currentSchool, students, fees } = useSchoolData();
 
   // 1. Gateway Server URL (defaults to local express server on 5001)
@@ -98,7 +102,15 @@ export const NotificationDispatcher: React.FC = () => {
 
   // 3. Channel & Message
   const [channel, setChannel] = useState<NotificationChannel>('whatsapp');
-  const [messageTemplate, setMessageTemplate] = useState<string>(DEFAULT_TEMPLATES[0].text);
+  const [messageTemplate, setMessageTemplate] = useState<string>(() => {
+    return initialMessageText || DEFAULT_TEMPLATES[0].text;
+  });
+
+  useEffect(() => {
+    if (initialMessageText) {
+      setMessageTemplate(initialMessageText);
+    }
+  }, [initialMessageText]);
   const [minDelaySec, setMinDelaySec] = useState<number>(5);
   const [maxDelaySec, setMaxDelaySec] = useState<number>(10);
 
@@ -1018,3 +1030,4 @@ export const NotificationDispatcher: React.FC = () => {
     </div>
   );
 };
+

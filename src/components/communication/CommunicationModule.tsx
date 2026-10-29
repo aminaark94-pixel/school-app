@@ -17,10 +17,12 @@ import {
   User,
   CheckCircle,
   Smartphone,
+  Zap,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { Notice, CommunicationQuery } from '../../types';
 import { NotificationDispatcher } from './NotificationDispatcher';
+import { CircularAutomationPanel } from './CircularAutomationPanel';
 
 export const CommunicationModule: React.FC = () => {
   const {
@@ -39,8 +41,9 @@ export const CommunicationModule: React.FC = () => {
   const isTeacherOrAdmin = currentUser?.role === 'teacher' || currentUser?.role === 'admin';
   const isParent = currentUser?.role === 'parent';
 
-  // Sub Module Switcher: 'notices' (Digital Circulars) vs 'queries' (Structured Parent-Teacher Chat) vs 'broadcast' (WhatsApp & SMS Gateway)
-  const [subModule, setSubModule] = useState<'notices' | 'queries' | 'broadcast'>('notices');
+  // Sub Module Switcher: 'notices' (Digital Circulars) vs 'queries' (Structured Parent-Teacher Chat) vs 'broadcast' (WhatsApp & SMS) vs 'automation' (Holidays & Fees)
+  const [subModule, setSubModule] = useState<'notices' | 'queries' | 'broadcast' | 'automation'>('notices');
+  const [broadcastPresetText, setBroadcastPresetText] = useState<string>('');
 
   // Notice Form Modal
   const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
@@ -219,18 +222,32 @@ export const CommunicationModule: React.FC = () => {
               <span>Structured Queries ({visibleQueries.length})</span>
             </button>
             {isTeacherOrAdmin && (
-              <button
-                id="tab-whatsapp-broadcast"
-                onClick={() => setSubModule('broadcast')}
-                className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl transition font-extrabold ${
-                  subModule === 'broadcast'
-                    ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <Smartphone className="w-4 h-4" />
-                <span>WhatsApp &amp; SMS Broadcast</span>
-              </button>
+              <>
+                <button
+                  id="tab-holiday-fee-automation"
+                  onClick={() => setSubModule('automation')}
+                  className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl transition font-extrabold ${
+                    subModule === 'automation'
+                      ? 'bg-[#8B0000] text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <Zap className="w-4 h-4 text-amber-400" />
+                  <span>Holidays &amp; Fee Automation</span>
+                </button>
+                <button
+                  id="tab-whatsapp-broadcast"
+                  onClick={() => setSubModule('broadcast')}
+                  className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl transition font-extrabold ${
+                    subModule === 'broadcast'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <Smartphone className="w-4 h-4" />
+                  <span>WhatsApp &amp; SMS Broadcast</span>
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -239,6 +256,31 @@ export const CommunicationModule: React.FC = () => {
       {/* 2. DIGITAL CIRCULARS & NOTICES VIEW */}
       {subModule === 'notices' && (
         <div className="space-y-4">
+          {/* Automated Circulars Quick Banner */}
+          {isTeacherOrAdmin && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-3xl bg-amber-500/10 border border-amber-300/80 text-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2 rounded-xl bg-amber-500 text-white shrink-0">
+                  <Zap className="w-4 h-4" />
+                </span>
+                <div>
+                  <span className="font-bold text-[#200E01] block">
+                    Automated Gazette Circulars Active
+                  </span>
+                  <span className="text-[11px] text-[#5B0202]/70">
+                    Kashmir Day, Pakistan Day, Eid breaks, Summer/Winter vacations &amp; Monthly 1st/7th/10th/15th Fee Cycles.
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setSubModule('automation')}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#8B0000] text-white hover:bg-[#700000] transition shadow-2xs shrink-0"
+              >
+                <span>Manage Automation Calendar</span>
+              </button>
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-2xs">
             <div>
               <h4 className="font-extrabold text-slate-800 text-sm font-['Outfit',sans-serif]">Instant Digital Circulars (School Broadcasts)</h4>
@@ -539,8 +581,21 @@ export const CommunicationModule: React.FC = () => {
         </div>
       )}
 
-      {/* 3. WHATSAPP & ANDROID SMS BROADCAST GATEWAY */}
-      {subModule === 'broadcast' && <NotificationDispatcher />}
+      {/* 3. AUTOMATED CIRCULARS & HOLIDAY ENGINE */}
+      {subModule === 'automation' && (
+        <CircularAutomationPanel
+          onSelectForBroadcast={(text) => {
+            setBroadcastPresetText(text);
+            setSubModule('broadcast');
+          }}
+          onNavigateToNotices={() => setSubModule('notices')}
+        />
+      )}
+
+      {/* 4. WHATSAPP & ANDROID SMS BROADCAST GATEWAY */}
+      {subModule === 'broadcast' && (
+        <NotificationDispatcher initialMessageText={broadcastPresetText} />
+      )}
 
       {/* 4. Compose Digital Circular Modal */}
       {isNoticeModalOpen && (
