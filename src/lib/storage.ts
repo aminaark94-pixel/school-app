@@ -187,10 +187,26 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'user-teacher-horizon',
     school_id: 'school-horizon',
-    full_name: 'Prof. Zafar Iqbal',
+    full_name: 'Prof. Zafar Iqbal (Urdu)',
     role: 'teacher',
     email: 'zafar.iqbal@highstar.edu.pk',
     created_at: new Date('2024-02-15').toISOString(),
+  },
+  {
+    id: 'user-teacher-hs-math',
+    school_id: 'school-horizon',
+    full_name: 'Sir Tariq Jamil (Mathematics)',
+    role: 'teacher',
+    email: 'tariq.jamil@highstar.edu.pk',
+    created_at: new Date('2024-02-16').toISOString(),
+  },
+  {
+    id: 'user-teacher-hs-eng',
+    school_id: 'school-horizon',
+    full_name: 'Ms. Sadia Parveen (English)',
+    role: 'teacher',
+    email: 'sadia.parveen@highstar.edu.pk',
+    created_at: new Date('2024-02-18').toISOString(),
   },
   // Ideas Schooling Users
   {
@@ -204,10 +220,26 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'user-teacher-ideas',
     school_id: 'school-ideas',
-    full_name: 'Sir Adnan Haider',
+    full_name: 'Sir Adnan Haider (Mathematics)',
     role: 'teacher',
     email: 'adnan.haider@ideasschooling.edu.pk',
     created_at: new Date('2024-03-05').toISOString(),
+  },
+  {
+    id: 'user-teacher-ideas-sci',
+    school_id: 'school-ideas',
+    full_name: 'Ms. Rabia Basri (Sciences)',
+    role: 'teacher',
+    email: 'rabia.basri@ideasschooling.edu.pk',
+    created_at: new Date('2024-03-08').toISOString(),
+  },
+  {
+    id: 'user-teacher-ideas-eng',
+    school_id: 'school-ideas',
+    full_name: 'Sir Usman Ghani (English)',
+    role: 'teacher',
+    email: 'usman.ghani@ideasschooling.edu.pk',
+    created_at: new Date('2024-03-10').toISOString(),
   },
   // The Leading School Users
   {
@@ -221,10 +253,26 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'user-teacher-leading',
     school_id: 'school-leading',
-    full_name: 'Prof. Tahir Mahmood',
+    full_name: 'Prof. Tahir Mahmood (Mathematics Head)',
     role: 'teacher',
     email: 'tahir.mahmood@leadingschool.edu.pk',
     created_at: new Date('2024-04-05').toISOString(),
+  },
+  {
+    id: 'user-teacher-leading-eng',
+    school_id: 'school-leading',
+    full_name: 'Ms. Bushra Rehman (English Literature)',
+    role: 'teacher',
+    email: 'bushra.rehman@leadingschool.edu.pk',
+    created_at: new Date('2024-04-08').toISOString(),
+  },
+  {
+    id: 'user-teacher-leading-sci',
+    school_id: 'school-leading',
+    full_name: 'Sir Farhan Qureshi (Physics & Chemistry)',
+    role: 'teacher',
+    email: 'farhan.qureshi@leadingschool.edu.pk',
+    created_at: new Date('2024-04-10').toISOString(),
   },
 ];
 
@@ -1750,6 +1798,14 @@ export const LocalStore = {
     localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, schoolId);
     // Remove temporary preview override so school's native skin/branding displays
     localStorage.removeItem('owner_skin_v1');
+
+    // Make sure the chosen school has complete data immediately so UI never goes blank
+    const studentsOfSchool = this.getStudents().filter((s) => s.school_id === schoolId);
+    if (studentsOfSchool.length === 0) {
+      const targetSchool = this.getSchools().find((s) => s.id === schoolId);
+      this.importSchoolDemoData(schoolId, targetSchool?.name);
+    }
+
     // Also adjust current user to match school if needed
     const users = this.getUsers().filter((u) => u.school_id === schoolId);
     if (users.length > 0) {
@@ -1874,7 +1930,22 @@ export const LocalStore = {
     const datesheetsOtherSchools = existingDatesheets.filter((d) => d.school_id !== schoolId);
     this.saveDatesheets([...datesheetsOtherSchools, ...generated.datesheets]);
 
-    // 12. Set active school & admin user
+    // 12. Kids Monthly Progress
+    const existingProgress = this.getProgressReports();
+    const progressOtherSchools = existingProgress.filter((p) => p.school_id !== schoolId);
+    this.saveProgressReports([...progressOtherSchools, ...generated.kidsProgress]);
+
+    // 13. Teacher Appraisals
+    const existingTeacherProgress = this.getTeacherProgressReports();
+    const teacherProgressOtherSchools = existingTeacherProgress.filter((t) => t.school_id !== schoolId);
+    this.saveTeacherProgressReports([...teacherProgressOtherSchools, ...generated.teacherProgress]);
+
+    // 14. Parents Reports
+    const existingParentsReports = this.getParentsReportCards();
+    const parentsReportsOtherSchools = existingParentsReports.filter((p) => p.school_id !== schoolId);
+    this.saveParentsReportCards([...parentsReportsOtherSchools, ...generated.parentsReports]);
+
+    // 15. Set active school & admin user
     localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, schoolId);
     localStorage.removeItem('owner_skin_v1');
     const adminUser =
@@ -1998,6 +2069,27 @@ export const LocalStore = {
     emitChange();
   },
 
+  ensureAllSchoolsData() {
+    const schools = this.getSchools();
+    const students = this.getStudents();
+    const diary = this.getDiary();
+    const progress = this.getProgressReports();
+    const teacherProgress = this.getTeacherProgressReports();
+    const parentsReports = this.getParentsReportCards();
+
+    for (const school of schools) {
+      const hasStudents = students.some((s) => s.school_id === school.id);
+      const hasDiary = diary.some((d) => d.school_id === school.id);
+      const hasProg = progress.some((p) => p.school_id === school.id);
+      const hasTeacherProg = teacherProgress.some((t) => t.school_id === school.id);
+      const hasParents = parentsReports.some((pr) => pr.school_id === school.id);
+
+      if (!hasStudents || !hasDiary || !hasProg || !hasTeacherProg || !hasParents) {
+        this.importSchoolDemoData(school.id, school.name);
+      }
+    }
+  },
+
   resetDefaults() {
     localStorage.setItem(STORAGE_KEYS.SCHOOLS, JSON.stringify(INITIAL_SCHOOLS));
     localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(INITIAL_USERS));
@@ -2010,8 +2102,12 @@ export const LocalStore = {
     localStorage.setItem(STORAGE_KEYS.QUERIES, JSON.stringify(INITIAL_QUERIES));
     localStorage.setItem(STORAGE_KEYS.ALERTS, JSON.stringify(INITIAL_ALERTS));
     localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(INITIAL_DATESHEETS));
+    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(INITIAL_PROGRESS));
+    localStorage.setItem(STORAGE_KEYS.TEACHER_PROGRESS, JSON.stringify(INITIAL_TEACHER_PROGRESS));
+    localStorage.setItem(STORAGE_KEYS.PARENTS_REPORT, JSON.stringify(INITIAL_PARENTS_REPORT));
     localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, 'school-apex');
     localStorage.setItem(STORAGE_KEYS.CURRENT_USER, 'user-admin-apex');
+    this.ensureAllSchoolsData();
     emitChange();
   },
 };

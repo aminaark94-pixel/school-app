@@ -10,9 +10,12 @@ import {
   Datesheet,
   User,
   School,
+  MonthlyKidsProgress,
+  TeacherProgressEvaluation,
+  ParentReportCard,
 } from '../types';
 
-interface GeneratedSchoolDemo {
+export interface GeneratedSchoolDemo {
   school: School;
   users: User[];
   students: Student[];
@@ -24,6 +27,9 @@ interface GeneratedSchoolDemo {
   queries: CommunicationQuery[];
   alerts: AbsenceAlert[];
   datesheets: Datesheet[];
+  kidsProgress: MonthlyKidsProgress[];
+  teacherProgress: TeacherProgressEvaluation[];
+  parentsReports: ParentReportCard[];
 }
 
 const PAKISTANI_NAMES = [
@@ -72,6 +78,8 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
   // 1. Users (Admin, Teacher, Parents)
   const adminId = `user-admin-${schoolId}`;
   const teacherId = `user-teacher-${schoolId}`;
+  const teacher2Id = `user-teacher-eng-${schoolId}`;
+  const teacher3Id = `user-teacher-sci-${schoolId}`;
 
   const adminUser: User = {
     id: adminId,
@@ -87,8 +95,26 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
     school_id: schoolId,
     full_name: 'Senior Master Riaz-ul-Hassan',
     role: 'teacher',
-    email: `faculty@${schoolId.replace(/[^a-z0-9]/gi, '').toLowerCase()}.edu.pk`,
+    email: `riaz.hassan@${schoolId.replace(/[^a-z0-9]/gi, '').toLowerCase()}.edu.pk`,
     created_at: new Date(now.getTime() - 80 * 86400000).toISOString(),
+  };
+
+  const teacher2User: User = {
+    id: teacher2Id,
+    school_id: schoolId,
+    full_name: 'Ms. Sadia Parveen (English Head)',
+    role: 'teacher',
+    email: `sadia.parveen@${schoolId.replace(/[^a-z0-9]/gi, '').toLowerCase()}.edu.pk`,
+    created_at: new Date(now.getTime() - 75 * 86400000).toISOString(),
+  };
+
+  const teacher3User: User = {
+    id: teacher3Id,
+    school_id: schoolId,
+    full_name: 'Prof. Shahbaz Ahmed (Sciences)',
+    role: 'teacher',
+    email: `shahbaz.ahmed@${schoolId.replace(/[^a-z0-9]/gi, '').toLowerCase()}.edu.pk`,
+    created_at: new Date(now.getTime() - 70 * 86400000).toISOString(),
   };
 
   const parentUsers: User[] = [];
@@ -554,6 +580,353 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
     },
   ];
 
+  // Kids Monthly Progress Evaluation (October 2026)
+  const kidsProgress: MonthlyKidsProgress[] = [
+    {
+      id: `prog-${schoolId}-pari-kg1-oct2026`,
+      school_id: schoolId,
+      student_id: `std-pari-${schoolId}-1`,
+      student_name: 'Zaviyar Ahmed Khan',
+      class_id: 'KG 1',
+      section: 'Rose',
+      month: 'October',
+      year: 2026,
+      teacher_id: teacherId,
+      teacher_name: 'Senior Master Riaz-ul-Hassan',
+      language: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Speaks clearly, active phonics participant.' },
+      discipline: { score: 4, grade: 'A', status: 'Proficient', notes: 'Attentive during group storytelling, shares toys.' },
+      writing: { score: 4, grade: 'A', status: 'Proficient', notes: 'Stable pencil grip, clear alphabet tracing.' },
+      reading: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Quick sight-word recognition.' },
+      cleaning: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Spotless uniform and washes hands promptly.' },
+      teacher_remarks: 'Zaviyar is an enthusiastic and bright kindergarten scholar!',
+      badges: ['Star Speaker', 'Cleanliness Champion'],
+      overall_score: 94,
+      overall_grade: 'A+',
+      created_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+      updated_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+    },
+    {
+      id: `prog-${schoolId}-pari-c2-oct2026`,
+      school_id: schoolId,
+      student_id: `std-pari-${schoolId}-2`,
+      student_name: 'Mirha Fatima Khan',
+      class_id: 'Class 2',
+      section: 'Tulip',
+      month: 'October',
+      year: 2026,
+      teacher_id: teacher2Id,
+      teacher_name: 'Ms. Sadia Parveen (English Head)',
+      language: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Fluent bilingual speaker, rich vocabulary.' },
+      discipline: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Model student with polite classroom manners.' },
+      writing: { score: 4, grade: 'A', status: 'Proficient', notes: 'Neat four-line notebook work.' },
+      reading: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Reads ORT Level 4 stories with expression.' },
+      cleaning: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Immaculate desk and tidy school bag.' },
+      teacher_remarks: 'Mirha is an exceptional role model in Class 2.',
+      badges: ['Book Worm', 'Perfect Conduct'],
+      overall_score: 96,
+      overall_grade: 'A+',
+      created_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+      updated_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+    },
+    {
+      id: `prog-${schoolId}-pari-c5-oct2026`,
+      school_id: schoolId,
+      student_id: `std-pari-${schoolId}-3`,
+      student_name: 'Muhammad Rayyan Khan',
+      class_id: 'Class 5',
+      section: 'Green',
+      month: 'October',
+      year: 2026,
+      teacher_id: teacherId,
+      teacher_name: 'Senior Master Riaz-ul-Hassan',
+      language: { score: 4, grade: 'A', status: 'Proficient', notes: 'Speaks well in school debates.' },
+      discipline: { score: 4, grade: 'A', status: 'Proficient', notes: 'Acts as Junior Prefect.' },
+      writing: { score: 4, grade: 'A', status: 'Proficient', notes: 'Good creative essay structures.' },
+      reading: { score: 4, grade: 'A', status: 'Proficient', notes: 'Reads ahead in Science.' },
+      cleaning: { score: 4, grade: 'A', status: 'Proficient', notes: 'Well turned out uniform.' },
+      teacher_remarks: 'Rayyan shows admirable leadership qualities.',
+      badges: ['Class Leader', 'Creative Thinker'],
+      overall_score: 88,
+      overall_grade: 'A',
+      created_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+      updated_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+    },
+    {
+      id: `prog-${schoolId}-pari-c9-oct2026`,
+      school_id: schoolId,
+      student_id: `std-pari-${schoolId}-4`,
+      student_name: 'Shahmeer Ali Khan',
+      class_id: 'Class 9',
+      section: 'Matric A',
+      month: 'October',
+      year: 2026,
+      teacher_id: teacher3Id,
+      teacher_name: 'Prof. Shahbaz Ahmed (Sciences)',
+      language: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Command of board technical terminology.' },
+      discipline: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Punctual with lab work.' },
+      writing: { score: 4, grade: 'A', status: 'Proficient', notes: 'Step-by-step mathematical derivations.' },
+      reading: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Solves past paper numerical questions.' },
+      cleaning: { score: 5, grade: 'A+', status: 'Outstanding', notes: 'Full senior blazer and formal tie.' },
+      teacher_remarks: 'Shahmeer is on track for straight A-One grades in Board exams.',
+      badges: ['Academic Ace', 'Board Exam Contender'],
+      overall_score: 95,
+      overall_grade: 'A+',
+      created_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+      updated_at: new Date(now.getTime() - 4 * 86400000).toISOString(),
+    },
+  ];
+
+  // Faculty Teacher Progress Evaluations
+  const teacherProgress: TeacherProgressEvaluation[] = [
+    {
+      id: `eval-${schoolId}-riaz-oct2026`,
+      school_id: schoolId,
+      teacher_id: teacherId,
+      teacher_name: 'Senior Master Riaz-ul-Hassan',
+      teacher_email: teacherUser.email,
+      subject_specialty: 'Mathematics & Mechanics Faculty Head',
+      assigned_grades: ['Grade 9', 'Grade 10'],
+      month: 'October',
+      year: 2026,
+      language: {
+        score: 5,
+        rating: 'Outstanding & Articulate',
+        notes: 'Clear bilingual lectures with polite and respectful student engagement.',
+      },
+      dressing: {
+        score: 5,
+        rating: 'Immaculate & Formal',
+        notes: 'Executive formal suit with tie and polished shoes. Exemplary grooming.',
+      },
+      working: {
+        score: 5,
+        rating: 'Exemplary Pedagogy & Timely',
+        notes: 'Lesson plans submitted 5 days in advance. Digital diary updated daily by 2 PM.',
+      },
+      regularity: {
+        status: 'regular',
+        score: 5,
+        days_present: 22,
+        days_absent: 0,
+        late_arrivals: 0,
+        notes: '100% biometric attendance, always early for morning assembly.',
+      },
+      overall_score: 96,
+      overall_grade: 'A+',
+      incharge_remarks: 'An anchor pillar of our senior faculty. Recommended for annual appreciation increment.',
+      incharge_recommendation: 'increment',
+      evaluated_by_id: adminId,
+      evaluated_by_name: `Principal (${name})`,
+      created_at: new Date(now.getTime() - 3 * 86400000).toISOString(),
+      updated_at: new Date(now.getTime() - 3 * 86400000).toISOString(),
+    },
+    {
+      id: `eval-${schoolId}-sadia-oct2026`,
+      school_id: schoolId,
+      teacher_id: teacher2Id,
+      teacher_name: 'Ms. Sadia Parveen (English Head)',
+      teacher_email: teacher2User.email,
+      subject_specialty: 'English Literature & Language',
+      assigned_grades: ['Grade 8', 'Grade 9', 'Grade 10'],
+      month: 'October',
+      year: 2026,
+      language: {
+        score: 5,
+        rating: 'Eloquent & Native Tone',
+        notes: 'Flawless English diction and supportive tone in debates.',
+      },
+      dressing: {
+        score: 5,
+        rating: 'Elegant & Professional',
+        notes: 'Strict formal dress code with school security badge.',
+      },
+      working: {
+        score: 4,
+        rating: 'Thorough Checking & Creative Work',
+        notes: 'Essay marking is detailed with encouraging corrections.',
+      },
+      regularity: {
+        status: 'regular',
+        score: 5,
+        days_present: 22,
+        days_absent: 0,
+        late_arrivals: 1,
+        notes: 'Very dependable faculty member with 99% punctuality.',
+      },
+      overall_score: 94,
+      overall_grade: 'A+',
+      incharge_remarks: 'Commendable leadership of English department and creative clubs.',
+      incharge_recommendation: 'increment',
+      evaluated_by_id: adminId,
+      evaluated_by_name: `Principal (${name})`,
+      created_at: new Date(now.getTime() - 3 * 86400000).toISOString(),
+      updated_at: new Date(now.getTime() - 3 * 86400000).toISOString(),
+    },
+    {
+      id: `eval-${schoolId}-shahbaz-oct2026`,
+      school_id: schoolId,
+      teacher_id: teacher3Id,
+      teacher_name: 'Prof. Shahbaz Ahmed (Sciences)',
+      teacher_email: teacher3User.email,
+      subject_specialty: 'Physics & Chemistry Laboratory',
+      assigned_grades: ['Grade 9', 'Grade 10'],
+      month: 'October',
+      year: 2026,
+      language: {
+        score: 3,
+        rating: 'Satisfactory / Colloquial',
+        notes: 'Good technical grasp but tends to speak colloquially.',
+      },
+      dressing: {
+        score: 3,
+        rating: 'Casual / Boundary',
+        notes: 'Must wear mandatory lab coat and formal attire during practical classes.',
+      },
+      working: {
+        score: 3,
+        rating: 'Moderate / Delayed Correction',
+        notes: 'Science experiments are good, but notebook checking backlog needs clearing.',
+      },
+      regularity: {
+        status: 'occasional_late',
+        score: 3,
+        days_present: 19,
+        days_absent: 2,
+        late_arrivals: 4,
+        notes: 'Flagged for 4 late arrivals past 8:15 AM. Guidance counseling recommended.',
+      },
+      overall_score: 68,
+      overall_grade: 'C',
+      incharge_remarks: 'Competent subject expert. Needs improvement in punctuality and dress code compliance.',
+      incharge_recommendation: 'guidance_required',
+      evaluated_by_id: adminId,
+      evaluated_by_name: `Principal (${name})`,
+      created_at: new Date(now.getTime() - 3 * 86400000).toISOString(),
+      updated_at: new Date(now.getTime() - 3 * 86400000).toISOString(),
+    },
+  ];
+
+  // Parents Report Cards & Vigilance Analytics
+  const parentsReports: ParentReportCard[] = [
+    {
+      id: `prc-${schoolId}-pari`,
+      parent_id: pariId,
+      school_id: schoolId,
+      parent_name: 'Pari Khan (Mother of 4)',
+      parent_email: 'pari@example.com',
+      parent_phone: '+92 300 1234567',
+      children_count: 4,
+      children: [
+        { student_id: `std-pari-${schoolId}-1`, student_name: 'Zaviyar Ahmed Khan', class_id: 'KG 1', section: 'Rose', roll_number: `${prefix}-KG-01` },
+        { student_id: `std-pari-${schoolId}-2`, student_name: 'Mirha Fatima Khan', class_id: 'Class 2', section: 'Tulip', roll_number: `${prefix}-C2-01` },
+        { student_id: `std-pari-${schoolId}-3`, student_name: 'Muhammad Rayyan Khan', class_id: 'Class 5', section: 'Green', roll_number: `${prefix}-C5-01` },
+        { student_id: `std-pari-${schoolId}-4`, student_name: 'Shahmeer Ali Khan', class_id: 'Class 9', section: 'Matric A', roll_number: `${prefix}-C9-01` },
+      ],
+      metrics: {
+        last_active_at: new Date(now.getTime() - 2 * 3600000).toISOString(),
+        days_since_last_active: 0,
+        logins_last_30_days: 29,
+        usage_frequency: 'daily',
+        diary_read_rate: 98,
+        queries_asked_count: 7,
+        alerts_acknowledged_count: 1,
+        fee_payment_punctuality: 'prompt',
+      },
+      engagement_score: 98,
+      vigilance_level: 'proactive',
+      extense_attention_needed: false,
+      teacher_notes: 'Highly vigilant mother. Actively tracks homework feeds across all 4 children and signs planners immediately.',
+      last_contacted_date: new Date(now.getTime() - 3 * 86400000).toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: `prc-${schoolId}-tariq`,
+      parent_id: parentUsers[0]?.id || `prnt-${schoolId}-1`,
+      school_id: schoolId,
+      parent_name: parentUsers[0]?.full_name || 'Tariq Mehmood',
+      parent_email: parentUsers[0]?.email || 'tariq.mehmood@example.com',
+      parent_phone: '+92 321 4567890',
+      children_count: 1,
+      children: [
+        { student_id: students[0]?.id || 's-1', student_name: students[0]?.name || 'Student 1', class_id: 'Grade 10', section: 'A', roll_number: `${prefix}-10-01` },
+      ],
+      metrics: {
+        last_active_at: new Date(now.getTime() - 28 * 3600000).toISOString(),
+        days_since_last_active: 1,
+        logins_last_30_days: 18,
+        usage_frequency: 'every_few_days',
+        diary_read_rate: 84,
+        queries_asked_count: 3,
+        alerts_acknowledged_count: 0,
+        fee_payment_punctuality: 'prompt',
+      },
+      engagement_score: 84,
+      vigilance_level: 'cooperative',
+      extense_attention_needed: false,
+      teacher_notes: 'Cooperative father. Regularly checks mid-term schedules and clears tuition on time.',
+      last_contacted_date: new Date(now.getTime() - 10 * 86400000).toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: `prc-${schoolId}-farooq`,
+      parent_id: parentUsers[1]?.id || `prnt-${schoolId}-2`,
+      school_id: schoolId,
+      parent_name: parentUsers[1]?.full_name || 'Farooq Siddiqui',
+      parent_email: parentUsers[1]?.email || 'farooq.siddiqui@example.com',
+      parent_phone: '+92 333 7890123',
+      children_count: 1,
+      children: [
+        { student_id: students[1]?.id || 's-2', student_name: students[1]?.name || 'Student 2', class_id: 'Grade 10', section: 'A', roll_number: `${prefix}-10-02` },
+      ],
+      metrics: {
+        last_active_at: new Date(now.getTime() - 17 * 86400000).toISOString(),
+        days_since_last_active: 17,
+        logins_last_30_days: 3,
+        usage_frequency: 'monthly',
+        diary_read_rate: 44,
+        queries_asked_count: 0,
+        alerts_acknowledged_count: 0,
+        fee_payment_punctuality: 'requires_reminders',
+      },
+      engagement_score: 52,
+      vigilance_level: 'passive',
+      extense_attention_needed: true,
+      attention_reason: 'Parent rarely opens school app (3 logins in 30 days). Student needs teacher follow-up during 1st period for homework verification.',
+      teacher_notes: 'Father travels frequently; recommended family member be linked to PWA for daily homework check.',
+      last_contacted_date: new Date(now.getTime() - 15 * 86400000).toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: `prc-${schoolId}-kamran`,
+      parent_id: `user-parent-dormant-${schoolId}`,
+      school_id: schoolId,
+      parent_name: 'Kamran Malik',
+      parent_email: 'kamran.malik@example.com',
+      parent_phone: '+92 301 9876543',
+      children_count: 1,
+      children: [
+        { student_id: students[4]?.id || 's-5', student_name: students[4]?.name || 'Bilal Ahmed', class_id: 'Grade 10', section: 'A', roll_number: `${prefix}-10-05` },
+      ],
+      metrics: {
+        last_active_at: new Date(now.getTime() - 48 * 86400000).toISOString(),
+        days_since_last_active: 48,
+        logins_last_30_days: 0,
+        usage_frequency: 'dormant',
+        diary_read_rate: 0,
+        queries_asked_count: 0,
+        alerts_acknowledged_count: 0,
+        fee_payment_punctuality: 'chronic_defaulter',
+      },
+      engagement_score: 18,
+      vigilance_level: 'neglectful',
+      extense_attention_needed: true,
+      attention_reason: 'CRITICAL ALERT: Parent has zero app logins in 48 days. Child lacks home study support. Assign classroom study buddy immediately.',
+      teacher_notes: 'Unresponsive to automated SMS alerts. In-person meeting requested.',
+      last_contacted_date: new Date(now.getTime() - 5 * 86400000).toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+  ];
+
   const schoolObj: School = {
     id: schoolId,
     name,
@@ -567,7 +940,7 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
 
   return {
     school: schoolObj,
-    users: [adminUser, teacherUser, ...parentUsers],
+    users: [adminUser, teacherUser, teacher2User, teacher3User, ...parentUsers],
     students,
     fees,
     attendance,
@@ -577,6 +950,9 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
     queries,
     alerts,
     datesheets,
+    kidsProgress,
+    teacherProgress,
+    parentsReports,
   };
 }
 

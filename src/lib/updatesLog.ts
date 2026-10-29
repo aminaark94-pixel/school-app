@@ -12,11 +12,27 @@ export interface SystemUpdate {
 
 export const SYSTEM_UPDATES: SystemUpdate[] = [
   {
+    version: 'v2.7.1',
+    title: 'Universal Multi-School Data Auto-Seeder, Teacher Name Input Bar & Incharge Verdict Hint',
+    date: '29 October 2026',
+    khiTime: '08:35 PM PKT (Karachi Time)',
+    badge: 'Latest',
+    status: 'Live & Deployed on Vercel',
+    summary:
+      'Universal demo dataset auto-seeder guaranteeing complete data for all schools (no more blank screens when switching institutions), faculty member free text input bar replacing dropdown, and unfilled incharge verdict with light placeholder hint.',
+    features: [
+      'Universal Multi-School Dataset Auto-Seeder: All 4 institutions (Aitchisonian Imperial, High Star, Ideas Schooling, The Leading School) and any new school automatically receive complete demo datasets (Students with Pari\'s 4 kids, Fees, Results, Attendance, Diary with PDFs, Circulars, Datesheets, Kids Progress, Teacher Progress, Parents Reports). Eliminates the issue of empty or disappearing data when switching schools.',
+      'Teacher Performance Name Input Bar: Replaced restrictive dropdown with a free text input bar with datalist suggestions and 1-click faculty pills. Management can now enter any faculty member name directly.',
+      'Unfilled Confidential Incharge Verdict: Removed all autofilled default text so the incharge verdict starts completely blank, accompanied by a subtle low-opacity suggestion placeholder.',
+      'Self-Healing Storage Seeder: Automatic check upon school switch or app load instantly backfills missing records into localStorage so the user never encounters an empty screen.',
+    ],
+  },
+  {
     version: 'v2.7.0',
     title: 'Parents Report Card & Parental App Usage Analytics (Extense Attention Index)',
     date: '29 October 2026',
     khiTime: '07:05 PM PKT (Karachi Time)',
-    badge: 'Latest',
+    badge: 'Major Feature',
     status: 'Live & Deployed on Vercel',
     summary:
       'Confidential appraisal and analytics module exclusively for School Admin and Teachers. Measures parental vigilance, backend app usage frequency, diary read receipts, and flags students requiring extense attention in the classroom.',

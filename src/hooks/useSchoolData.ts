@@ -72,6 +72,7 @@ export function useSchoolData() {
   }, [cloudSchoolId]);
 
   useEffect(() => {
+    LocalStore.ensureAllSchoolsData();
     const unsubscribe = LocalStore.subscribe(() => {
       setTick((t) => t + 1);
     });
@@ -178,6 +179,13 @@ export function useSchoolData() {
     () => allStudents.filter((s) => s.school_id === currentSchool?.id),
     [allStudents, currentSchool]
   );
+
+  // Guarantee that whatever school is selected, data is immediately auto-populated if empty
+  useEffect(() => {
+    if (!usingRemote && currentSchool?.id && studentsInSchool.length === 0) {
+      LocalStore.importSchoolDemoData(currentSchool.id, currentSchool.name);
+    }
+  }, [usingRemote, currentSchool, studentsInSchool.length]);
 
   const localAttendance = useMemo(() => LocalStore.getAttendance(), [tick]);
   const localFees = useMemo(() => LocalStore.getFees(), [tick]);

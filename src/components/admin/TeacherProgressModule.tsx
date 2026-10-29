@@ -153,50 +153,50 @@ export const TeacherProgressModule: React.FC = () => {
     year: selectedYear,
     languageScore: 5,
     languageRating: 'Outstanding & Articulate',
-    languageNotes: 'Clear bilingual communication and respectful student engagement.',
+    languageNotes: '',
     dressingScore: 5,
     dressingRating: 'Immaculate & Formal',
-    dressingNotes: 'Strict adherence to formal dress code, displays school ID badge.',
+    dressingNotes: '',
     workingScore: 4,
     workingRating: 'Exemplary Pedagogy & Timely',
-    workingNotes: 'Syllabus on track, homework diary updated without backlog.',
+    workingNotes: '',
     regularityStatus: 'regular',
     regularityScore: 5,
     daysPresent: 22,
     daysAbsent: 0,
     lateArrivals: 0,
-    regularityNotes: 'Punctual at morning assembly and zero unexcused absences.',
-    inchargeRemarks: 'Consistent performance and positive contribution to school environment.',
+    regularityNotes: '',
+    inchargeRemarks: '',
     inchargeRecommendation: 'satisfactory',
   });
 
   const handleOpenCreateModal = () => {
     const firstTeacher = teachersInSchool[0];
     setFormData({
-      teacher_id: firstTeacher?.id || 'user-teacher-apex',
-      teacher_name: firstTeacher?.full_name || 'Prof. Asim Munir',
-      teacher_email: firstTeacher?.email || 'teacher@imperialgrammar.edu.pk',
+      teacher_id: firstTeacher?.id || '',
+      teacher_name: firstTeacher?.full_name || '',
+      teacher_email: firstTeacher?.email || '',
       subject_specialty: 'Mathematics & Science Faculty',
       assigned_grades: 'Class 9, Class 10',
       month: selectedMonth,
       year: selectedYear,
       languageScore: 5,
       languageRating: 'Outstanding & Articulate',
-      languageNotes: 'Engages learners effectively, uses polite and formal academic vocabulary.',
+      languageNotes: '',
       dressingScore: 5,
       dressingRating: 'Immaculate & Formal',
-      dressingNotes: 'Executive formal suit / blazer with tie and proper footwear.',
+      dressingNotes: '',
       workingScore: 5,
       workingRating: 'Exemplary Pedagogy & Timely',
-      workingNotes: 'Lesson plans submitted well in advance; digital diary checked daily.',
+      workingNotes: '',
       regularityStatus: 'regular',
       regularityScore: 5,
       daysPresent: 22,
       daysAbsent: 0,
       lateArrivals: 0,
-      regularityNotes: 'Arrives 20 mins prior to assembly; zero unscheduled casual leaves.',
-      inchargeRemarks: 'Highly recommended for annual appreciation certificate.',
-      inchargeRecommendation: 'increment',
+      regularityNotes: '',
+      inchargeRemarks: '',
+      inchargeRecommendation: 'satisfactory',
     });
     setEditingEval(null);
     setIsModalOpen(true);
@@ -237,6 +237,15 @@ export const TeacherProgressModule: React.FC = () => {
     e.preventDefault();
     if (!currentSchool) return;
 
+    if (!formData.teacher_name.trim()) {
+      alert('Please enter or select a teacher name.');
+      return;
+    }
+
+    const teacherId =
+      formData.teacher_id ||
+      `teacher-${formData.teacher_name.toLowerCase().replace(/[^a-z0-9]/g, '-') || Date.now()}`;
+
     // Calculate overall score out of 100 based on the 4 pillars (25% each)
     const langPct = (formData.languageScore / 5) * 25;
     const dressPct = (formData.dressingScore / 5) * 25;
@@ -247,11 +256,13 @@ export const TeacherProgressModule: React.FC = () => {
       totalPct >= 90 ? 'A+' : totalPct >= 80 ? 'A' : totalPct >= 70 ? 'B' : totalPct >= 60 ? 'C' : 'D';
 
     const newEval: TeacherProgressEvaluation = {
-      id: editingEval?.id || `eval-${formData.teacher_id}-${formData.month.toLowerCase()}${formData.year}`,
+      id: editingEval?.id || `eval-${teacherId}-${formData.month.toLowerCase()}${formData.year}`,
       school_id: currentSchool.id,
-      teacher_id: formData.teacher_id,
-      teacher_name: formData.teacher_name,
-      teacher_email: formData.teacher_email,
+      teacher_id: teacherId,
+      teacher_name: formData.teacher_name.trim(),
+      teacher_email:
+        formData.teacher_email ||
+        `${formData.teacher_name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'faculty'}@${currentSchool.id}.edu.pk`,
       subject_specialty: formData.subject_specialty,
       assigned_grades: formData.assigned_grades
         .split(',')
@@ -737,28 +748,64 @@ export const TeacherProgressModule: React.FC = () => {
               {/* Teacher & Month Selection */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Select Faculty Member:</label>
-                  <select
-                    value={formData.teacher_id}
-                    onChange={(e) => {
-                      const t = teachersInSchool.find((teach) => teach.id === e.target.value);
-                      if (t) {
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Teacher / Faculty Member Name:
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={formData.teacher_name}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const matched = teachersInSchool.find(
+                          (t) => t.full_name.toLowerCase() === val.toLowerCase()
+                        );
                         setFormData((prev) => ({
                           ...prev,
-                          teacher_id: t.id,
-                          teacher_name: t.full_name,
-                          teacher_email: t.email,
+                          teacher_name: val,
+                          teacher_id: matched ? matched.id : prev.teacher_id || '',
+                          teacher_email: matched ? matched.email : prev.teacher_email || '',
                         }));
-                      }
-                    }}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold text-slate-900 bg-slate-50 focus:ring-2 focus:ring-amber-500"
-                  >
-                    {teachersInSchool.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.full_name} ({t.email})
-                      </option>
-                    ))}
-                  </select>
+                      }}
+                      placeholder="Type teacher name (e.g. Ms. Ayesha Noor, Prof. Asim Munir)..."
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 font-semibold text-slate-900 bg-white focus:ring-2 focus:ring-amber-500 shadow-2xs"
+                      list="faculty-name-suggestions"
+                      required
+                    />
+                    <datalist id="faculty-name-suggestions">
+                      {teachersInSchool.map((t) => (
+                        <option key={t.id} value={t.full_name}>
+                          {t.full_name} ({t.email})
+                        </option>
+                      ))}
+                    </datalist>
+                  </div>
+                  {teachersInSchool.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                      <span className="text-[10px] text-slate-400 font-bold">Quick Select:</span>
+                      {teachersInSchool.map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              teacher_id: t.id,
+                              teacher_name: t.full_name,
+                              teacher_email: t.email,
+                            }))
+                          }
+                          className={`text-[10px] px-2 py-0.5 rounded-md font-semibold border transition cursor-pointer ${
+                            formData.teacher_name === t.full_name
+                              ? 'bg-amber-100 text-amber-900 border-amber-400 font-bold'
+                              : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+                          }`}
+                        >
+                          {t.full_name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -1038,15 +1085,18 @@ export const TeacherProgressModule: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Confidential Incharge Verdict:</label>
-                  <input
-                    type="text"
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold text-slate-700">Confidential Incharge Verdict:</label>
+                    <span className="text-[10px] text-slate-400 italic">User can write custom verdict freely</span>
+                  </div>
+                  <textarea
+                    rows={2}
                     value={formData.inchargeRemarks}
                     onChange={(e) =>
-                      setFormData((prev) => ({ ...prev,inchargeRemarks: e.target.value }))
+                      setFormData((prev) => ({ ...prev, inchargeRemarks: e.target.value }))
                     }
-                    placeholder="Executive summary of faculty performance..."
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-slate-900 bg-slate-50"
+                    placeholder="e.g. Recommended for 10% annual increment. Outstanding pedagogy, polite bilingual delivery, and zero casual leaves during the academic quarter..."
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-slate-900 bg-white placeholder:text-slate-400 placeholder:opacity-50 placeholder:italic focus:ring-2 focus:ring-amber-500 shadow-2xs resize-none"
                   />
                 </div>
               </div>
@@ -1146,3 +1196,4 @@ export const TeacherProgressModule: React.FC = () => {
     </div>
   );
 };
+
