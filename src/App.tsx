@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RoleSwitcherBar } from './components/RoleSwitcherBar';
 import { Navbar, AppModule } from './components/Navbar';
 import { DribbbleAppShell } from './components/dribbble/DribbbleAppShell';
 import { DiaryModule } from './components/diary/DiaryModule';
 import { AttendanceModule } from './components/attendance/AttendanceModule';
 import { ResultCardModule } from './components/results/ResultCardModule';
+import { KidsProgressModule } from './components/progress/KidsProgressModule';
 import { CommunicationModule } from './components/communication/CommunicationModule';
 import { ExamsDatesheetModule } from './components/datesheets/ExamsDatesheetModule';
+import { UpdatesPage } from './components/updates/UpdatesPage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { OwnerDashboard } from './components/owner/OwnerDashboard';
 import { OfflineIndicator } from './components/OfflineIndicator';
@@ -17,7 +19,44 @@ import { ShieldAlert, ArrowLeft } from 'lucide-react';
 export default function App() {
   const { currentSchool, currentUser } = useSchoolData();
   const skin = useSkin();
-  const [activeModule, setActiveModule] = useState<AppModule>('portal');
+  
+  // Persist active module across refreshes (F5 / Ctrl+F5) using hash and localStorage
+  const [activeModule, setActiveModuleState] = useState<AppModule>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '') as AppModule;
+      const validModules: AppModule[] = [
+        'portal', 'diary', 'attendance', 'results', 'progress', 'communication', 'datesheets', 'updates', 'admin'
+      ];
+      if (validModules.includes(hash)) return hash;
+      const saved = localStorage.getItem('sms_active_module') as AppModule;
+      if (saved && validModules.includes(saved)) return saved;
+    }
+    return 'portal';
+  });
+
+  const setActiveModule = useCallback((m: AppModule) => {
+    setActiveModuleState(m);
+    try {
+      localStorage.setItem('sms_active_module', m);
+      if (typeof window !== 'undefined') {
+        window.location.hash = m === 'portal' ? '' : m;
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.replace('#', '') as AppModule;
+      const validModules: AppModule[] = [
+        'portal', 'diary', 'attendance', 'results', 'progress', 'communication', 'datesheets', 'updates', 'admin'
+      ];
+      if (validModules.includes(hash)) {
+        setActiveModuleState(hash);
+      }
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
 
   // Each skin can supply its own header/nav and portal/home screen (lib/skins.ts);
   // falls back to the shared components when a skin doesn't provide one.
@@ -77,8 +116,10 @@ export default function App() {
                 {activeModule === 'diary' && 'Digital Student Diary & Homework Feed'}
                 {activeModule === 'attendance' && 'Attendance Register'}
                 {activeModule === 'results' && 'Student Result Cards & Fee-Locked Transcript'}
+                {activeModule === 'progress' && 'Kids Monthly Progress & Character Assessment'}
                 {activeModule === 'communication' && 'Digital Circulars & Parent-Teacher Chat'}
                 {activeModule === 'datesheets' && 'Examinations Schedule & Syllabus'}
+                {activeModule === 'updates' && 'Platform Live Changelog & Deployment Status (PKT)'}
                 {activeModule === 'admin' && 'School Administration & Data Import'}
               </h2>
               <p className="hidden sm:block text-sm text-[var(--t-ink)]/70 mt-1 font-medium">
@@ -88,10 +129,14 @@ export default function App() {
                   'Record, review, and maintain daily class attendance for your school.'}
                 {activeModule === 'results' &&
                   'Conditional exam card unlock with fee status verification. Download branded official PDFs with school seal.'}
+                {activeModule === 'progress' &&
+                  'Holistic monthly evaluation across Language, Discipline, Writing, Reading, and Cleaning with badges and star ratings.'}
                 {activeModule === 'communication' &&
                   'Zero-paper digital circulars, holiday notices, and timed query desk to eliminate unregulated WhatsApp messaging.'}
                 {activeModule === 'datesheets' &&
                   'Printable examination timetables, room assignments, and chapter-wise syllabus for grades.'}
+                {activeModule === 'updates' &&
+                  'Real-time release log and live verification clock for Karachi Standard Time (PKT).'}
                 {activeModule === 'admin' &&
                   'Batch import student records from CSV, manage student lifecycles with soft-delete, and customize theme branding.'}
               </p>
@@ -131,8 +176,10 @@ export default function App() {
         {activeModule === 'diary' && <DiaryModule />}
         {activeModule === 'attendance' && <AttendanceModule />}
         {activeModule === 'results' && <ResultCardModule />}
+        {activeModule === 'progress' && <KidsProgressModule />}
         {activeModule === 'communication' && <CommunicationModule />}
         {activeModule === 'datesheets' && <ExamsDatesheetModule />}
+        {activeModule === 'updates' && <UpdatesPage />}
         {/* Admin area intentionally keeps its own fixed Imperial look regardless of the
             published app skin — the owner asked for this to stay as-is. */}
         {activeModule === 'admin' && currentUser?.role === 'admin' && <AdminDashboard />}

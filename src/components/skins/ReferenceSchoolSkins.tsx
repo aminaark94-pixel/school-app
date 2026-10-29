@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   BookOpen, CalendarCheck2, CalendarDays, ChevronRight, FileText,
-  GraduationCap, Megaphone, Menu, Settings, Sparkles, X,
+  GraduationCap, Megaphone, Menu, Settings, Sparkles, X, Award, Clock,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { getActiveSkin } from '../../lib/skins';
@@ -29,8 +29,10 @@ const items: Array<{ id: AppModule; label: string; short: string; Icon: React.El
   { id: 'diary', label: 'Diary', short: 'Diary', Icon: BookOpen },
   { id: 'attendance', label: 'Attendance', short: 'Attendance', Icon: CalendarCheck2 },
   { id: 'results', label: 'Results', short: 'Results', Icon: FileText },
+  { id: 'progress', label: 'Kids Progress', short: 'Progress', Icon: Award },
   { id: 'communication', label: 'Notices', short: 'Notices', Icon: Megaphone },
   { id: 'datesheets', label: 'Exams', short: 'Exams', Icon: CalendarDays },
+  { id: 'updates', label: 'Updates (PKT)', short: 'Updates', Icon: Clock },
   { id: 'admin', label: 'Admin', short: 'Admin', Icon: Settings },
 ];
 

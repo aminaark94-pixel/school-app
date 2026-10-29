@@ -15,8 +15,10 @@ const MODULES: Array<{ id: AppModule; label: string }> = [
   { id: 'diary', label: 'Diary' },
   { id: 'attendance', label: 'Attendance' },
   { id: 'results', label: 'Results' },
+  { id: 'progress', label: 'Kids Progress' },
   { id: 'communication', label: 'Notices' },
   { id: 'datesheets', label: 'Exams' },
+  { id: 'updates', label: 'Updates (PKT)' },
   { id: 'admin', label: 'Admin' },
 ];
 

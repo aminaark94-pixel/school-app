@@ -12,6 +12,7 @@ import {
   Notice,
   CommunicationQuery,
   Datesheet,
+  MonthlyKidsProgress,
 } from '../types';
 import { LocalStore, FullSchoolDataset, SchoolSupabaseConfig } from '../lib/storage';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
@@ -247,6 +248,23 @@ export function useSchoolData() {
   const datesheetsInSchool = useMemo(
     () => allDatesheets.filter((ds) => ds.school_id === currentSchool?.id),
     [allDatesheets, currentSchool]
+  );
+
+  const allKidsProgress = useMemo(
+    () => LocalStore.getProgressReports(),
+    [tick]
+  );
+
+  const kidsProgressInSchool = useMemo(
+    () => allKidsProgress.filter((p) => p.school_id === currentSchool?.id),
+    [allKidsProgress, currentSchool]
+  );
+
+  const saveKidsProgressReport = useCallback(
+    (report: MonthlyKidsProgress) => {
+      LocalStore.saveKidsProgressReport(report);
+    },
+    []
   );
 
   // Set Current School (local demo mode only - signed-in users get their own school)
@@ -1110,6 +1128,9 @@ export function useSchoolData() {
     allQueries,
     alerts: alertsInSchool,
     datesheets: datesheetsInSchool,
+    kidsProgress: kidsProgressInSchool,
+    allKidsProgress,
+    saveKidsProgressReport,
     importSchoolDemoData,
     purgeSchoolData,
     getSchoolSupabaseConfigs,

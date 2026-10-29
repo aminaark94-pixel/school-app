@@ -197,6 +197,78 @@ export function generateDemoDataForSchool(schoolId: string, schoolName?: string)
     }
   });
 
+  // Guaranteed Parent Pari & 4 Children for testing (KG 1, Class 2, Class 5, Class 9)
+  const pariId = `user-pari-${schoolId}`;
+  parentUsers.push({
+    id: pariId,
+    school_id: schoolId,
+    full_name: 'Pari Khan (Mother of 4)',
+    role: 'parent',
+    email: 'pari@example.com',
+    created_at: new Date(now.getTime() - 60 * 86400000).toISOString(),
+  });
+
+  const pariKidsData = [
+    { name: 'Zaviyar Ahmed Khan', classId: 'KG 1', section: 'Rose', roll: `${prefix}-KG-01` },
+    { name: 'Mirha Fatima Khan', classId: 'Class 2', section: 'Tulip', roll: `${prefix}-C2-01` },
+    { name: 'Muhammad Rayyan Khan', classId: 'Class 5', section: 'Green', roll: `${prefix}-C5-01` },
+    { name: 'Shahmeer Ali Khan', classId: 'Class 9', section: 'Matric A', roll: `${prefix}-C9-01` },
+  ];
+
+  pariKidsData.forEach((k, idx) => {
+    const sId = `std-pari-${schoolId}-${idx + 1}`;
+    students.push({
+      id: sId,
+      school_id: schoolId,
+      roll_number: k.roll,
+      name: k.name,
+      class_id: k.classId,
+      section: k.section,
+      parent_id: pariId,
+      parent_name: 'Pari Khan',
+      parent_email: 'pari@example.com',
+      parent_phone: '+92 300 1234567',
+      created_at: new Date(now.getTime() - 40 * 86400000).toISOString(),
+    });
+    fees.push({
+      id: `fee-pari-${schoolId}-${idx + 1}`,
+      student_id: sId,
+      amount: 9500 + idx * 1000,
+      status: 'paid',
+      due_date: new Date(now.getTime() + 10 * 86400000).toISOString().split('T')[0],
+      updated_at: new Date(now.getTime() - 2 * 86400000).toISOString(),
+      term: 'Tuition Fee',
+      receipt_number: `REC-PARI-${prefix}-${idx + 1}`,
+    });
+    attendance.push({
+      id: `att-pari-${schoolId}-${idx + 1}`,
+      student_id: sId,
+      date: todayStr,
+      status: 'present',
+      marked_by: teacherId,
+      created_at: new Date().toISOString(),
+    });
+    results.push({
+      id: `res-pari-${schoolId}-${idx + 1}`,
+      student_id: sId,
+      term: 'mid_term',
+      total_marks: 460 + idx * 5,
+      grade: 'A+',
+      percentage: Math.round(((460 + idx * 5) / 500) * 100),
+      class_rank: 1,
+      attendance_percentage: 98,
+      conduct: 'Exemplary character, punctual and well-behaved.',
+      created_at: new Date(now.getTime() - 10 * 86400000).toISOString(),
+      marks_json: [
+        { subject: 'English', max_marks: 100, obtained_marks: 95, grade: 'A+' },
+        { subject: 'Urdu', max_marks: 100, obtained_marks: 92, grade: 'A+' },
+        { subject: 'Mathematics / Numeracy', max_marks: 100, obtained_marks: 96, grade: 'A+' },
+        { subject: 'General Knowledge', max_marks: 100, obtained_marks: 90, grade: 'A+' },
+        { subject: 'Arts & Crafts', max_marks: 100, obtained_marks: 92, grade: 'A+' },
+      ],
+    });
+  });
+
   // Diary Entries (8 realistic lessons)
   const diary: DiaryEntry[] = [
     {

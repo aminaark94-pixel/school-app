@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database, Crown, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Shield, GraduationCap, Users, RefreshCw, Building2, LogOut, Database, Crown, Sparkles, Clock } from 'lucide-react';
 import { useSchoolData } from '../hooks/useSchoolData';
+import { LocalStore } from '../lib/storage';
 import { useSkin } from '../hooks/useSkin';
 import { useAuth } from '../lib/authContext';
 import { UserRole } from '../types';
@@ -50,6 +51,7 @@ export const RoleSwitcherBar: React.FC = () => {
     currentSchool,
     schools,
     setCurrentSchoolId,
+    setCurrentUserId,
     switchRole,
     resetToDefaults,
     importSchoolDemoData,
@@ -59,6 +61,24 @@ export const RoleSwitcherBar: React.FC = () => {
   const skin = useSkin();
   const { signOut } = useAuth();
   const [isDemoLoading, setIsDemoLoading] = useState(false);
+  const [khiTime, setKhiTime] = useState('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      setKhiTime(
+        new Date().toLocaleTimeString('en-US', {
+          timeZone: 'Asia/Karachi',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true,
+        })
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleQuickLoadDemo = () => {
     if (!currentSchool) return;
@@ -204,6 +224,39 @@ export const RoleSwitcherBar: React.FC = () => {
               </button>
             );
           })}
+
+          <button
+            onClick={() => {
+              const all = LocalStore.getUsers();
+              const pari = all.find((u) => u.email === 'pari@example.com' || u.id === 'user-parent-pari');
+              if (pari) {
+                setCurrentUserId(pari.id);
+              } else {
+                switchRole('parent');
+              }
+            }}
+            title="Switch to Pari (Mother of 4 students across KG 1, Class 2, Class 5, Class 9)"
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl transition text-xs font-bold border ${
+              currentUser?.email === 'pari@example.com'
+                ? 'bg-emerald-700 text-emerald-100 border-emerald-400 ring-1 ring-emerald-300'
+                : 'bg-[#01411C] hover:bg-emerald-900 text-emerald-200 border-emerald-600/70'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5 text-emerald-300" />
+            <span>Pari (4 Kids)</span>
+          </button>
+
+          <a
+            href="#updates"
+            title="Check live deployment log stamped with Karachi Time (PKT)"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-950 hover:bg-indigo-900 text-indigo-200 border border-indigo-400 font-extrabold transition text-xs"
+          >
+            <Clock className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
+            <span className="hidden sm:inline">Updates (PKT)</span>
+            <span className="bg-indigo-900 px-1.5 py-0.2 rounded text-[10px] text-amber-300 font-mono">
+              {khiTime || 'PKT'}
+            </span>
+          </a>
 
           <button
             onClick={handleQuickLoadDemo}

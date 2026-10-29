@@ -241,3 +241,38 @@ export interface NotificationLog {
   retry_count: number;
 }
 
+// 6. Kids Monthly Development & Character Progress
+export type SkillLevel = 1 | 2 | 3 | 4 | 5; // 1: Developing, 2: Satisfactory, 3: Good, 4: Very Good, 5: Outstanding
+
+export interface SkillEvaluation {
+  score: SkillLevel; // 1-5
+  grade: 'A+' | 'A' | 'B' | 'C' | 'D';
+  status: string; // e.g. "Outstanding", "Proficient", "Good", "Needs Support"
+  notes?: string;
+}
+
+export interface MonthlyKidsProgress {
+  id: string;
+  school_id: string;
+  student_id: string;
+  student_name: string;
+  class_id: string;
+  section: string;
+  month: string; // e.g. "October 2026"
+  year: number;
+  language: SkillEvaluation;
+  discipline: SkillEvaluation;
+  writing: SkillEvaluation;
+  reading: SkillEvaluation;
+  cleaning: SkillEvaluation; // Hygiene, personal cleanliness, desk & uniform
+  teacher_id: string;
+  teacher_name: string;
+  teacher_remarks: string;
+  badges: string[]; // e.g. ["Star of the Month", "Neat Desk Champion", "Fluent Reader"]
+  overall_score: number; // e.g. 94%
+  overall_grade: string; // e.g. "A+"
+  created_at: string;
+  updated_at: string;
+}
+
+

@@ -1,4 +1,5 @@
 import {
+  MonthlyKidsProgress,
   Attendance,
   Fee,
   Result,
@@ -33,6 +34,7 @@ const STORAGE_KEYS = {
   QUERIES: 'sms_queries_v1',
   ALERTS: 'sms_alerts_v1',
   DATESHEETS: 'sms_datesheets_v1',
+  PROGRESS: 'sms_kids_progress_v1',
   CURRENT_USER: 'sms_current_user_id_v1',
   CURRENT_SCHOOL: 'sms_current_school_id_v1',
   SUPABASE_CONFIGS: 'sms_school_supabase_configs_v1',
@@ -90,6 +92,24 @@ export const INITIAL_SCHOOLS: School[] = [
 ];
 
 export const INITIAL_USERS: User[] = [
+  // Pari Khan (Mother of 4 Kids)
+  {
+    id: 'user-parent-pari',
+    school_id: 'school-apex',
+    full_name: 'Pari Khan (Mother of 4)',
+    role: 'parent',
+    email: 'pari@example.com',
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'user-teacher-general',
+    school_id: 'school-apex',
+    full_name: 'Prof. Asim Munir (Teacher)',
+    role: 'teacher',
+    email: 'teacher@imperialgrammar.edu.pk',
+    created_at: new Date('2024-01-10').toISOString(),
+  },
+
   // Platform Owner (SaaS Seller)
   {
     id: 'user-owner-platform',
@@ -186,6 +206,126 @@ export const INITIAL_USERS: User[] = [
 ];
 
 export const INITIAL_STUDENTS: Student[] = [
+  // Pari Khan's 4 Kids (Across KG 1, Class 2, Class 5, Class 9)
+  {
+    id: 'student-pari-kg1',
+    school_id: 'school-apex',
+    roll_number: 'AI-KG-01',
+    name: 'Zaviyar Ahmed Khan',
+    class_id: 'KG 1',
+    section: 'Rose',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'student-pari-c2',
+    school_id: 'school-apex',
+    roll_number: 'AI-C2-01',
+    name: 'Mirha Fatima Khan',
+    class_id: 'Class 2',
+    section: 'Tulip',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'student-pari-c5',
+    school_id: 'school-apex',
+    roll_number: 'AI-C5-01',
+    name: 'Muhammad Rayyan Khan',
+    class_id: 'Class 5',
+    section: 'Green',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'student-pari-c9',
+    school_id: 'school-apex',
+    roll_number: 'AI-C9-01',
+    name: 'Shahmeer Ali Khan',
+    class_id: 'Class 9',
+    section: 'Matric A',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  // High Star Seed Scholars
+  {
+    id: 'student-hs-pari-kg1',
+    school_id: 'school-horizon',
+    roll_number: 'HS-KG-01',
+    name: 'Zaviyar Ahmed Khan',
+    class_id: 'KG 1',
+    section: 'Rose',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'student-hs-pari-c2',
+    school_id: 'school-horizon',
+    roll_number: 'HS-C2-01',
+    name: 'Mirha Fatima Khan',
+    class_id: 'Class 2',
+    section: 'Tulip',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'student-hs-pari-c5',
+    school_id: 'school-horizon',
+    roll_number: 'HS-C5-01',
+    name: 'Muhammad Rayyan Khan',
+    class_id: 'Class 5',
+    section: 'Green',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'student-hs-pari-c9',
+    school_id: 'school-horizon',
+    roll_number: 'HS-C9-01',
+    name: 'Shahmeer Ali Khan',
+    class_id: 'Class 9',
+    section: 'Matric A',
+    parent_id: 'user-parent-pari',
+    parent_name: 'Pari Khan',
+    parent_email: 'pari@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: 'student-hs-1',
+    school_id: 'school-horizon',
+    roll_number: 'HS-101',
+    name: 'Hamza Farooq',
+    class_id: 'Class 10 (Matric)',
+    section: 'A',
+    parent_id: 'user-parent-1',
+    parent_name: 'Tariq Mehmood',
+    parent_email: 'tariq.mehmood@example.com',
+    is_deleted: false,
+    created_at: new Date('2024-02-01').toISOString(),
+  },
+
   // Grade 10 / Matric / O-Level Section A
   {
     id: 'student-1',
@@ -818,7 +958,223 @@ export interface FullSchoolDataset {
   datesheets?: Datesheet[];
 }
 
+export const INITIAL_PROGRESS: MonthlyKidsProgress[] = [
+  {
+    id: 'prog-pari-kg1-oct2026',
+    school_id: 'school-apex',
+    student_id: 'student-pari-kg1',
+    student_name: 'Zaviyar Ahmed Khan',
+    class_id: 'KG 1',
+    section: 'Rose',
+    month: 'October',
+    year: 2026,
+    teacher_id: 'user-teacher-apex',
+    teacher_name: 'Prof. Asim Munir',
+    language: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Exceptional phonetic recognition, recognizes all Urdu haroof and English letters with native confidence.',
+    },
+    discipline: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Follows Montessori circle time instructions attentively, shares play blocks nicely with peers.',
+    },
+    writing: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Pencil grip is stable. Tracing straight lines and curved vowels is clear and within ruled boxes.',
+    },
+    reading: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Sight-word vocabulary is fast growing; reads aloud short 3-letter words eagerly in morning circle.',
+    },
+    cleaning: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Spotless white apron and uniform. Washes hands independently before meal and puts lunchbox away.',
+    },
+    teacher_remarks: 'Zaviyar is a delight to teach in Kindergarten! Enthusiastic, cheerful, and highly active.',
+    badges: ['Star Speaker', 'Cleanliness Champion', 'Friendly Helper'],
+    overall_score: 94,
+    overall_grade: 'A+',
+    created_at: new Date('2026-10-25').toISOString(),
+    updated_at: new Date('2026-10-25').toISOString(),
+  },
+  {
+    id: 'prog-pari-c2-oct2026',
+    school_id: 'school-apex',
+    student_id: 'student-pari-c2',
+    student_name: 'Mirha Fatima Khan',
+    class_id: 'Class 2',
+    section: 'Tulip',
+    month: 'October',
+    year: 2026,
+    teacher_id: 'user-teacher-apex',
+    teacher_name: 'Prof. Asim Munir',
+    language: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Speaks clearly in English and Urdu, uses complete sentences, and demonstrates strong vocabulary.',
+    },
+    discipline: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Exemplary classroom decorum. Punctual, raises hand before speaking, and respects school rules.',
+    },
+    writing: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Neat cursive letters and organized four-lined notebooks. Margins and headings are neat.',
+    },
+    reading: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Fluent reader of Oxford Reading Tree Level 4 stories with good expression and tone.',
+    },
+    cleaning: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Maintains an immaculate school bag, polished black shoes, and tidy school work station.',
+    },
+    teacher_remarks: 'Mirha consistently shines as a model student in Class 2. A role model for her class fellows.',
+    badges: ['Book Worm', 'Neat & Tidy Star', 'Perfect Conduct'],
+    overall_score: 96,
+    overall_grade: 'A+',
+    created_at: new Date('2026-10-25').toISOString(),
+    updated_at: new Date('2026-10-25').toISOString(),
+  },
+  {
+    id: 'prog-pari-c5-oct2026',
+    school_id: 'school-apex',
+    student_id: 'student-pari-c5',
+    student_name: 'Muhammad Rayyan Khan',
+    class_id: 'Class 5',
+    section: 'Green',
+    month: 'October',
+    year: 2026,
+    teacher_id: 'user-teacher-apex',
+    teacher_name: 'Prof. Asim Munir',
+    language: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Participates actively in classroom debates. Strong English comprehension with good Urdu grammar.',
+    },
+    discipline: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Takes charge as Junior Class Prefect; maintains corridor queue during assembly transitions.',
+    },
+    writing: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Creative paragraph composition is strong. Well-structured answers in Social Studies & Science.',
+    },
+    reading: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Reads informative articles quickly, summarizes key takeaway points accurately.',
+    },
+    cleaning: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Crisp uniform and trimmed hair. Keeps science lab bench clean and orderly after experiments.',
+    },
+    teacher_remarks: 'Rayyan shows admirable leadership qualities and steady academic progression across all subjects.',
+    badges: ['Class Leader', 'Creative Thinker'],
+    overall_score: 88,
+    overall_grade: 'A',
+    created_at: new Date('2026-10-25').toISOString(),
+    updated_at: new Date('2026-10-25').toISOString(),
+  },
+  {
+    id: 'prog-pari-c9-oct2026',
+    school_id: 'school-apex',
+    student_id: 'student-pari-c9',
+    student_name: 'Shahmeer Ali Khan',
+    class_id: 'Class 9',
+    section: 'Matric A',
+    month: 'October',
+    year: 2026,
+    teacher_id: 'user-teacher-apex',
+    teacher_name: 'Prof. Asim Munir',
+    language: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Excellent command of English technical terminology in Physics, Chemistry, and Computer Science.',
+    },
+    discipline: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Punctual with lab work submission and regular attendance for early morning board prep lectures.',
+    },
+    writing: {
+      score: 4,
+      grade: 'A',
+      status: 'Proficient',
+      notes: 'Mathematical derivations and long board-type questions are formatted methodically with side headings.',
+    },
+    reading: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Reads ahead of syllabus in Science subjects, solves past paper numerical problems proactively.',
+    },
+    cleaning: {
+      score: 5,
+      grade: 'A+',
+      status: 'Outstanding',
+      notes: 'Proper blazer, school tie, and exemplary presentation representing Senior Matric boys.',
+    },
+    teacher_remarks: 'Shahmeer is on track for straight A-One grades in upcoming Federal/Lahore Board Matric exams.',
+    badges: ['Academic Ace', 'Board Exam Contender', 'Master Mind'],
+    overall_score: 95,
+    overall_grade: 'A+',
+    created_at: new Date('2026-10-25').toISOString(),
+    updated_at: new Date('2026-10-25').toISOString(),
+  },
+];
+
 export const LocalStore = {
+  getProgressReports(): MonthlyKidsProgress[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.PROGRESS);
+      return raw ? JSON.parse(raw) : INITIAL_PROGRESS;
+    } catch {
+      return INITIAL_PROGRESS;
+    }
+  },
+
+  saveProgressReports(reports: MonthlyKidsProgress[]) {
+    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(reports));
+    emitChange();
+  },
+
+  saveKidsProgressReport(report: MonthlyKidsProgress) {
+    const list = this.getProgressReports();
+    const idx = list.findIndex((p) => p.id === report.id);
+    const updated = idx >= 0 ? list.map((p, i) => (i === idx ? report : p)) : [report, ...list];
+    this.saveProgressReports(updated);
+  },
+
   subscribe(listener: StorageListener) {
     listeners.add(listener);
     return () => {
@@ -1015,6 +1371,7 @@ export const LocalStore = {
     const raw = localStorage.getItem(STORAGE_KEYS.DATESHEETS);
     if (!raw) {
       localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(INITIAL_DATESHEETS));
+    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(INITIAL_PROGRESS));
       return INITIAL_DATESHEETS;
     }
     return JSON.parse(raw);
