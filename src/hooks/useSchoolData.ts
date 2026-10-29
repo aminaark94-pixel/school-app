@@ -311,6 +311,13 @@ export function useSchoolData() {
     []
   );
 
+  // Real-time parent app telemetry tracker: Automatically records parent login & app sessions
+  useEffect(() => {
+    if (currentUser?.role === 'parent' && currentUser?.id) {
+      LocalStore.recordParentAppActivity(currentUser.id, 'login');
+    }
+  }, [currentUser?.id, currentUser?.role]);
+
   // Set Current School (local demo mode only - signed-in users get their own school)
   const setCurrentSchoolId = useCallback(
     (id: string) => {
@@ -891,6 +898,7 @@ export function useSchoolData() {
             (r) => r.parent_id === currentUser?.id && r.student_id === studentId
           );
           if (!alreadyRead && currentUser) {
+            LocalStore.recordParentAppActivity(currentUser.id, 'diary_read');
             return {
               ...d,
               read_by_parents: [
@@ -1038,6 +1046,9 @@ export function useSchoolData() {
         ],
       };
       LocalStore.saveQueries([newQuery, ...all]);
+      if (currentUser?.role === 'parent' || data.parent_id) {
+        LocalStore.recordParentAppActivity(currentUser?.id || data.parent_id || '', 'query_sent');
+      }
       return newQuery;
     },
     [currentSchool, currentUser, cloudSchoolId]

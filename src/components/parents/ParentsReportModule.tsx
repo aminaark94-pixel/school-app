@@ -353,8 +353,9 @@ export const ParentsReportModule: React.FC = () => {
                         <h3 className="text-lg font-bold text-slate-900 font-['Cinzel',serif]">
                           {card.parent_name}
                         </h3>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-200 text-slate-700">
-                          ID: {card.parent_id}
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-black bg-indigo-100 text-indigo-900 border border-indigo-200 inline-flex items-center gap-1 shadow-2xs">
+                          <ShieldCheck className="w-3.5 h-3.5 text-indigo-700" />
+                          <span>Single Parent ID: {card.parent_code || card.parent_id}</span>
                         </span>
 
                         {card.vigilance_level === 'proactive' && (
@@ -438,27 +439,32 @@ export const ParentsReportModule: React.FC = () => {
                 </div>
 
                 {/* 2. Linked Children Strip (Shows all kids under this Single Parent ID) */}
-                <div className="px-5 sm:px-6 py-3 bg-indigo-50/40 border-b border-indigo-100/60 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-1 shrink-0">
-                    <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
-                    <span>Linked Scholars ({card.children.length}):</span>
-                  </span>
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {card.children.map((child) => (
-                      <span
-                        key={child.student_id}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-xs font-bold text-slate-800 shadow-2xs"
-                      >
-                        <span>{child.student_name}</span>
-                        <span className="px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800 text-[10px]">
-                          {child.class_id}
+                <div className="px-5 sm:px-6 py-3 bg-indigo-50/40 border-b border-indigo-100/60 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-black text-indigo-950 uppercase tracking-wider flex items-center gap-1 shrink-0">
+                      <GraduationCap className="w-4 h-4 text-indigo-600" />
+                      <span>Single Family Unified Roster ({card.children.length} Enrolled):</span>
+                    </span>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {card.children.map((child) => (
+                        <span
+                          key={child.student_id}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-xs font-bold text-slate-800 shadow-2xs"
+                        >
+                          <span>{child.student_name}</span>
+                          <span className="px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800 text-[10px] font-extrabold">
+                            {child.class_id}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            ({child.roll_number})
+                          </span>
                         </span>
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          ({child.roll_number})
-                        </span>
-                      </span>
-                    ))}
+                      ))}
+                    </div>
                   </div>
+                  <span className="text-[11px] font-bold text-indigo-800 bg-white px-2.5 py-1 rounded-lg border border-indigo-200/80 shadow-2xs">
+                    Unified under 1 Parent ID: <strong>{card.parent_code || card.parent_id}</strong>
+                  </span>
                 </div>
 
                 {/* 3. EXTENSE ATTENTION DIRECTIVE BANNER (For Teachers) */}
@@ -491,13 +497,13 @@ export const ParentsReportModule: React.FC = () => {
                     <div className="flex items-center justify-between text-xs font-bold text-slate-600 mb-1">
                       <span className="flex items-center gap-1.5 text-indigo-700">
                         <Smartphone className="w-4 h-4" />
-                        <span>App Logins</span>
+                        <span>Backend App Telemetry</span>
                       </span>
                       <span className="text-slate-800 font-black">{card.metrics.logins_last_30_days}x / mo</span>
                     </div>
                     <p className="text-xs font-extrabold text-slate-800 mt-1">
                       {card.metrics.days_since_last_active === 0
-                        ? '🟢 Active Today'
+                        ? '🟢 Active Today (Live session)'
                         : card.metrics.days_since_last_active <= 3
                         ? `🟢 Active ${card.metrics.days_since_last_active}d ago`
                         : card.metrics.days_since_last_active <= 14
@@ -505,7 +511,7 @@ export const ParentsReportModule: React.FC = () => {
                         : `🔴 Dormant (${card.metrics.days_since_last_active}d ago)`}
                     </p>
                     <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
-                      Frequency: <span className="capitalize font-bold">{card.metrics.usage_frequency.replace(/_/g, ' ')}</span>
+                      Usage Interval: <span className="capitalize font-bold text-indigo-900">{card.metrics.usage_frequency.replace(/_/g, ' ')}</span>
                     </p>
                   </div>
 
@@ -787,3 +793,4 @@ export const ParentsReportModule: React.FC = () => {
     </div>
   );
 };
+

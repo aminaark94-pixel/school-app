@@ -12,11 +12,28 @@ export interface SystemUpdate {
 
 export const SYSTEM_UPDATES: SystemUpdate[] = [
   {
+    version: 'v2.7.3',
+    title: 'Single Parent ID Multi-Kid Aggregation, Real-Time Backend Telemetry & Universal All-Grade Demo Snaps',
+    date: '29 October 2026',
+    khiTime: '10:15 PM PKT (Karachi Time)',
+    badge: 'Latest',
+    status: 'Live & Deployed on Vercel',
+    summary:
+      'Unified Single Parent ID system aggregating all enrolled siblings under 1 family code (Pari Khan with 4 kids & Aisha Bibi with 5 kids across grades), live backend app usage telemetry that updates in real time and reflects on the Parents Report Card for Teachers and Admin, and comprehensive all-grade dummy datasets with rich diary snaps & CamScanner work planner PDFs for every class (KG 1 to Class 10).',
+    features: [
+      'Single Parent Family ID Architecture: Issues 1 unified Parent ID (e.g. PAR-2026-001 for Pari Khan with 4 kids; PAR-2026-002 for Aisha Bibi with 5 kids) that groups all children across different grades and classes into a single aggregated report card.',
+      'Live Backend App Usage Telemetry: Real-time event listener automatically records parent app sessions upon login, diary read receipt submission, and ticket inquiries. Updates last active date, visit interval (daily, every few days, dormant), 30-day login volume, and diary sign-off rates immediately visible to Admin and Teachers.',
+      'Universal All-Grade Dataset (KG 1 to Class 10): Enrolls students across all 11 Pakistani class levels with complete fee vouchers, daily attendance registers, and academic result cards.',
+      'Rich Dummy Diary Snaps & CamScanner PDFs: Every single class contains active diary entries with high-resolution blackboard notes, science lab photos, Urdu handwriting worksheets, and printable CamScanner work planner PDFs.',
+      '1-Click Quick Parent Persona Switcher: Added direct top-bar switcher buttons for both Pari Khan (4 Kids) and Aisha Bibi (5 Kids) to verify multi-grade sibling aggregation in 1 click.',
+    ],
+  },
+  {
     version: 'v2.7.2',
     title: 'Collaborative Complaint & Ticket Desk: Parents ⇄ Teachers with School Administration Dual Oversight',
     date: '29 October 2026',
     khiTime: '09:25 PM PKT (Karachi Time)',
-    badge: 'Latest',
+    badge: 'Enhancement',
     status: 'Live & Deployed on Vercel',
     summary:
       'Full-fledged ticket system for complaints, inquiries, and behavioral notices. Parents can lodge complaints directly to teachers (with auto-selection of their kids like Pari Khan\'s 4 children), teachers can issue student conduct & incomplete homework notices, and both Teachers and School Administration receive instant notifications and can participate in official dual-reply collaborative threads.',

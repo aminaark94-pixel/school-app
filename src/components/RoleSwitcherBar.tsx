@@ -228,7 +228,7 @@ export const RoleSwitcherBar: React.FC = () => {
           <button
             onClick={() => {
               const all = LocalStore.getUsers();
-              const pari = all.find((u) => u.email === 'pari@example.com' || u.id === 'user-parent-pari');
+              const pari = all.find((u) => u.email === 'pari@example.com' || u.id === 'user-parent-pari' || u.full_name?.includes('Pari'));
               if (pari) {
                 setCurrentUserId(pari.id);
               } else {
@@ -237,13 +237,34 @@ export const RoleSwitcherBar: React.FC = () => {
             }}
             title="Switch to Pari (Mother of 4 students across KG 1, Class 2, Class 5, Class 9)"
             className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl transition text-xs font-bold border ${
-              currentUser?.email === 'pari@example.com'
+              currentUser?.email === 'pari@example.com' || currentUser?.full_name?.includes('Pari')
                 ? 'bg-emerald-700 text-emerald-100 border-emerald-400 ring-1 ring-emerald-300'
                 : 'bg-[#01411C] hover:bg-emerald-900 text-emerald-200 border-emerald-600/70'
             }`}
           >
             <Users className="w-3.5 h-3.5 text-emerald-300" />
             <span>Pari (4 Kids)</span>
+          </button>
+
+          <button
+            onClick={() => {
+              const all = LocalStore.getUsers();
+              const aisha = all.find((u) => u.email === 'aisha.bibi@example.com' || u.id === 'user-parent-aisha' || u.full_name?.includes('Aisha'));
+              if (aisha) {
+                setCurrentUserId(aisha.id);
+              } else {
+                switchRole('parent');
+              }
+            }}
+            title="Switch to Aisha (Mother of 5 students across Grade 1, Grade 3, Grade 4, Grade 6, Grade 7)"
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl transition text-xs font-bold border ${
+              currentUser?.email === 'aisha.bibi@example.com' || currentUser?.full_name?.includes('Aisha')
+                ? 'bg-teal-700 text-teal-100 border-teal-400 ring-1 ring-teal-300'
+                : 'bg-[#01352c] hover:bg-teal-900 text-teal-200 border-teal-600/70'
+            }`}
+          >
+            <Users className="w-3.5 h-3.5 text-teal-300" />
+            <span>Aisha (5 Kids)</span>
           </button>
 
           <a

@@ -326,6 +326,7 @@ export interface ParentLinkedChild {
 export interface ParentReportCard {
   id: string; // e.g. "prc-pari"
   parent_id: string; // Unique Single Parent ID e.g. "user-parent-pari"
+  parent_code?: string; // Official School Parent ID e.g. "PAR-2026-001"
   school_id: string;
   parent_name: string;
   parent_email: string;
