@@ -3101,16 +3101,6 @@ export const LocalStore = {
     const parentsReportsOtherSchools = existingParentsReports.filter((p) => p.school_id !== schoolId);
     this.saveParentsReportCards([...parentsReportsOtherSchools, ...generated.parentsReports]);
 
-    // 15. Set active school & admin user
-    localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, schoolId);
-    localStorage.removeItem('owner_skin_v1');
-    const adminUser =
-      this.getUsers().find((u) => u.school_id === schoolId && u.role === 'admin') ||
-      generated.users.find((u) => u.role === 'admin');
-    if (adminUser) {
-      localStorage.setItem(STORAGE_KEYS.CURRENT_USER, adminUser.id);
-    }
-
     emitChange();
 
     return {
@@ -3244,6 +3234,11 @@ export const LocalStore = {
   },
 
   ensureAllSchoolsData() {
+    // A startup repair must not change the tenant/persona the user selected.
+    // importSchoolDemoData is deliberately usable for an explicit demo load,
+    // but this batch repair must be invisible to the active session.
+    const activeSchoolId = this.getCurrentSchoolId();
+    const activeUserId = this.getCurrentUserId();
     const schools = this.getSchools();
     const students = this.getStudents();
     const diary = this.getDiary();
@@ -3264,6 +3259,9 @@ export const LocalStore = {
         this.importSchoolDemoData(school.id, school.name);
       }
     }
+    localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, activeSchoolId);
+    localStorage.setItem(STORAGE_KEYS.CURRENT_USER, activeUserId);
+    emitChange();
   },
 
   resetDefaults() {

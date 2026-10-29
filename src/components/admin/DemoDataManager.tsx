@@ -40,6 +40,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
     exportFullDataset,
     clearAllDemoData,
     resetToDefaults,
+    isSupabaseActive,
   } = useSchoolData();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -49,6 +50,10 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
 
   // 1. Upload & Import Custom Demo JSON file
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isSupabaseActive) {
+      setErrorMsg('This browser-only demo importer is disabled for a live Supabase school. It would otherwise claim success while changing only this device. Use the secured server-side demo seeder.');
+      return;
+    }
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -102,8 +107,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
       );
     } catch (err) {
       console.error('Load demo error:', err);
-      resetToDefaults();
-      setSuccessMsg('Default demonstration data loaded successfully.');
+      setErrorMsg(err instanceof Error ? err.message : 'Could not load demonstration data.');
     } finally {
       setIsProcessing(false);
     }
@@ -130,6 +134,10 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
 
   // 4. Purge / Wipe Demo Data for Current School
   const handlePurgeDemoData = () => {
+    if (isSupabaseActive) {
+      setErrorMsg('This browser-only purge is disabled for a live Supabase school. Use the secured server-side onboarding flow so real tenant records cannot be removed accidentally.');
+      return;
+    }
     const targetName = currentSchool?.name || 'this school';
     const confirmed = window.confirm(
       `Are you sure you want to remove demonstration data for ${targetName}? This will clear its students, attendance, diary entries, fees, and results to leave it completely clean for real school onboarding.`

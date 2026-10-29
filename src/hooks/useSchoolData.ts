@@ -77,12 +77,15 @@ export function useSchoolData() {
   }, [cloudSchoolId]);
 
   useEffect(() => {
-    LocalStore.ensureAllSchoolsData();
+    // The local demo store is a separate mode.  Never touch it while a real
+    // Supabase session is active: doing so made the UI report a successful
+    // import while the visible data was still being read from Supabase.
+    if (!isSupabaseActive) LocalStore.ensureAllSchoolsData();
     const unsubscribe = LocalStore.subscribe(() => {
       setTick((t) => t + 1);
     });
     return unsubscribe;
-  }, []);
+  }, [isSupabaseActive]);
 
   // ---------------------------------------------------------------------------
   // Remote loading
@@ -322,19 +325,16 @@ export function useSchoolData() {
 
   const saveKidsProgressReport = useCallback(
     (report: MonthlyKidsProgress) => {
-      LocalStore.saveKidsProgressReport(report);
       if (isSupabaseActive) {
         const supabase = getSupabase();
-        if (supabase) {
-          supabase
-            .from('kids_progress')
-            .upsert(report)
-            .then(({ error }) => {
-              if (error) console.warn('Supabase kids_progress sync:', error.message);
-              refreshRemote();
-            });
-        }
+        if (!supabase) return;
+        void supabase.from('kids_progress').upsert(report).then(({ error }) => {
+          if (error) setRemoteError(error.message);
+          else void refreshRemote();
+        });
+        return;
       }
+      LocalStore.saveKidsProgressReport(report);
     },
     [isSupabaseActive, refreshRemote]
   );
@@ -351,19 +351,16 @@ export function useSchoolData() {
 
   const saveTeacherProgressReport = useCallback(
     (report: TeacherProgressEvaluation) => {
-      LocalStore.saveTeacherProgressReport(report);
       if (isSupabaseActive) {
         const supabase = getSupabase();
-        if (supabase) {
-          supabase
-            .from('teacher_progress')
-            .upsert(report)
-            .then(({ error }) => {
-              if (error) console.warn('Supabase teacher_progress sync:', error.message);
-              refreshRemote();
-            });
-        }
+        if (!supabase) return;
+        void supabase.from('teacher_progress').upsert(report).then(({ error }) => {
+          if (error) setRemoteError(error.message);
+          else void refreshRemote();
+        });
+        return;
       }
+      LocalStore.saveTeacherProgressReport(report);
     },
     [isSupabaseActive, refreshRemote]
   );
@@ -380,19 +377,16 @@ export function useSchoolData() {
 
   const saveParentReportCard = useCallback(
     (card: ParentReportCard) => {
-      LocalStore.saveParentReportCard(card);
       if (isSupabaseActive) {
         const supabase = getSupabase();
-        if (supabase) {
-          supabase
-            .from('parent_reports')
-            .upsert(card)
-            .then(({ error }) => {
-              if (error) console.warn('Supabase parent_reports sync:', error.message);
-              refreshRemote();
-            });
-        }
+        if (!supabase) return;
+        void supabase.from('parent_reports').upsert(card).then(({ error }) => {
+          if (error) setRemoteError(error.message);
+          else void refreshRemote();
+        });
+        return;
       }
+      LocalStore.saveParentReportCard(card);
     },
     [isSupabaseActive, refreshRemote]
   );
@@ -1242,16 +1236,25 @@ export function useSchoolData() {
   );
 
   const importFullDataset = useCallback((data: Partial<FullSchoolDataset>) => {
+    if (isSupabaseActive) {
+      throw new Error('Demo JSON import is unavailable while connected to Supabase. Seed demo data through the secured server-side onboarding flow.');
+    }
     LocalStore.importFullDataset(data);
-  }, []);
+  }, [isSupabaseActive]);
 
   const importSchoolDemoData = useCallback((schoolId: string, schoolName?: string) => {
+    if (isSupabaseActive) {
+      throw new Error('Demo data cannot be written to a live Supabase school from this browser. Use the secured server-side demo seeder so real tenant data is never overwritten.');
+    }
     return LocalStore.importSchoolDemoData(schoolId, schoolName);
-  }, []);
+  }, [isSupabaseActive]);
 
   const purgeSchoolData = useCallback((schoolId: string) => {
+    if (isSupabaseActive) {
+      throw new Error('Browser demo purge is unavailable while connected to Supabase. Use the secured server-side onboarding flow for live tenant data.');
+    }
     LocalStore.purgeSchoolData(schoolId);
-  }, []);
+  }, [isSupabaseActive]);
 
   const getSchoolSupabaseConfigs = useCallback(() => {
     return LocalStore.getSchoolSupabaseConfigs();
