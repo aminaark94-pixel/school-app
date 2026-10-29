@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   BookOpen, CalendarCheck2, CalendarDays, ChevronRight, FileText,
-  GraduationCap, Megaphone, Menu, Settings, Sparkles, X, Award, Clock,
+  GraduationCap, Megaphone, Menu, Settings, Sparkles, X, Award, Clock, UserCheck,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { getActiveSkin } from '../../lib/skins';
@@ -30,6 +30,7 @@ const items: Array<{ id: AppModule; label: string; short: string; Icon: React.El
   { id: 'attendance', label: 'Attendance', short: 'Attendance', Icon: CalendarCheck2 },
   { id: 'results', label: 'Results', short: 'Results', Icon: FileText },
   { id: 'progress', label: 'Kids Progress', short: 'Progress', Icon: Award },
+  { id: 'teacher-progress', label: "Teacher's Progress", short: 'Teacher KPI', Icon: UserCheck },
   { id: 'communication', label: 'Notices', short: 'Notices', Icon: Megaphone },
   { id: 'datesheets', label: 'Exams', short: 'Exams', Icon: CalendarDays },
   { id: 'updates', label: 'Updates (PKT)', short: 'Updates', Icon: Clock },
@@ -37,7 +38,7 @@ const items: Array<{ id: AppModule; label: string; short: string; Icon: React.El
 ];
 
 function allowedItems(role?: string) {
-  return items.filter((item) => role === 'admin' || item.id !== 'admin');
+  return items.filter((item) => role === 'admin' || (item.id !== 'admin' && item.id !== 'teacher-progress'));
 }
 
 /**

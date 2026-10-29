@@ -13,6 +13,7 @@ import {
   CommunicationQuery,
   Datesheet,
   MonthlyKidsProgress,
+  TeacherProgressEvaluation,
 } from '../types';
 import { LocalStore, FullSchoolDataset, SchoolSupabaseConfig } from '../lib/storage';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
@@ -263,6 +264,23 @@ export function useSchoolData() {
   const saveKidsProgressReport = useCallback(
     (report: MonthlyKidsProgress) => {
       LocalStore.saveKidsProgressReport(report);
+    },
+    []
+  );
+
+  const allTeacherProgress = useMemo(
+    () => LocalStore.getTeacherProgressReports(),
+    [tick]
+  );
+
+  const teacherProgressInSchool = useMemo(
+    () => allTeacherProgress.filter((p) => p.school_id === currentSchool?.id),
+    [allTeacherProgress, currentSchool]
+  );
+
+  const saveTeacherProgressReport = useCallback(
+    (report: TeacherProgressEvaluation) => {
+      LocalStore.saveTeacherProgressReport(report);
     },
     []
   );
@@ -1131,6 +1149,9 @@ export function useSchoolData() {
     kidsProgress: kidsProgressInSchool,
     allKidsProgress,
     saveKidsProgressReport,
+    teacherProgress: teacherProgressInSchool,
+    allTeacherProgress,
+    saveTeacherProgressReport,
     importSchoolDemoData,
     purgeSchoolData,
     getSchoolSupabaseConfigs,

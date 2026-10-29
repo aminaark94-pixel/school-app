@@ -9,6 +9,7 @@ import { KidsProgressModule } from './components/progress/KidsProgressModule';
 import { CommunicationModule } from './components/communication/CommunicationModule';
 import { ExamsDatesheetModule } from './components/datesheets/ExamsDatesheetModule';
 import { UpdatesPage } from './components/updates/UpdatesPage';
+import { TeacherProgressModule } from './components/admin/TeacherProgressModule';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { OwnerDashboard } from './components/owner/OwnerDashboard';
 import { OfflineIndicator } from './components/OfflineIndicator';
@@ -25,7 +26,7 @@ export default function App() {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '') as AppModule;
       const validModules: AppModule[] = [
-        'portal', 'diary', 'attendance', 'results', 'progress', 'communication', 'datesheets', 'updates', 'admin'
+        'portal', 'diary', 'attendance', 'results', 'progress', 'teacher-progress', 'communication', 'datesheets', 'updates', 'admin'
       ];
       if (validModules.includes(hash)) return hash;
       const saved = localStorage.getItem('sms_active_module') as AppModule;
@@ -48,7 +49,7 @@ export default function App() {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '') as AppModule;
       const validModules: AppModule[] = [
-        'portal', 'diary', 'attendance', 'results', 'progress', 'communication', 'datesheets', 'updates', 'admin'
+        'portal', 'diary', 'attendance', 'results', 'progress', 'teacher-progress', 'communication', 'datesheets', 'updates', 'admin'
       ];
       if (validModules.includes(hash)) {
         setActiveModuleState(hash);
@@ -63,12 +64,15 @@ export default function App() {
   const SkinHeader = skin.Header ?? Navbar;
   const SkinPortal = skin.Portal ?? DribbbleAppShell;
 
-  // School administration is exclusively for the school's admin account.
+  // School administration & Teacher Appraisals are exclusively for the school's admin account.
   React.useEffect(() => {
-    if (currentUser?.role !== 'admin' && activeModule === 'admin') {
+    if (
+      currentUser?.role !== 'admin' &&
+      (activeModule === 'admin' || activeModule === 'teacher-progress')
+    ) {
       setActiveModule('portal');
     }
-  }, [currentUser, activeModule]);
+  }, [currentUser, activeModule, setActiveModule]);
 
   // The platform Owner is not scoped to any single school (school_id is null),
   // so it gets its own top-level screen instead of the per-school portal below.
@@ -117,6 +121,7 @@ export default function App() {
                 {activeModule === 'attendance' && 'Attendance Register'}
                 {activeModule === 'results' && 'Student Result Cards & Fee-Locked Transcript'}
                 {activeModule === 'progress' && 'Kids Monthly Progress & Character Assessment'}
+                {activeModule === 'teacher-progress' && "Teacher's Progress & Regularity Appraisal"}
                 {activeModule === 'communication' && 'Digital Circulars & Parent-Teacher Chat'}
                 {activeModule === 'datesheets' && 'Examinations Schedule & Syllabus'}
                 {activeModule === 'updates' && 'Platform Live Changelog & Deployment Status (PKT)'}
@@ -131,6 +136,8 @@ export default function App() {
                   'Conditional exam card unlock with fee status verification. Download branded official PDFs with school seal.'}
                 {activeModule === 'progress' &&
                   'Holistic monthly evaluation across Language, Discipline, Writing, Reading, and Cleaning with badges and star ratings.'}
+                {activeModule === 'teacher-progress' &&
+                  'Confidential school incharge & management assessment of faculty across Language, Dressing, Working, and Regularity / Absenteeism.'}
                 {activeModule === 'communication' &&
                   'Zero-paper digital circulars, holiday notices, and timed query desk to eliminate unregulated WhatsApp messaging.'}
                 {activeModule === 'datesheets' &&
@@ -177,6 +184,7 @@ export default function App() {
         {activeModule === 'attendance' && <AttendanceModule />}
         {activeModule === 'results' && <ResultCardModule />}
         {activeModule === 'progress' && <KidsProgressModule />}
+        {activeModule === 'teacher-progress' && currentUser?.role === 'admin' && <TeacherProgressModule />}
         {activeModule === 'communication' && <CommunicationModule />}
         {activeModule === 'datesheets' && <ExamsDatesheetModule />}
         {activeModule === 'updates' && <UpdatesPage />}

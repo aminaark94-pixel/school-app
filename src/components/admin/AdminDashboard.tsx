@@ -13,18 +13,21 @@ import {
   AlertTriangle,
   Database,
   Sparkles,
+  Award,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { useSkin } from '../../hooks/useSkin';
 import { CsvStudentImport } from './CsvStudentImport';
 import { SchoolBrandingSettings } from './SchoolBrandingSettings';
 import { DemoDataManager } from './DemoDataManager';
+import { TeacherProgressModule } from './TeacherProgressModule';
 import { Student } from '../../types';
 
-type AdminTab = 'roster' | 'import' | 'branding' | 'demo';
+type AdminTab = 'roster' | 'faculty' | 'import' | 'branding' | 'demo';
 
 const TABS = [
   { id: 'roster', domId: 'tab-admin-roster', Icon: Users, full: 'Scholar Management', short: 'Roster' },
+  { id: 'faculty', domId: 'tab-admin-faculty', Icon: Award, full: "Teacher's Progress & Regularity", short: "Teacher KPI" },
   { id: 'import', domId: 'tab-admin-import', Icon: FileSpreadsheet, full: 'CSV Batch Enrollment', short: 'Import' },
   { id: 'branding', domId: 'tab-admin-branding', Icon: Palette, full: 'School Branding', short: 'Branding' },
   { id: 'demo', domId: 'tab-admin-demo', Icon: Database, full: 'Demo & Sample Data', short: 'Demo Data' },
@@ -463,6 +466,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
+      {activeTab === 'faculty' && <TeacherProgressModule />}
       {activeTab === 'import' && <CsvStudentImport />}
       {activeTab === 'branding' && <SchoolBrandingSettings />}
       {activeTab === 'demo' && <DemoDataManager onNavigateToRoster={() => setActiveTab('roster')} />}

@@ -1,5 +1,7 @@
 import {
   MonthlyKidsProgress,
+  TeacherProgressEvaluation,
+  RegularityStatus,
   Attendance,
   Fee,
   Result,
@@ -35,6 +37,7 @@ const STORAGE_KEYS = {
   ALERTS: 'sms_alerts_v1',
   DATESHEETS: 'sms_datesheets_v1',
   PROGRESS: 'sms_kids_progress_v1',
+  TEACHER_PROGRESS: 'sms_teacher_progress_v1',
   CURRENT_USER: 'sms_current_user_id_v1',
   CURRENT_SCHOOL: 'sms_current_school_id_v1',
   SUPABASE_CONFIGS: 'sms_school_supabase_configs_v1',
@@ -127,6 +130,22 @@ export const INITIAL_USERS: User[] = [
     role: 'admin',
     email: 'principal@imperialgrammar.edu.pk',
     created_at: new Date('2024-01-05').toISOString(),
+  },
+  {
+    id: 'user-teacher-english',
+    school_id: 'school-apex',
+    full_name: 'Ms. Hina Bukhari (English Incharge)',
+    role: 'teacher',
+    email: 'hina.bukhari@imperialgrammar.edu.pk',
+    created_at: new Date('2024-01-15').toISOString(),
+  },
+  {
+    id: 'user-teacher-science',
+    school_id: 'school-apex',
+    full_name: 'Mr. Shahbaz Gill (Physics Faculty)',
+    role: 'teacher',
+    email: 'shahbaz.gill@imperialgrammar.edu.pk',
+    created_at: new Date('2024-01-20').toISOString(),
   },
   {
     id: 'user-teacher-apex',
@@ -1153,7 +1172,199 @@ export const INITIAL_PROGRESS: MonthlyKidsProgress[] = [
   },
 ];
 
+export const INITIAL_TEACHER_PROGRESS: TeacherProgressEvaluation[] = [
+  {
+    id: 'eval-asim-munir-oct2026',
+    school_id: 'school-apex',
+    teacher_id: 'user-teacher-apex',
+    teacher_name: 'Prof. Asim Munir',
+    teacher_email: 'asim.munir@imperialgrammar.edu.pk',
+    subject_specialty: 'Senior Mathematics & Cambridge Mechanics',
+    assigned_grades: ['Class 9 (Matric)', 'Class 10 (O-Levels)'],
+    month: 'October',
+    year: 2026,
+    language: {
+      score: 5,
+      rating: 'Outstanding & Articulate',
+      notes: 'Exceptional bilingual command in English and Urdu. Explains intricate calculus and algebra with clarity and pedagogical patience.',
+    },
+    dressing: {
+      score: 5,
+      rating: 'Immaculate & Formal',
+      notes: 'Consistently wears crisp formal blazer, necktie, and polished black shoes. Exemplary executive faculty grooming.',
+    },
+    working: {
+      score: 5,
+      rating: 'Exemplary Pedagogy & Timely',
+      notes: 'Weekly lesson planners submitted 5 days in advance. Digital diary updated daily by 2:00 PM. High student engagement in math quizzes.',
+    },
+    regularity: {
+      status: 'regular',
+      score: 5,
+      days_present: 22,
+      days_absent: 0,
+      late_arrivals: 0,
+      notes: '100% attendance. Arrives at 7:35 AM for morning assembly gate duty without fail.',
+    },
+    overall_score: 96,
+    overall_grade: 'A+',
+    incharge_remarks: 'An anchor pillar of our senior faculty. Parents and students consistently rate Prof. Asim at the top of academic surveys.',
+    incharge_recommendation: 'increment',
+    evaluated_by_id: 'user-admin-apex',
+    evaluated_by_name: 'Principal Syed Ali Raza',
+    created_at: new Date('2026-10-26').toISOString(),
+    updated_at: new Date('2026-10-26').toISOString(),
+  },
+  {
+    id: 'eval-hina-bukhari-oct2026',
+    school_id: 'school-apex',
+    teacher_id: 'user-teacher-english',
+    teacher_name: 'Ms. Hina Bukhari',
+    teacher_email: 'hina.bukhari@imperialgrammar.edu.pk',
+    subject_specialty: 'English Literature & Language Head',
+    assigned_grades: ['Class 8', 'Class 9', 'Class 10 (O-Levels)'],
+    month: 'October',
+    year: 2026,
+    language: {
+      score: 5,
+      rating: 'Eloquent & Native Tone',
+      notes: 'Flawless English diction and literary pronunciation. Encourages quiet students to speak in morning debate sessions.',
+    },
+    dressing: {
+      score: 5,
+      rating: 'Elegant & Professional',
+      notes: 'Strict adherence to formal dress code, displays school security badge, maintains immaculate classroom work desk.',
+    },
+    working: {
+      score: 4,
+      rating: 'Thorough Checking & Creative Work',
+      notes: 'Detailed red-pen feedback on student essays. Oxford syllabus progress is ahead of scheduled milestones.',
+    },
+    regularity: {
+      status: 'regular',
+      score: 5,
+      days_present: 22,
+      days_absent: 0,
+      late_arrivals: 1,
+      notes: 'Highly dependable. Single 10-minute late arrival due to rainstorm, pre-notified bursar office.',
+    },
+    overall_score: 94,
+    overall_grade: 'A+',
+    incharge_remarks: 'Commendable leadership of the English Department and annual dramatics club.',
+    incharge_recommendation: 'increment',
+    evaluated_by_id: 'user-admin-apex',
+    evaluated_by_name: 'Principal Syed Ali Raza',
+    created_at: new Date('2026-10-26').toISOString(),
+    updated_at: new Date('2026-10-26').toISOString(),
+  },
+  {
+    id: 'eval-shahbaz-gill-oct2026',
+    school_id: 'school-apex',
+    teacher_id: 'user-teacher-science',
+    teacher_name: 'Mr. Shahbaz Gill',
+    teacher_email: 'shahbaz.gill@imperialgrammar.edu.pk',
+    subject_specialty: 'Physics & Chemistry Laboratory',
+    assigned_grades: ['Class 9', 'Class 10'],
+    month: 'October',
+    year: 2026,
+    language: {
+      score: 3,
+      rating: 'Satisfactory / Colloquial',
+      notes: 'Good technical grasp of physics principles but frequently reverts to regional Punjabi/Urdu slang during class explanations.',
+    },
+    dressing: {
+      score: 3,
+      rating: 'Casual / Non-Compliant',
+      notes: 'Frequently seen wearing informal polo shirts and sports joggers. Must wear formal shirt, trousers and mandatory lab coat during practicals.',
+    },
+    working: {
+      score: 3,
+      rating: 'Moderate / Delayed Correction',
+      notes: 'Science experiments are conducted well, but student practical journals were left unverified for 12 days.',
+    },
+    regularity: {
+      status: 'irregular',
+      score: 2,
+      days_present: 17,
+      days_absent: 4,
+      late_arrivals: 5,
+      notes: 'Flagged by biometric punch clock: 4 unscheduled absences and 5 late arrivals past 8:15 AM. Causes disruption in zero-period labs.',
+    },
+    overall_score: 64,
+    overall_grade: 'C',
+    incharge_remarks: 'Competent subject knowledge, but severe punctuality and dressing lapses require formal counseling and observation.',
+    incharge_recommendation: 'guidance_required',
+    evaluated_by_id: 'user-admin-apex',
+    evaluated_by_name: 'Principal Syed Ali Raza',
+    created_at: new Date('2026-10-26').toISOString(),
+    updated_at: new Date('2026-10-26').toISOString(),
+  },
+  {
+    id: 'eval-zafar-iqbal-oct2026',
+    school_id: 'school-horizon',
+    teacher_id: 'user-teacher-horizon',
+    teacher_name: 'Prof. Zafar Iqbal',
+    teacher_email: 'zafar.iqbal@highstar.edu.pk',
+    subject_specialty: 'Urdu Literature, Grammar & Pakistan Studies',
+    assigned_grades: ['Class 8', 'Class 9', 'Class 10'],
+    month: 'October',
+    year: 2026,
+    language: {
+      score: 5,
+      rating: 'Scholarly Urdu & Eloquence',
+      notes: 'Masterful command of classic Urdu literature, poetical verses, and respectful classroom communication.',
+    },
+    dressing: {
+      score: 4,
+      rating: 'Formal Traditional Dignity',
+      notes: 'Neat traditional formal attire with tailored waistcoat and formal shoes. Very dignified appearance.',
+    },
+    working: {
+      score: 4,
+      rating: 'Disciplined & Board Focused',
+      notes: 'Board past paper practice sheets prepared diligently. Students show marked improvement in Urdu essay composition.',
+    },
+    regularity: {
+      status: 'regular',
+      score: 4,
+      days_present: 21,
+      days_absent: 1,
+      late_arrivals: 0,
+      notes: 'Very regular. 1 day leave taken for pre-approved family medical checkup.',
+    },
+    overall_score: 89,
+    overall_grade: 'A',
+    incharge_remarks: 'Reliable and respected faculty member of High Star Public Secondary School.',
+    incharge_recommendation: 'satisfactory',
+    evaluated_by_id: 'user-admin-horizon',
+    evaluated_by_name: 'Principal Dr. Qasim Khan',
+    created_at: new Date('2026-10-26').toISOString(),
+    updated_at: new Date('2026-10-26').toISOString(),
+  },
+];
+
 export const LocalStore = {
+  getTeacherProgressReports(): TeacherProgressEvaluation[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.TEACHER_PROGRESS);
+      return raw ? JSON.parse(raw) : INITIAL_TEACHER_PROGRESS;
+    } catch {
+      return INITIAL_TEACHER_PROGRESS;
+    }
+  },
+
+  saveTeacherProgressReports(reports: TeacherProgressEvaluation[]) {
+    localStorage.setItem(STORAGE_KEYS.TEACHER_PROGRESS, JSON.stringify(reports));
+    emitChange();
+  },
+
+  saveTeacherProgressReport(report: TeacherProgressEvaluation) {
+    const list = this.getTeacherProgressReports();
+    const idx = list.findIndex((p) => p.id === report.id);
+    const updated = idx >= 0 ? list.map((p, i) => (i === idx ? report : p)) : [report, ...list];
+    this.saveTeacherProgressReports(updated);
+  },
+
   getProgressReports(): MonthlyKidsProgress[] {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.PROGRESS);
@@ -1372,6 +1583,7 @@ export const LocalStore = {
     if (!raw) {
       localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(INITIAL_DATESHEETS));
     localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(INITIAL_PROGRESS));
+    localStorage.setItem(STORAGE_KEYS.TEACHER_PROGRESS, JSON.stringify(INITIAL_TEACHER_PROGRESS));
       return INITIAL_DATESHEETS;
     }
     return JSON.parse(raw);

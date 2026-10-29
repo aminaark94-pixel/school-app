@@ -12,11 +12,29 @@ export interface SystemUpdate {
 
 export const SYSTEM_UPDATES: SystemUpdate[] = [
   {
+    version: 'v2.6.0',
+    title: "Teacher's Progress & Regularity Section for School Incharge & Management",
+    date: '29 October 2026',
+    khiTime: '06:35 PM PKT (Karachi Time)',
+    badge: 'Latest',
+    status: 'Live & Deployed on Vercel',
+    summary:
+      'Confidential faculty appraisal desk strictly restricted to School Incharge and Top Management. Evaluates teachers across Language, Dressing, Working, and Regularity / Absenteeism with printable appraisal slips.',
+    features: [
+      "Strict Incharge & Admin Access: Role Level Security ensures teachers and parents cannot access other teachers' evaluations.",
+      '4 Core Performance Pillars: Language (Bilingual communication & tone), Dressing (Formal attire & grooming), Working (Pedagogy & diary), Regularity (Regular vs Irregular attendance).',
+      'Regularity & Biometric Punch Tracker: Tally of days present, days absent, late arrivals, and regularity status (Regular, Occasional Late, Irregular).',
+      'Management Decision & Verdict: Increment recommendations, satisfactory ratings, and formal warning tracking.',
+      'Printable Appraisal Slip: Formal double-bordered confidential PDF/print slip with school seal and incharge sign-off.',
+      'Embedded in Admin Dashboard: Directly accessible under the "Teacher KPI" tab or top navigation for admin accounts.',
+    ],
+  },
+  {
     version: 'v2.5.0',
     title: 'Kids Monthly Progress Module, Parent Pari (4 Kids), & Karachi Live Updates Page',
     date: '29 October 2026',
     khiTime: '12:05 PM PKT (Karachi Time)',
-    badge: 'Latest',
+    badge: 'Major Feature',
     status: 'Live & Deployed on Vercel',
     summary:
       'Added full Teacher-Parent Kids Monthly Progress tracker covering Language, Discipline, Writing, Reading, and Cleaning. Seeded Parent Pari with 4 kids (KG 1, Class 2, Class 5, Class 9) and dedicated Karachi Time verification page.',

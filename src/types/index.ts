@@ -275,4 +275,52 @@ export interface MonthlyKidsProgress {
   updated_at: string;
 }
 
+// ---------------------------------------------------------------------------
+// Teacher / Faculty Progress & Management Appraisal (Incharge & Admin only)
+// ---------------------------------------------------------------------------
+export type RegularityStatus = 'regular' | 'occasional_late' | 'irregular';
+
+export interface TeacherPillarEvaluation {
+  score: SkillLevel; // 1-5
+  rating: string; // e.g. "Outstanding", "Professional & Clear", "Needs Attention"
+  notes: string;
+}
+
+export interface TeacherProgressEvaluation {
+  id: string;
+  school_id: string;
+  teacher_id: string;
+  teacher_name: string;
+  teacher_email?: string;
+  subject_specialty: string; // e.g. "Mathematics & Sciences"
+  assigned_grades: string[]; // e.g. ["Class 9", "Class 10"]
+  month: string; // e.g. "October"
+  year: number; // e.g. 2026
+
+  // The 4 Core Evaluation Pillars requested by user
+  language: TeacherPillarEvaluation; // Communication, professional tone, language proficiency in Urdu/English
+  dressing: TeacherPillarEvaluation; // Formal attire, neat grooming, tie/coat/lab coat, ID badge
+  working: TeacherPillarEvaluation;  // Pedagogy, lesson planning, diary updating, student notebook checking
+  
+  // Regularity & Attendance
+  regularity: {
+    status: RegularityStatus; // 'regular' | 'occasional_late' | 'irregular'
+    score: SkillLevel; // 1-5
+    days_present: number; // e.g. 22
+    days_absent: number;  // e.g. 0
+    late_arrivals: number; // e.g. 0
+    notes: string;
+  };
+
+  overall_score: number; // 0 - 100 percentage
+  overall_grade: 'A+' | 'A' | 'B' | 'C' | 'D';
+  incharge_remarks: string;
+  incharge_recommendation: 'increment' | 'satisfactory' | 'guidance_required' | 'warning_issued';
+  evaluated_by_id: string;
+  evaluated_by_name: string; // School Incharge / Principal
+  created_at: string;
+  updated_at: string;
+}
+
+
 
