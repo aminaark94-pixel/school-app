@@ -1,6 +1,9 @@
 import {
   MonthlyKidsProgress,
   TeacherProgressEvaluation,
+  ParentReportCard,
+  ParentAppUsageMetrics,
+  ParentVigilanceLevel,
   RegularityStatus,
   Attendance,
   Fee,
@@ -38,6 +41,7 @@ const STORAGE_KEYS = {
   DATESHEETS: 'sms_datesheets_v1',
   PROGRESS: 'sms_kids_progress_v1',
   TEACHER_PROGRESS: 'sms_teacher_progress_v1',
+  PARENTS_REPORT: 'sms_parents_report_v1',
   CURRENT_USER: 'sms_current_user_id_v1',
   CURRENT_SCHOOL: 'sms_current_school_id_v1',
   SUPABASE_CONFIGS: 'sms_school_supabase_configs_v1',
@@ -1343,7 +1347,150 @@ export const INITIAL_TEACHER_PROGRESS: TeacherProgressEvaluation[] = [
   },
 ];
 
+export const INITIAL_PARENTS_REPORT: ParentReportCard[] = [
+  {
+    id: 'prc-pari',
+    parent_id: 'user-parent-pari',
+    school_id: 'school-apex',
+    parent_name: 'Pari Khan (Mother of 4)',
+    parent_email: 'pari@example.com',
+    parent_phone: '+92 300 1234567',
+    children_count: 4,
+    children: [
+      { student_id: 'student-pari-kg1', student_name: 'Zaviyar Ahmed Khan', class_id: 'KG 1', section: 'Rose', roll_number: 'AI-KG-01' },
+      { student_id: 'student-pari-c2', student_name: 'Mirha Fatima Khan', class_id: 'Class 2', section: 'Tulip', roll_number: 'AI-C2-01' },
+      { student_id: 'student-pari-c5', student_name: 'Muhammad Rayyan Khan', class_id: 'Class 5', section: 'Green', roll_number: 'AI-C5-01' },
+      { student_id: 'student-pari-c9', student_name: 'Shahmeer Ali Khan', class_id: 'Class 9', section: 'Matric A', roll_number: 'AI-C9-01' },
+    ],
+    metrics: {
+      last_active_at: new Date(Date.now() - 2 * 3600000).toISOString(),
+      days_since_last_active: 0,
+      logins_last_30_days: 29,
+      usage_frequency: 'daily',
+      diary_read_rate: 98,
+      queries_asked_count: 7,
+      alerts_acknowledged_count: 1,
+      fee_payment_punctuality: 'prompt',
+    },
+    engagement_score: 98,
+    vigilance_level: 'proactive',
+    extense_attention_needed: false,
+    teacher_notes: 'Exemplary home monitoring. Mother Pari actively checks daily homework feeds, assists kids with reading tree books, and promptly clarifies syllabus questions with teachers.',
+    last_contacted_date: new Date(Date.now() - 3 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'prc-tariq',
+    parent_id: 'user-parent-1',
+    school_id: 'school-apex',
+    parent_name: 'Tariq Mehmood',
+    parent_email: 'tariq.mehmood@example.com',
+    parent_phone: '+92 321 4567890',
+    children_count: 2,
+    children: [
+      { student_id: 'student-1', student_name: 'Muhammad Hamza', class_id: 'Class 10 (O-Levels)', section: 'A', roll_number: 'AIC-101' },
+      { student_id: 'student-3', student_name: 'Danial Qureshi', class_id: 'Class 10 (O-Levels)', section: 'A', roll_number: 'AIC-103' },
+    ],
+    metrics: {
+      last_active_at: new Date(Date.now() - 28 * 3600000).toISOString(),
+      days_since_last_active: 1,
+      logins_last_30_days: 18,
+      usage_frequency: 'every_few_days',
+      diary_read_rate: 84,
+      queries_asked_count: 3,
+      alerts_acknowledged_count: 0,
+      fee_payment_punctuality: 'prompt',
+    },
+    engagement_score: 84,
+    vigilance_level: 'cooperative',
+    extense_attention_needed: false,
+    teacher_notes: 'Cooperative father. Regularly reviews mid-term datesheets and signs tuition vouchers. Children demonstrate good academic regularity.',
+    last_contacted_date: new Date(Date.now() - 12 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'prc-farooq',
+    parent_id: 'user-parent-2',
+    school_id: 'school-apex',
+    parent_name: 'Farooq Siddiqui',
+    parent_email: 'farooq.siddiqui@example.com',
+    parent_phone: '+92 333 7890123',
+    children_count: 2,
+    children: [
+      { student_id: 'student-2', student_name: 'Ayesha Siddiqui', class_id: 'Class 10 (O-Levels)', section: 'A', roll_number: 'AIC-102' },
+      { student_id: 'student-4', student_name: 'Fatima Zahra', class_id: 'Class 10 (O-Levels)', section: 'A', roll_number: 'AIC-104' },
+    ],
+    metrics: {
+      last_active_at: new Date(Date.now() - 17 * 86400000).toISOString(),
+      days_since_last_active: 17,
+      logins_last_30_days: 3,
+      usage_frequency: 'monthly',
+      diary_read_rate: 44,
+      queries_asked_count: 0,
+      alerts_acknowledged_count: 0,
+      fee_payment_punctuality: 'requires_reminders',
+    },
+    engagement_score: 52,
+    vigilance_level: 'passive',
+    extense_attention_needed: true,
+    attention_reason: 'Parent rarely opens school app (3 logins in 30 days) and seldom acknowledges diary feeds. Ayesha needs teacher follow-up during 1st period for homework verification.',
+    teacher_notes: 'Father travels frequently; mentions he cannot check app often. Suggested mother or elder sibling be linked to PWA for daily homework awareness.',
+    last_contacted_date: new Date(Date.now() - 20 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'prc-dormant',
+    parent_id: 'user-parent-dormant',
+    school_id: 'school-apex',
+    parent_name: 'Kamran Malik',
+    parent_email: 'kamran.malik@example.com',
+    parent_phone: '+92 301 9876543',
+    children_count: 1,
+    children: [
+      { student_id: 'student-5', student_name: 'Bilal Ahmed', class_id: 'Class 10 (O-Levels)', section: 'B', roll_number: 'AIC-105' },
+    ],
+    metrics: {
+      last_active_at: new Date(Date.now() - 48 * 86400000).toISOString(),
+      days_since_last_active: 48,
+      logins_last_30_days: 0,
+      usage_frequency: 'dormant',
+      diary_read_rate: 0,
+      queries_asked_count: 0,
+      alerts_acknowledged_count: 0,
+      fee_payment_punctuality: 'chronic_defaulter',
+    },
+    engagement_score: 18,
+    vigilance_level: 'neglectful',
+    extense_attention_needed: true,
+    attention_reason: 'CRITICAL ALERT: Parent has zero app logins in 48 days. Never signs diary. Student Bilal lacks home study support and is slipping in Mathematics & Physics. Assign classroom study buddy immediately.',
+    teacher_notes: 'Unresponsive to automated SMS alerts. Class teacher Prof. Asim Munir conducted a direct phone call. In-person meeting requested.',
+    last_contacted_date: new Date(Date.now() - 5 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+];
+
 export const LocalStore = {
+  getParentsReportCards(): ParentReportCard[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.PARENTS_REPORT);
+      return raw ? JSON.parse(raw) : INITIAL_PARENTS_REPORT;
+    } catch {
+      return INITIAL_PARENTS_REPORT;
+    }
+  },
+
+  saveParentsReportCards(cards: ParentReportCard[]) {
+    localStorage.setItem(STORAGE_KEYS.PARENTS_REPORT, JSON.stringify(cards));
+    emitChange();
+  },
+
+  saveParentReportCard(card: ParentReportCard) {
+    const list = this.getParentsReportCards();
+    const idx = list.findIndex((c) => c.id === card.id || c.parent_id === card.parent_id);
+    const updated = idx >= 0 ? list.map((c, i) => (i === idx ? card : c)) : [card, ...list];
+    this.saveParentsReportCards(updated);
+  },
+
   getTeacherProgressReports(): TeacherProgressEvaluation[] {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.TEACHER_PROGRESS);
@@ -1584,6 +1731,7 @@ export const LocalStore = {
       localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(INITIAL_DATESHEETS));
     localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(INITIAL_PROGRESS));
     localStorage.setItem(STORAGE_KEYS.TEACHER_PROGRESS, JSON.stringify(INITIAL_TEACHER_PROGRESS));
+    localStorage.setItem(STORAGE_KEYS.PARENTS_REPORT, JSON.stringify(INITIAL_PARENTS_REPORT));
       return INITIAL_DATESHEETS;
     }
     return JSON.parse(raw);

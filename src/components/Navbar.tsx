@@ -14,13 +14,14 @@ import {
   Award,
   Clock,
   UserCheck,
+  UsersRound,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useSchoolData } from '../hooks/useSchoolData';
 import { PWAInstallButton } from './PWAInstallButton';
 import { SupabaseConfigModal } from './supabase/SupabaseConfigModal';
 
-export type AppModule = 'portal' | 'diary' | 'attendance' | 'results' | 'progress' | 'teacher-progress' | 'communication' | 'datesheets' | 'updates' | 'admin';
+export type AppModule = 'portal' | 'diary' | 'attendance' | 'results' | 'progress' | 'teacher-progress' | 'parents-report' | 'communication' | 'datesheets' | 'updates' | 'admin';
 
 interface NavbarProps {
   activeModule: AppModule;
@@ -44,6 +45,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'results', label: 'Result Cards', shortLabel: 'Results', Icon: FileText, allowedRoles: ALL_ROLES },
   { id: 'progress', label: 'Kids Progress', shortLabel: 'Progress', Icon: Award, allowedRoles: ALL_ROLES },
   { id: 'teacher-progress', label: "Teacher's Progress", shortLabel: 'Teachers', Icon: UserCheck, allowedRoles: ['admin'] },
+  { id: 'parents-report', label: 'Parents Report Card', shortLabel: 'Parents KPI', Icon: UsersRound, allowedRoles: ['admin', 'teacher'] },
   { id: 'communication', label: 'Notices & Chat', shortLabel: 'Notices', Icon: Megaphone, allowedRoles: ALL_ROLES },
   { id: 'datesheets', label: 'Datesheets', shortLabel: 'Datesheets', Icon: CalendarDays, allowedRoles: ALL_ROLES },
   { id: 'updates', label: 'Live Updates (PKT)', shortLabel: 'Updates', Icon: Clock, allowedRoles: ALL_ROLES },

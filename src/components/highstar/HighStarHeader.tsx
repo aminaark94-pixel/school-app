@@ -17,6 +17,7 @@ const MODULES: Array<{ id: AppModule; label: string }> = [
   { id: 'results', label: 'Results' },
   { id: 'progress', label: 'Kids Progress' },
   { id: 'teacher-progress', label: 'Teacher KPI' },
+  { id: 'parents-report', label: 'Parents KPI' },
   { id: 'communication', label: 'Notices' },
   { id: 'datesheets', label: 'Exams' },
   { id: 'updates', label: 'Updates (PKT)' },
@@ -61,9 +62,12 @@ interface Props {
 export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule }) => {
   const { currentSchool, currentUser } = useSchoolData();
   const isParent = currentUser?.role === 'parent';
-  const visibleModules = MODULES.filter(
-    (m) => currentUser?.role === 'admin' || (m.id !== 'admin' && m.id !== 'teacher-progress')
-  );
+  const visibleModules = MODULES.filter((m) => {
+    if (m.id === 'admin') return currentUser?.role === 'admin';
+    if (m.id === 'teacher-progress') return currentUser?.role === 'admin';
+    if (m.id === 'parents-report') return currentUser?.role === 'admin' || currentUser?.role === 'teacher';
+    return true;
+  });
 
   const initials = (currentUser?.full_name || 'User')
     .split(' ')

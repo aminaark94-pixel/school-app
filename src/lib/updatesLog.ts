@@ -12,11 +12,29 @@ export interface SystemUpdate {
 
 export const SYSTEM_UPDATES: SystemUpdate[] = [
   {
+    version: 'v2.7.0',
+    title: 'Parents Report Card & Parental App Usage Analytics (Extense Attention Index)',
+    date: '29 October 2026',
+    khiTime: '07:05 PM PKT (Karachi Time)',
+    badge: 'Latest',
+    status: 'Live & Deployed on Vercel',
+    summary:
+      'Confidential appraisal and analytics module exclusively for School Admin and Teachers. Measures parental vigilance, backend app usage frequency, diary read receipts, and flags students requiring extense attention in the classroom.',
+    features: [
+      'Strict Admin & Teacher Access: Role Level Security ensures parents cannot access or view their vigilance report or teacher directives.',
+      'Single Parent ID Multi-Kid Aggregation: 1 parent ID links all enrolled siblings (e.g. Pari Khan with 4 kids in KG 1, Class 2, Class 5, Class 9; Farooq with 2 kids in Class 10).',
+      'Backend App Usage Metrics: Tracks 30-day logins, last active recency, diary read receipt percentage, teacher inquiries asked, and fee payment punctuality.',
+      '4 Parental Vigilance Tiers: Proactive (Green), Cooperative (Blue), Passive (Amber), Neglectful (Red) with automated 0-100 vigilance scores.',
+      'Extense Attention Classroom Directive: Flags students whose parents are dormant or inactive with clear instructions for teachers (e.g. daily 1st period diary checks, buddy assignments).',
+      'Direct WhatsApp Outreach & Printable Slips: 1-click WhatsApp outreach to parents and formal double-bordered confidential appraisal slips with school seal.',
+    ],
+  },
+  {
     version: 'v2.6.0',
     title: "Teacher's Progress & Regularity Section for School Incharge & Management",
     date: '29 October 2026',
     khiTime: '06:35 PM PKT (Karachi Time)',
-    badge: 'Latest',
+    badge: 'Major Feature',
     status: 'Live & Deployed on Vercel',
     summary:
       'Confidential faculty appraisal desk strictly restricted to School Incharge and Top Management. Evaluates teachers across Language, Dressing, Working, and Regularity / Absenteeism with printable appraisal slips.',

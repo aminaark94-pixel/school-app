@@ -276,6 +276,59 @@ export interface MonthlyKidsProgress {
 }
 
 // ---------------------------------------------------------------------------
+// Parents Report Card & App Usage Analytics (Admin & Teachers Only)
+// ---------------------------------------------------------------------------
+export type ParentVigilanceLevel = 'proactive' | 'cooperative' | 'passive' | 'neglectful';
+
+export interface ParentAppUsageMetrics {
+  last_active_at: string; // ISO date string e.g. "2026-10-29T10:15:00Z"
+  days_since_last_active: number; // e.g. 0 (today) or 38 (dormant)
+  logins_last_30_days: number; // e.g. 28 times
+  usage_frequency: 'daily' | 'every_few_days' | 'weekly' | 'monthly' | 'dormant';
+  diary_read_rate: number; // percentage 0 - 100 e.g. 96%
+  queries_asked_count: number; // academic questions sent to teachers e.g. 6
+  alerts_acknowledged_count: number; // absence notices acknowledged e.g. 2
+  fee_payment_punctuality: 'prompt' | 'requires_reminders' | 'chronic_defaulter';
+}
+
+export interface ParentLinkedChild {
+  student_id: string;
+  student_name: string;
+  class_id: string;
+  section: string;
+  roll_number: string;
+}
+
+export interface ParentReportCard {
+  id: string; // e.g. "prc-pari"
+  parent_id: string; // Unique Single Parent ID e.g. "user-parent-pari"
+  school_id: string;
+  parent_name: string;
+  parent_email: string;
+  parent_phone: string;
+  
+  // All kids belonging to this parent across classes
+  children_count: number;
+  children: ParentLinkedChild[];
+
+  // App Usage & Vigilance Metrics
+  metrics: ParentAppUsageMetrics;
+
+  // Engagement Score & Classification
+  engagement_score: number; // 0 - 100
+  vigilance_level: ParentVigilanceLevel; // 'proactive' | 'cooperative' | 'passive' | 'neglectful'
+  
+  // Teacher Directive: Flag whether child needs extense/intense attention
+  extense_attention_needed: boolean;
+  attention_reason?: string; // Reason why extra teacher attention is needed
+
+  teacher_notes: string;
+  last_contacted_date?: string;
+  updated_at: string;
+}
+
+
+// ---------------------------------------------------------------------------
 // Teacher / Faculty Progress & Management Appraisal (Incharge & Admin only)
 // ---------------------------------------------------------------------------
 export type RegularityStatus = 'regular' | 'occasional_late' | 'irregular';
@@ -321,6 +374,8 @@ export interface TeacherProgressEvaluation {
   created_at: string;
   updated_at: string;
 }
+
+
 
 
 
