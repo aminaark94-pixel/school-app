@@ -171,12 +171,12 @@ export const TeacherProgressModule: React.FC = () => {
   });
 
   const handleOpenCreateModal = () => {
-    const firstTeacher = teachersInSchool[0];
+    // Always start blank — user must type. Never auto-fill the first teacher.
     setFormData({
-      teacher_id: firstTeacher?.id || '',
-      teacher_name: firstTeacher?.full_name || '',
-      teacher_email: firstTeacher?.email || '',
-      subject_specialty: 'Mathematics & Science Faculty',
+      teacher_id: '',
+      teacher_name: '',
+      teacher_email: '',
+      subject_specialty: '',
       assigned_grades: 'Class 9, Class 10',
       month: selectedMonth,
       year: selectedYear,

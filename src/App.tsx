@@ -14,6 +14,7 @@ import { ParentsReportModule } from './components/parents/ParentsReportModule';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { OwnerDashboard } from './components/owner/OwnerDashboard';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { PWAUpdateNotification } from './components/PWAUpdateNotification';
 import { useSchoolData } from './hooks/useSchoolData';
 import { useSkin } from './hooks/useSkin';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
@@ -207,20 +208,32 @@ export default function App() {
       {/* 4. Footer (short on phones) */}
       <footer className="mt-auto border-t border-[var(--t-sand)] bg-[var(--t-bg)] py-3 sm:py-4 px-4 sm:px-6 text-center text-xs text-[var(--t-ink)]/70">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span
-            className="font-bold text-[var(--t-ink)]"
-            style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
-          >
-            {skin.name} • School Management PWA
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              className="font-bold text-[var(--t-ink)]"
+              style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
+            >
+              {skin.name} • School Management PWA
+            </span>
+            <button
+              type="button"
+              onClick={() => setActiveModule('updates')}
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200 transition cursor-pointer"
+              title="Click to view live Karachi Time changelog and deployed features"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>v2.7.4 (Live PKT)</span>
+            </button>
+          </div>
           <span className="hidden sm:inline text-[11px] text-[var(--t-primary)] font-semibold">
             Digital Diary • Class Work & Planner PDF • Zero Paper Circulars • Fee-Locked Reports
           </span>
         </div>
       </footer>
 
-      {/* 5. Offline connectivity indicator */}
+      {/* 5. Offline & PWA Update indicators */}
       <OfflineIndicator />
+      <PWAUpdateNotification />
     </div>
   );
 }

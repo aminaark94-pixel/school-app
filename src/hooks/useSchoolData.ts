@@ -32,7 +32,12 @@ interface RemoteData {
   attendance: Attendance[];
   fees: Fee[];
   results: Result[];
+  kidsProgress: MonthlyKidsProgress[];
+  teacherProgress: TeacherProgressEvaluation[];
+  parentsReports: ParentReportCard[];
 }
+
+export type DataState = 'loading' | 'remote' | 'empty_remote' | 'remote_error' | 'demo';
 
 export function useSchoolData() {
   const [tick, setTick] = useState(0);
@@ -86,7 +91,7 @@ export function useSchoolData() {
     const supabase = getSupabase();
     if (!supabase || !profile) return;
 
-    const [schoolsRes, usersRes, studentsRes, attendanceRes, feesRes, resultsRes] =
+    const [schoolsRes, usersRes, studentsRes, attendanceRes, feesRes, resultsRes, kidsRes, teacherRes, parentRes] =
       await Promise.all([
         supabase.from('schools').select('*'),
         supabase.from('users').select('*'),
@@ -94,6 +99,9 @@ export function useSchoolData() {
         supabase.from('attendance').select('*'),
         supabase.from('fees').select('*'),
         supabase.from('results').select('*'),
+        supabase.from('kids_progress').select('*').then((r) => r, () => ({ data: [], error: null })),
+        supabase.from('teacher_progress').select('*').then((r) => r, () => ({ data: [], error: null })),
+        supabase.from('parent_reports').select('*').then((r) => r, () => ({ data: [], error: null })),
       ]);
 
     const firstError =
@@ -117,6 +125,9 @@ export function useSchoolData() {
       attendance: (attendanceRes.data ?? []) as Attendance[],
       fees: (feesRes.data ?? []) as Fee[],
       results: (resultsRes.data ?? []) as Result[],
+      kidsProgress: (kidsRes?.data ?? []) as MonthlyKidsProgress[],
+      teacherProgress: (teacherRes?.data ?? []) as TeacherProgressEvaluation[],
+      parentsReports: (parentRes?.data ?? []) as ParentReportCard[],
     });
   }, [profile]);
 
@@ -139,27 +150,49 @@ export function useSchoolData() {
 
   const usingRemote = isSupabaseActive && remote !== null;
 
+  // Explicit architectural state: loading, successful remote data, empty remote data, remote error, or demo mode
+  const dataState: DataState = useMemo(() => {
+    if (!isSupabaseActive) return 'demo';
+    if (isLoading || (remote === null && !remoteError)) return 'loading';
+    if (remoteError) return 'remote_error';
+    if (remote && remote.students.length === 0) return 'empty_remote';
+    return 'remote';
+  }, [isSupabaseActive, isLoading, remote, remoteError]);
+
   // ---------------------------------------------------------------------------
-  // Core collections (remote when signed in, local demo data otherwise)
+  // Core collections (strictly isolated: remote in authenticated mode, never blinking demo data)
   // ---------------------------------------------------------------------------
   const localSchools = useMemo(() => LocalStore.getSchools(), [tick]);
-  const schools = usingRemote ? remote!.schools : localSchools;
+  const schools = useMemo(() => {
+    if (isSupabaseActive) {
+      if (remote) return remote.schools;
+      return authSchool ? [authSchool] : [];
+    }
+    return localSchools;
+  }, [isSupabaseActive, remote, authSchool, localSchools]);
 
   const localCurrentSchoolId = LocalStore.getCurrentSchoolId();
   const currentSchool = useMemo(() => {
-    if (usingRemote) {
+    if (isSupabaseActive) {
       return (
         authSchool ??
-        remote!.schools.find((s) => s.id === profile?.school_id) ??
-        remote!.schools[0] ??
+        remote?.schools.find((s) => s.id === profile?.school_id) ??
+        remote?.schools[0] ??
         null
       );
     }
     return localSchools.find((s) => s.id === localCurrentSchoolId) || localSchools[0] || null;
-  }, [usingRemote, remote, authSchool, profile, localSchools, localCurrentSchoolId]);
+  }, [isSupabaseActive, remote, authSchool, profile, localSchools, localCurrentSchoolId]);
 
   const localUsers = useMemo(() => LocalStore.getUsers(), [tick]);
-  const allUsers = usingRemote ? remote!.users : localUsers;
+  const allUsers = useMemo(() => {
+    if (isSupabaseActive) {
+      if (remote) return remote.users;
+      return profile ? [profile] : [];
+    }
+    return localUsers;
+  }, [isSupabaseActive, remote, profile, localUsers]);
+
   const usersInSchool = useMemo(
     () => allUsers.filter((u) => u.school_id === currentSchool?.id),
     [allUsers, currentSchool]
@@ -167,33 +200,50 @@ export function useSchoolData() {
 
   const localCurrentUserId = LocalStore.getCurrentUserId();
   const currentUser = useMemo(() => {
-    if (usingRemote) return profile;
+    if (isSupabaseActive) return profile;
     const found = localUsers.find((u) => u.id === localCurrentUserId);
     if (found && found.school_id === currentSchool?.id) return found;
     return usersInSchool[0] || localUsers[0] || null;
-  }, [usingRemote, profile, localUsers, localCurrentUserId, currentSchool, usersInSchool]);
+  }, [isSupabaseActive, profile, localUsers, localCurrentUserId, currentSchool, usersInSchool]);
 
   const localStudents = useMemo(() => LocalStore.getStudents(), [tick]);
-  const allStudents = usingRemote ? remote!.students : localStudents;
+  const allStudents = useMemo(() => {
+    if (isSupabaseActive) {
+      return remote ? remote.students : [];
+    }
+    return localStudents;
+  }, [isSupabaseActive, remote, localStudents]);
+
   const studentsInSchool = useMemo(
     () => allStudents.filter((s) => s.school_id === currentSchool?.id),
     [allStudents, currentSchool]
   );
 
-  // Guarantee that whatever school is selected, data is immediately auto-populated if empty
+  // Guarantee demo auto-population ONLY in pure local demo mode (never in Supabase mode)
   useEffect(() => {
-    if (!usingRemote && currentSchool?.id && studentsInSchool.length === 0) {
+    if (!isSupabaseActive && currentSchool?.id && studentsInSchool.length === 0) {
       LocalStore.importSchoolDemoData(currentSchool.id, currentSchool.name);
     }
-  }, [usingRemote, currentSchool, studentsInSchool.length]);
+  }, [isSupabaseActive, currentSchool, studentsInSchool.length]);
 
   const localAttendance = useMemo(() => LocalStore.getAttendance(), [tick]);
   const localFees = useMemo(() => LocalStore.getFees(), [tick]);
   const localResults = useMemo(() => LocalStore.getResults(), [tick]);
 
-  const allAttendance = usingRemote ? remote!.attendance : localAttendance;
-  const allFees = usingRemote ? remote!.fees : localFees;
-  const allResults = usingRemote ? remote!.results : localResults;
+  const allAttendance = useMemo(() => {
+    if (isSupabaseActive) return remote ? remote.attendance : [];
+    return localAttendance;
+  }, [isSupabaseActive, remote, localAttendance]);
+
+  const allFees = useMemo(() => {
+    if (isSupabaseActive) return remote ? remote.fees : [];
+    return localFees;
+  }, [isSupabaseActive, remote, localFees]);
+
+  const allResults = useMemo(() => {
+    if (isSupabaseActive) return remote ? remote.results : [];
+    return localResults;
+  }, [isSupabaseActive, remote, localResults]);
 
   const studentIdsInSchool = useMemo(
     () => new Set(studentsInSchool.map((s) => s.id)),
@@ -261,8 +311,8 @@ export function useSchoolData() {
   );
 
   const allKidsProgress = useMemo(
-    () => LocalStore.getProgressReports(),
-    [tick]
+    () => (isSupabaseActive ? remote?.kidsProgress ?? [] : LocalStore.getProgressReports()),
+    [isSupabaseActive, remote?.kidsProgress, tick]
   );
 
   const kidsProgressInSchool = useMemo(
@@ -273,13 +323,25 @@ export function useSchoolData() {
   const saveKidsProgressReport = useCallback(
     (report: MonthlyKidsProgress) => {
       LocalStore.saveKidsProgressReport(report);
+      if (isSupabaseActive) {
+        const supabase = getSupabase();
+        if (supabase) {
+          supabase
+            .from('kids_progress')
+            .upsert(report)
+            .then(({ error }) => {
+              if (error) console.warn('Supabase kids_progress sync:', error.message);
+              refreshRemote();
+            });
+        }
+      }
     },
-    []
+    [isSupabaseActive, refreshRemote]
   );
 
   const allTeacherProgress = useMemo(
-    () => LocalStore.getTeacherProgressReports(),
-    [tick]
+    () => (isSupabaseActive ? remote?.teacherProgress ?? [] : LocalStore.getTeacherProgressReports()),
+    [isSupabaseActive, remote?.teacherProgress, tick]
   );
 
   const teacherProgressInSchool = useMemo(
@@ -290,13 +352,25 @@ export function useSchoolData() {
   const saveTeacherProgressReport = useCallback(
     (report: TeacherProgressEvaluation) => {
       LocalStore.saveTeacherProgressReport(report);
+      if (isSupabaseActive) {
+        const supabase = getSupabase();
+        if (supabase) {
+          supabase
+            .from('teacher_progress')
+            .upsert(report)
+            .then(({ error }) => {
+              if (error) console.warn('Supabase teacher_progress sync:', error.message);
+              refreshRemote();
+            });
+        }
+      }
     },
-    []
+    [isSupabaseActive, refreshRemote]
   );
 
   const allParentsReports = useMemo(
-    () => LocalStore.getParentsReportCards(),
-    [tick]
+    () => (isSupabaseActive ? remote?.parentsReports ?? [] : LocalStore.getParentsReportCards()),
+    [isSupabaseActive, remote?.parentsReports, tick]
   );
 
   const parentsReportsInSchool = useMemo(
@@ -307,8 +381,20 @@ export function useSchoolData() {
   const saveParentReportCard = useCallback(
     (card: ParentReportCard) => {
       LocalStore.saveParentReportCard(card);
+      if (isSupabaseActive) {
+        const supabase = getSupabase();
+        if (supabase) {
+          supabase
+            .from('parent_reports')
+            .upsert(card)
+            .then(({ error }) => {
+              if (error) console.warn('Supabase parent_reports sync:', error.message);
+              refreshRemote();
+            });
+        }
+      }
     },
-    []
+    [isSupabaseActive, refreshRemote]
   );
 
   // Real-time parent app telemetry tracker: Automatically records parent login & app sessions
@@ -1253,6 +1339,7 @@ export function useSchoolData() {
     saveDatesheet,
     isSupabaseActive,
     isLiveData: usingRemote,
+    dataState,
     remoteError,
     refreshRemote,
     isLoading,

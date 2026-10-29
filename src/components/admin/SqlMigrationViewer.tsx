@@ -205,6 +205,109 @@ CREATE POLICY "View results policy"
         )
     )
   );
+
+-- 7. DIARY ENTRIES & READ RECEIPTS
+CREATE TABLE IF NOT EXISTS public.diary_entries (
+  id TEXT PRIMARY KEY,
+  school_id UUID NOT NULL REFERENCES public.schools(id) ON DELETE CASCADE,
+  class_id TEXT NOT NULL,
+  section TEXT NOT NULL DEFAULT 'A',
+  subject TEXT NOT NULL,
+  date DATE NOT NULL DEFAULT CURRENT_DATE,
+  classwork TEXT NOT NULL DEFAULT '',
+  homework TEXT NOT NULL DEFAULT '',
+  due_date DATE,
+  teacher_id TEXT NOT NULL,
+  teacher_name TEXT NOT NULL DEFAULT 'Faculty Member',
+  attachments JSONB NOT NULL DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+CREATE INDEX IF NOT EXISTS idx_diary_school ON public.diary_entries(school_id, class_id);
+ALTER TABLE public.diary_entries ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Tenant isolation for diary" ON public.diary_entries FOR ALL
+  USING (school_id = public.get_current_user_school_id());
+
+-- 8. MONTHLY KIDS PROGRESS (KG1 - Class 10)
+CREATE TABLE IF NOT EXISTS public.kids_progress (
+  id TEXT PRIMARY KEY,
+  school_id UUID NOT NULL REFERENCES public.schools(id) ON DELETE CASCADE,
+  student_id TEXT NOT NULL,
+  student_name TEXT NOT NULL,
+  class_id TEXT NOT NULL,
+  section TEXT NOT NULL DEFAULT 'A',
+  month TEXT NOT NULL,
+  year INT NOT NULL,
+  language JSONB NOT NULL DEFAULT '{}'::jsonb,
+  discipline JSONB NOT NULL DEFAULT '{}'::jsonb,
+  writing JSONB NOT NULL DEFAULT '{}'::jsonb,
+  reading JSONB NOT NULL DEFAULT '{}'::jsonb,
+  cleaning JSONB NOT NULL DEFAULT '{}'::jsonb,
+  teacher_remarks TEXT DEFAULT '',
+  evaluated_by_id TEXT DEFAULT '',
+  evaluated_by_name TEXT DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+CREATE INDEX IF NOT EXISTS idx_kids_progress_school ON public.kids_progress(school_id, month, year);
+ALTER TABLE public.kids_progress ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Tenant isolation for kids progress" ON public.kids_progress FOR ALL
+  USING (school_id = public.get_current_user_school_id());
+
+-- 9. TEACHER PROGRESS EVALUATIONS (Confidential: Admin Only)
+CREATE TABLE IF NOT EXISTS public.teacher_progress (
+  id TEXT PRIMARY KEY,
+  school_id UUID NOT NULL REFERENCES public.schools(id) ON DELETE CASCADE,
+  teacher_id TEXT NOT NULL,
+  teacher_name TEXT NOT NULL,
+  teacher_email TEXT DEFAULT '',
+  subject_specialty TEXT DEFAULT '',
+  assigned_grades TEXT[] DEFAULT '{}',
+  month TEXT NOT NULL,
+  year INT NOT NULL,
+  language JSONB NOT NULL DEFAULT '{}'::jsonb,
+  dressing JSONB NOT NULL DEFAULT '{}'::jsonb,
+  working JSONB NOT NULL DEFAULT '{}'::jsonb,
+  regularity JSONB NOT NULL DEFAULT '{}'::jsonb,
+  overall_score NUMERIC(5,2) DEFAULT 0,
+  overall_grade TEXT DEFAULT 'N/A',
+  incharge_remarks TEXT DEFAULT '',
+  incharge_recommendation TEXT DEFAULT 'satisfactory',
+  evaluated_by_id TEXT DEFAULT '',
+  evaluated_by_name TEXT DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+CREATE INDEX IF NOT EXISTS idx_teacher_progress_school ON public.teacher_progress(school_id, month, year);
+ALTER TABLE public.teacher_progress ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Admin only for teacher progress" ON public.teacher_progress FOR ALL
+  USING (school_id = public.get_current_user_school_id() AND public.get_current_user_role() = 'admin');
+
+-- 10. PARENTS REPORT CARDS & APP TELEMETRY (Staff Only)
+CREATE TABLE IF NOT EXISTS public.parent_reports (
+  id TEXT PRIMARY KEY,
+  school_id UUID NOT NULL REFERENCES public.schools(id) ON DELETE CASCADE,
+  parent_id TEXT NOT NULL,
+  parent_code TEXT DEFAULT '',
+  parent_name TEXT NOT NULL,
+  parent_phone TEXT DEFAULT '',
+  parent_email TEXT DEFAULT '',
+  children JSONB NOT NULL DEFAULT '[]'::jsonb,
+  vigilance_level TEXT DEFAULT 'attentive',
+  inquiries_last_30_days INT DEFAULT 0,
+  ptm_attendance_rate NUMERIC(5,2) DEFAULT 100,
+  diary_signature_rate NUMERIC(5,2) DEFAULT 100,
+  fee_clearance_status TEXT DEFAULT 'prompt',
+  app_usage_metrics JSONB NOT NULL DEFAULT '{}'::jsonb,
+  teacher_notes TEXT DEFAULT '',
+  requires_attention BOOLEAN DEFAULT false,
+  attention_reason TEXT DEFAULT '',
+  last_interaction_date DATE DEFAULT CURRENT_DATE,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+CREATE INDEX IF NOT EXISTS idx_parent_reports_school ON public.parent_reports(school_id);
+ALTER TABLE public.parent_reports ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Staff only for parents reports" ON public.parent_reports FOR ALL
+  USING (school_id = public.get_current_user_school_id() AND public.get_current_user_role() IN ('admin', 'teacher'));
 `;
 
 export const SqlMigrationViewer: React.FC = () => {

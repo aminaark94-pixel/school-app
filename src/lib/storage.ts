@@ -2096,6 +2096,9 @@ export interface FullSchoolDataset {
   queries?: CommunicationQuery[];
   alerts?: AbsenceAlert[];
   datesheets?: Datesheet[];
+  progress?: MonthlyKidsProgress[];
+  teacher_progress?: TeacherProgressEvaluation[];
+  parents_reports?: ParentReportCard[];
 }
 
 export const INITIAL_PROGRESS: MonthlyKidsProgress[] = [
@@ -3132,6 +3135,9 @@ export const LocalStore = {
     this.saveQueries(this.getQueries().filter((q) => q.school_id !== schoolId));
     this.saveAlerts(this.getAlerts().filter((a) => a.school_id !== schoolId));
     this.saveDatesheets(this.getDatesheets().filter((d) => d.school_id !== schoolId));
+    this.saveProgressReports(this.getProgressReports().filter((p) => p.school_id !== schoolId));
+    this.saveTeacherProgressReports(this.getTeacherProgressReports().filter((t) => t.school_id !== schoolId));
+    this.saveParentsReportCards(this.getParentsReportCards().filter((pr) => pr.school_id !== schoolId));
     emitChange();
   },
 
@@ -3156,6 +3162,9 @@ export const LocalStore = {
       queries: this.getQueries(),
       alerts: this.getAlerts(),
       datesheets: this.getDatesheets(),
+      progress: this.getProgressReports(),
+      teacher_progress: this.getTeacherProgressReports(),
+      parents_reports: this.getParentsReportCards(),
     };
   },
 
@@ -3193,6 +3202,15 @@ export const LocalStore = {
     if (data.datesheets && Array.isArray(data.datesheets)) {
       localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(data.datesheets));
     }
+    if (data.progress && Array.isArray(data.progress)) {
+      localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(data.progress));
+    }
+    if (data.teacher_progress && Array.isArray(data.teacher_progress)) {
+      localStorage.setItem(STORAGE_KEYS.TEACHER_PROGRESS, JSON.stringify(data.teacher_progress));
+    }
+    if (data.parents_reports && Array.isArray(data.parents_reports)) {
+      localStorage.setItem(STORAGE_KEYS.PARENTS_REPORT, JSON.stringify(data.parents_reports));
+    }
     if (data.schools && data.schools.length > 0) {
       localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, data.schools[0].id);
       const admin = data.users?.find(
@@ -3215,6 +3233,9 @@ export const LocalStore = {
     localStorage.setItem(STORAGE_KEYS.QUERIES, JSON.stringify([]));
     localStorage.setItem(STORAGE_KEYS.ALERTS, JSON.stringify([]));
     localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.TEACHER_PROGRESS, JSON.stringify([]));
+    localStorage.setItem(STORAGE_KEYS.PARENTS_REPORT, JSON.stringify([]));
     if (!keepSchoolOnly) {
       localStorage.setItem(STORAGE_KEYS.SCHOOLS, JSON.stringify([]));
       localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify([]));
@@ -3237,7 +3258,9 @@ export const LocalStore = {
       const hasTeacherProg = teacherProgress.some((t) => t.school_id === school.id);
       const hasParents = parentsReports.some((pr) => pr.school_id === school.id);
 
-      if (!hasStudents || !hasDiary || !hasProg || !hasTeacherProg || !hasParents) {
+      // Only seed when ALL core collections are missing — not just one optional one.
+      // Using AND (&&) prevents over-eager re-seeding that wipes real data.
+      if (!hasStudents && !hasDiary && !hasProg && !hasTeacherProg && !hasParents) {
         this.importSchoolDemoData(school.id, school.name);
       }
     }

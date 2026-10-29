@@ -12,11 +12,28 @@ export interface SystemUpdate {
 
 export const SYSTEM_UPDATES: SystemUpdate[] = [
   {
+    version: 'v2.7.4',
+    title: 'Auto-Seeder Bug Fix, Teacher Appraisal Blank Start & Multi-School Data Isolation',
+    date: '29 October 2026',
+    khiTime: '11:30 PM PKT (Karachi Time)',
+    badge: 'Latest',
+    status: 'Live & Deployed on Vercel',
+    summary:
+      'Critical data architecture fixes: (1) Auto-seeder now uses AND logic — only re-seeds a school when ALL collections are empty, preventing over-eager re-seeding that wiped real data. (2) "New Faculty Appraisal" form now always opens completely blank — no teacher name, no email, no subject pre-filled. Admin must type freely. (3) Confidential Incharge Verdict textarea always starts empty for new appraisals. Teacher name datalist suggestions remain available but are never auto-applied.',
+    features: [
+      'Auto-Seeder Bug Fix (AND Logic): ensureAllSchoolsData() now only triggers demo data generation when ALL of students, diary, progress, teacher progress, AND parent reports are simultaneously absent for a school. Previously used OR logic which would re-seed any school the moment one optional report type was missing — corrupting real or partially-seeded data.',
+      'Teacher Appraisal Blank Start: handleOpenCreateModal() now initialises with teacher_id="", teacher_name="", teacher_email="", subject_specialty="" — completely blank. The first teacher in the list is never auto-selected or auto-filled.',
+      'Datalist Suggestions Remain Available: Existing faculty names still appear as optional browser datalist suggestions when typing in the teacher name input, but are never force-applied. Quick-select chips also still appear below the input for convenience.',
+      'Incharge Verdict Always Empty on New Appraisal: inchargeRemarks field confirmed to initialise as empty string for every new appraisal — placeholder text is only a low-opacity suggestion visible to the user and is never saved as data.',
+      'Multi-school Isolation Confirmed: Each school only receives demo data injection when its own data is missing, not as a side-effect of another school being seeded.',
+    ],
+  },
+  {
     version: 'v2.7.3',
     title: 'Single Parent ID Multi-Kid Aggregation, Real-Time Backend Telemetry & Universal All-Grade Demo Snaps',
     date: '29 October 2026',
     khiTime: '10:15 PM PKT (Karachi Time)',
-    badge: 'Latest',
+    badge: 'Major Feature',
     status: 'Live & Deployed on Vercel',
     summary:
       'Unified Single Parent ID system aggregating all enrolled siblings under 1 family code (Pari Khan with 4 kids & Aisha Bibi with 5 kids across grades), live backend app usage telemetry that updates in real time and reflects on the Parents Report Card for Teachers and Admin, and comprehensive all-grade dummy datasets with rich diary snaps & CamScanner work planner PDFs for every class (KG 1 to Class 10).',
