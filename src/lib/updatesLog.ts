@@ -12,11 +12,29 @@ export interface SystemUpdate {
 
 export const SYSTEM_UPDATES: SystemUpdate[] = [
   {
+    version: 'v2.7.2',
+    title: 'Collaborative Complaint & Ticket Desk: Parents ⇄ Teachers with School Administration Dual Oversight',
+    date: '29 October 2026',
+    khiTime: '09:25 PM PKT (Karachi Time)',
+    badge: 'Latest',
+    status: 'Live & Deployed on Vercel',
+    summary:
+      'Full-fledged ticket system for complaints, inquiries, and behavioral notices. Parents can lodge complaints directly to teachers (with auto-selection of their kids like Pari Khan\'s 4 children), teachers can issue student conduct & incomplete homework notices, and both Teachers and School Administration receive instant notifications and can participate in official dual-reply collaborative threads.',
+    features: [
+      'Dual Directional Ticket Raising: Parents can raise complaints directly to assigned faculty teachers, and Teachers can raise disciplinary/homework notices regarding students directly to parents.',
+      'Dual Notification & Oversight: Every ticket instantly alerts both the assigned Faculty Teacher AND School Administration with live notification tags and oversight badges.',
+      'Collaborative Multi-Role Response Thread: Both School Administration (with Principal seal) and Faculty Teachers (with Faculty badge) can reply collaboratively to parents in real-time.',
+      'Pari Khan Multi-Kid Integration: Multi-child parents can select which child (KG 1, Class 2, Class 5, Class 9) the inquiry or grievance pertains to.',
+      'Student Roster Selector for Teachers: Faculty members can select any student from the institutional roster to issue diary or academic alerts with parent details pre-populated.',
+      'Ticket Lifecycle & Urgency Tiers: Status tracker (Open, In Progress, Resolved, Closed) and priority badges (Normal, Urgent, Critical Intervention) with 1-click WhatsApp outreach.',
+    ],
+  },
+  {
     version: 'v2.7.1',
     title: 'Universal Multi-School Data Auto-Seeder, Teacher Name Input Bar & Incharge Verdict Hint',
     date: '29 October 2026',
     khiTime: '08:35 PM PKT (Karachi Time)',
-    badge: 'Latest',
+    badge: 'Enhancement',
     status: 'Live & Deployed on Vercel',
     summary:
       'Universal demo dataset auto-seeder guaranteeing complete data for all schools (no more blank screens when switching institutions), faculty member free text input bar replacing dropdown, and unfilled incharge verdict with light placeholder hint.',

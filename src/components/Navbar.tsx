@@ -46,7 +46,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'progress', label: 'Kids Progress', shortLabel: 'Progress', Icon: Award, allowedRoles: ALL_ROLES },
   { id: 'teacher-progress', label: "Teacher's Progress", shortLabel: 'Teachers', Icon: UserCheck, allowedRoles: ['admin'] },
   { id: 'parents-report', label: 'Parents Report Card', shortLabel: 'Parents KPI', Icon: UsersRound, allowedRoles: ['admin', 'teacher'] },
-  { id: 'communication', label: 'Notices & Chat', shortLabel: 'Notices', Icon: Megaphone, allowedRoles: ALL_ROLES },
+  { id: 'communication', label: 'Tickets & Complaints', shortLabel: 'Tickets', Icon: Megaphone, allowedRoles: ALL_ROLES },
   { id: 'datesheets', label: 'Datesheets', shortLabel: 'Datesheets', Icon: CalendarDays, allowedRoles: ALL_ROLES },
   { id: 'updates', label: 'Live Updates (PKT)', shortLabel: 'Updates', Icon: Clock, allowedRoles: ALL_ROLES },
   { id: 'admin', label: 'Admin', shortLabel: 'Admin', Icon: Settings, allowedRoles: ['admin'] },

@@ -977,40 +977,60 @@ export function useSchoolData() {
       student_class: string;
       subject: string;
       category: CommunicationQuery['category'];
+      priority?: CommunicationQuery['priority'];
       initial_message: string;
+      parent_id?: string;
+      parent_name?: string;
+      parent_phone?: string;
+      teacher_id?: string;
+      teacher_name?: string;
+      target_audience?: CommunicationQuery['target_audience'];
     }) => {
+      const ticketNum = `TKT-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+
       if (cloudSchoolId && currentUser) {
         const id = newChatId();
         chatActions.createQuery(id, data, {
           school_id: cloudSchoolId,
-          parent_id: currentUser.id,
-          parent_name: currentUser.full_name,
+          parent_id: data.parent_id || currentUser.id,
+          parent_name: data.parent_name || currentUser.full_name,
         });
-        // The full row (with the message) arrives moments later via realtime;
-        // callers only need the id to select this thread right away.
-        return { id } as CommunicationQuery;
+        return { id, ticket_number: ticketNum } as CommunicationQuery;
       }
 
       const all = LocalStore.getQueries();
+      const isTeacher = currentUser?.role === 'teacher';
+      const isAdmin = currentUser?.role === 'admin';
+
       const newQuery: CommunicationQuery = {
-        id: `query-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        id: `tkt-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        ticket_number: ticketNum,
         school_id: currentSchool?.id || 'school-apex',
         student_id: data.student_id,
         student_name: data.student_name,
         student_class: data.student_class,
-        parent_id: currentUser?.id || 'user-parent-1',
-        parent_name: currentUser?.full_name || 'Parent',
-        teacher_name: 'Class Coordinator',
+        parent_id: data.parent_id || (currentUser?.role === 'parent' ? currentUser.id : 'user-parent-1'),
+        parent_name: data.parent_name || (currentUser?.role === 'parent' ? currentUser.full_name : 'Parent'),
+        parent_phone: data.parent_phone,
+        teacher_id: data.teacher_id || (isTeacher ? currentUser?.id : undefined),
+        teacher_name: data.teacher_name || (isTeacher ? currentUser?.full_name : 'Faculty Incharge'),
+        raised_by_role: currentUser?.role || 'parent',
+        raised_by_name: currentUser?.full_name || 'User',
+        target_audience: data.target_audience || (isTeacher ? 'parent' : 'teacher'),
         subject: data.subject,
         status: 'open',
         category: data.category,
+        priority: data.priority || 'normal',
+        admin_notified: true,
+        teacher_notified: true,
+        parent_notified: isTeacher || isAdmin,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         messages: [
           {
             id: `msg-${Date.now()}`,
-            sender_id: currentUser?.id || 'user-parent-1',
-            sender_name: currentUser?.full_name || 'Parent',
+            sender_id: currentUser?.id || 'user-1',
+            sender_name: currentUser?.full_name || 'User',
             sender_role: currentUser?.role || 'parent',
             text: data.initial_message,
             sent_at: new Date().toISOString(),
@@ -1062,19 +1082,27 @@ export function useSchoolData() {
   );
 
   const updateQueryStatus = useCallback(
-    (queryId: string, status: 'open' | 'in_progress' | 'resolved') => {
+    (queryId: string, status: CommunicationQuery['status']) => {
       if (cloudSchoolId) {
-        void chatActions.updateStatus(queryId, status);
+        void chatActions.updateStatus(queryId, status as any);
         return;
       }
       const all = LocalStore.getQueries();
       LocalStore.saveQueries(
         all.map((q) =>
-          q.id === queryId ? { ...q, status, updated_at: new Date().toISOString() } : q
+          q.id === queryId
+            ? {
+                ...q,
+                status,
+                resolved_at: status === 'resolved' || status === 'closed' ? new Date().toISOString() : undefined,
+                resolved_by: status === 'resolved' || status === 'closed' ? currentUser?.full_name : undefined,
+                updated_at: new Date().toISOString(),
+              }
+            : q
         )
       );
     },
-    [cloudSchoolId]
+    [cloudSchoolId, currentUser]
   );
 
   // ---------------------------------------------------------------------------

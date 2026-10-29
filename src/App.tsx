@@ -130,7 +130,7 @@ export default function App() {
                 {activeModule === 'progress' && 'Kids Monthly Progress & Character Assessment'}
                 {activeModule === 'teacher-progress' && "Teacher's Progress & Regularity Appraisal"}
                 {activeModule === 'parents-report' && 'Parents Report Card & App Vigilance Analytics'}
-                {activeModule === 'communication' && 'Digital Circulars & Parent-Teacher Chat'}
+                {activeModule === 'communication' && 'Complaints & Support Tickets Desk (Parents ⇄ Teachers ⇄ Admin)'}
                 {activeModule === 'datesheets' && 'Examinations Schedule & Syllabus'}
                 {activeModule === 'updates' && 'Platform Live Changelog & Deployment Status (PKT)'}
                 {activeModule === 'admin' && 'School Administration & Data Import'}
@@ -149,7 +149,7 @@ export default function App() {
                 {activeModule === 'parents-report' &&
                   'Confidential teacher & management index tracking parental app usage, diary reads, and flagging students requiring extense attention in class.'}
                 {activeModule === 'communication' &&
-                  'Zero-paper digital circulars, holiday notices, and timed query desk to eliminate unregulated WhatsApp messaging.'}
+                  'Collaborative complaint and inquiry tickets between Parents and Teachers with immediate School Administration notification & dual reply oversight.'}
                 {activeModule === 'datesheets' &&
                   'Printable examination timetables, room assignments, and chapter-wise syllabus for grades.'}
                 {activeModule === 'updates' &&

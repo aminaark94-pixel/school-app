@@ -156,20 +156,44 @@ export interface Notice {
   created_at: string;
 }
 
-// Structured Parent-Teacher Queries (with specific office hour window)
+export type TicketPriority = 'normal' | 'urgent' | 'critical';
+export type TicketCategory =
+  | 'academic'
+  | 'homework'
+  | 'behavior'
+  | 'discipline'
+  | 'attendance'
+  | 'fee'
+  | 'transport'
+  | 'safety_bullying'
+  | 'general';
+export type TicketStatus = 'open' | 'in_progress' | 'resolved' | 'closed';
+
+// Structured Parent-Teacher Complaints & Support Tickets Desk
 export interface CommunicationQuery {
   id: string;
+  ticket_number?: string; // e.g. "TKT-2026-101"
   school_id: string;
   student_id: string;
   student_name: string;
   student_class: string;
   parent_id: string;
   parent_name: string;
+  parent_phone?: string;
   teacher_id?: string;
   teacher_name?: string;
+  raised_by_role?: UserRole;
+  raised_by_name?: string;
+  target_audience?: 'teacher' | 'admin' | 'parent';
   subject: string;
-  status: 'open' | 'in_progress' | 'resolved';
-  category: 'academic' | 'homework' | 'behavior' | 'attendance' | 'general';
+  status: TicketStatus;
+  category: TicketCategory;
+  priority?: TicketPriority;
+  admin_notified?: boolean;
+  teacher_notified?: boolean;
+  parent_notified?: boolean;
+  resolved_at?: string;
+  resolved_by?: string;
   created_at: string;
   updated_at: string;
   messages: {
