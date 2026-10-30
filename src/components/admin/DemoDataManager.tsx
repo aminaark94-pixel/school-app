@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { FullSchoolDataset } from '../../lib/storage';
+import { getSupabase } from '../../lib/supabase';
 
 export interface DemoDataManagerProps {
   onNavigateToRoster?: () => void;
@@ -41,6 +42,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
     clearAllDemoData,
     resetToDefaults,
     isSupabaseActive,
+    refreshRemoteData,
   } = useSchoolData();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -91,7 +93,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
   };
 
   // 2. Load 1-Click Built-in Realistic Demo Data
-  const handleLoadRealisticBuiltin = () => {
+  const handleLoadRealisticBuiltin = async () => {
     setErrorMsg(null);
     setSuccessMsg(null);
     setIsProcessing(true);
@@ -101,6 +103,19 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
         setErrorMsg('No active institution selected.');
         return;
       }
+      if (isSupabaseActive) {
+        const supabase = getSupabase();
+        if (!supabase) throw new Error('Supabase connection is unavailable. Please sign in again.');
+        const { data, error } = await supabase.functions.invoke('seed-demo-data');
+        if (error) throw new Error(error.message);
+        if (!data?.success) throw new Error(data?.error || 'The secured demo seeder did not complete.');
+        await refreshRemoteData();
+        setSuccessMsg(
+          `Official cloud demonstration dataset loaded for ${currentSchool.name}! (${data.students} scholars across ${data.classes} classes, including Class 10 (O-Levels) Mathematics).`
+        );
+        return;
+      }
+
       const stats = importSchoolDemoData(currentSchool.id, currentSchool.name);
       setSuccessMsg(
         `Official demonstration dataset loaded for ${currentSchool.name}! (${stats.studentsCount} scholars across Cambridge O-Levels, Matric & Primary, ${stats.diaryCount} diary lessons & ${stats.feesCount} PKR fee vouchers).`

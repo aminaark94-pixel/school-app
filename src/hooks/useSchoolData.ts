@@ -1309,6 +1309,7 @@ export function useSchoolData() {
     parentsReports: parentsReportsInSchool,
     allParentsReports,
     saveParentReportCard,
+    refreshRemoteData: refreshRemote,
     importSchoolDemoData,
     purgeSchoolData,
     getSchoolSupabaseConfigs,
