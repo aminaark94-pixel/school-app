@@ -47,6 +47,22 @@ const STORAGE_KEYS = {
   SUPABASE_CONFIGS: 'sms_school_supabase_configs_v1',
 };
 
+// Older demo fixtures accidentally repeated a block of Aisha Bibi's children.
+// Keep one record per stable ID / school-roll-number pair when reading the
+// browser cache, so existing installations repair themselves without a reset.
+const dedupeStudents = (students: Student[]): Student[] => {
+  const seenIds = new Set<string>();
+  const seenEnrollments = new Set<string>();
+
+  return students.filter((student) => {
+    const enrollmentKey = `${student.school_id}::${student.roll_number.trim().toLowerCase()}`;
+    if (seenIds.has(student.id) || seenEnrollments.has(enrollmentKey)) return false;
+    seenIds.add(student.id);
+    seenEnrollments.add(enrollmentKey);
+    return true;
+  });
+};
+
 export const INITIAL_SCHOOLS: School[] = [
   {
     id: 'school-apex',
@@ -2788,10 +2804,16 @@ export const LocalStore = {
   getStudents(): Student[] {
     const raw = localStorage.getItem(STORAGE_KEYS.STUDENTS);
     if (!raw) {
-      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(INITIAL_STUDENTS));
-      return INITIAL_STUDENTS;
+      const initialStudents = dedupeStudents(INITIAL_STUDENTS);
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(initialStudents));
+      return initialStudents;
     }
-    return JSON.parse(raw);
+    const storedStudents = JSON.parse(raw) as Student[];
+    const normalizedStudents = dedupeStudents(storedStudents);
+    if (normalizedStudents.length !== storedStudents.length) {
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(normalizedStudents));
+    }
+    return normalizedStudents;
   },
 
   saveStudents(students: Student[]) {
