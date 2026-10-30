@@ -148,8 +148,17 @@ export const KidsProgressModule: React.FC = () => {
         score === 5 ? 'Outstanding' : score === 4 ? 'Very Good' : score === 3 ? 'Satisfactory' : 'Needs Support',
     });
 
+    const existingReport = progressReports.find(
+      (report) =>
+        report.student_id === evaluatingStudent.id &&
+        report.month === selectedMonth &&
+        report.year === 2026
+    );
+
     const newReport: MonthlyKidsProgress = {
-      id: `prog-${Date.now()}-${evaluatingStudent.id}`,
+      // Preserve the existing primary key when an evaluation is amended. A new
+      // ID would create a second report for the same child and month in cloud mode.
+      id: existingReport?.id || `prog-${evaluatingStudent.id}-${selectedMonth.toLowerCase()}-2026`,
       school_id: currentSchool?.id || 'school-apex',
       student_id: evaluatingStudent.id,
       student_name: evaluatingStudent.name,
