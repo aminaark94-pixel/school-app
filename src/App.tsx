@@ -18,6 +18,7 @@ import { PWAUpdateNotification } from './components/PWAUpdateNotification';
 import { useSchoolData } from './hooks/useSchoolData';
 import { useSkin } from './hooks/useSkin';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
+import { ProductTour } from './components/ProductTour';
 
 export default function App() {
   const { currentSchool, currentUser } = useSchoolData();
@@ -91,6 +92,7 @@ export default function App() {
         <main className="flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 lg:p-8">
           <OwnerDashboard />
         </main>
+        <ProductTour role="owner" setActiveModule={setActiveModule} />
         <OfflineIndicator />
       </div>
     );
@@ -234,6 +236,7 @@ export default function App() {
       {/* 5. Offline & PWA Update indicators */}
       <OfflineIndicator />
       <PWAUpdateNotification />
+      <ProductTour role={currentUser?.role} setActiveModule={setActiveModule} />
     </div>
   );
 }
