@@ -90,7 +90,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule })
 
   return (
     <>
-      <header
+      <header data-tour="primary-navigation"
         className="sticky top-0 z-40 text-[#EDE7C7] shadow-lg border-b border-[#D4AF37]/30 transition-colors top-safe"
         style={{ backgroundColor: primaryColor }}
       >

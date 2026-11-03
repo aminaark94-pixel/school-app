@@ -107,7 +107,7 @@ export const RoleSwitcherBar: React.FC = () => {
   // ---------------------------------------------------------------------
   if (isLiveData) {
     return (
-      <div className="bg-[#200E01] text-[#EDE7C7] border-b border-[#5B0202] text-xs py-1.5 md:py-2.5 px-3 sm:px-6 shadow-md">
+      <div data-tour="role-bar" className="bg-[#200E01] text-[#EDE7C7] border-b border-[#5B0202] text-xs py-1.5 md:py-2.5 px-3 sm:px-6 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <div className="hidden sm:flex items-center gap-1.5 shrink-0">
@@ -165,7 +165,7 @@ export const RoleSwitcherBar: React.FC = () => {
   // Local demo mode: original persona / tenant switcher.
   // ---------------------------------------------------------------------
   return (
-    <div className="bg-[#200E01] text-[#EDE7C7] border-b border-[#5B0202] text-xs py-2.5 px-3 sm:px-6 shadow-md">
+    <div data-tour="role-bar" className="bg-[#200E01] text-[#EDE7C7] border-b border-[#5B0202] text-xs py-2.5 px-3 sm:px-6 shadow-md">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2.5">
         {/* Left: Tenant Selector & Active Persona */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">

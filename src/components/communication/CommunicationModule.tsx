@@ -378,7 +378,7 @@ export const CommunicationModule: React.FC = () => {
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex flex-wrap items-center p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 text-xs font-bold">
+        <div data-tour="communication-tabs" className="flex flex-wrap items-center p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 text-xs font-bold">
           <button
             onClick={() => setSubModule('tickets')}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition cursor-pointer font-extrabold ${
@@ -890,7 +890,7 @@ export const CommunicationModule: React.FC = () => {
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-2xs">
+          <div data-tour="communication-tabs" className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-2xs">
             <div>
               <h4 className="font-extrabold text-slate-800 text-sm font-['Outfit',sans-serif]">Instant Digital Circulars (School Broadcasts)</h4>
               <p className="text-xs text-slate-500 font-medium mt-0.5">

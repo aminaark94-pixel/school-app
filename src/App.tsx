@@ -18,7 +18,7 @@ import { PWAUpdateNotification } from './components/PWAUpdateNotification';
 import { useSchoolData } from './hooks/useSchoolData';
 import { useSkin } from './hooks/useSkin';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
-import { ProductTour } from './components/ProductTour';
+import { PageTourButton, ProductTour, triggerPageTour } from './components/ProductTour';
 
 export default function App() {
   const { currentSchool, currentUser } = useSchoolData();
@@ -92,7 +92,7 @@ export default function App() {
         <main className="flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 lg:p-8">
           <OwnerDashboard />
         </main>
-        <ProductTour role="owner" setActiveModule={setActiveModule} />
+        <ProductTour role="owner" activeModule={activeModule} setActiveModule={setActiveModule} />
         <OfflineIndicator />
       </div>
     );
@@ -138,6 +138,9 @@ export default function App() {
                 {activeModule === 'updates' && 'Platform Live Changelog & Deployment Status (PKT)'}
                 {activeModule === 'admin' && 'School Administration & Data Import'}
               </h2>
+              <div className="mt-2 sm:hidden">
+                <PageTourButton onClick={triggerPageTour} />
+              </div>
               <p className="hidden sm:block text-sm text-[var(--t-ink)]/70 mt-1 font-medium">
                 {activeModule === 'diary' &&
                   'Daily classwork & homework log with Class Work & Planner PDF scans, absent student catch-up, and verified parent read receipts.'}
@@ -163,7 +166,9 @@ export default function App() {
             </div>
 
             {/* School pill: desktop only (the school name is already in the phone header) */}
-            <div className="hidden sm:flex self-auto items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-white border border-[var(--t-sand)] text-xs text-[var(--t-ink)] shadow-2xs">
+            <div className="hidden sm:flex self-auto items-center gap-2">
+              <PageTourButton onClick={triggerPageTour} />
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-white border border-[var(--t-sand)] text-xs text-[var(--t-ink)] shadow-2xs">
               <span
                 className="w-2.5 h-2.5 rounded-full"
                 style={{ backgroundColor: currentSchool?.primary_color || '#8B0000' }}
@@ -174,6 +179,7 @@ export default function App() {
               >
                 {currentSchool?.name || skin.name}
               </span>
+              </div>
             </div>
           </div>
         )}
@@ -236,7 +242,7 @@ export default function App() {
       {/* 5. Offline & PWA Update indicators */}
       <OfflineIndicator />
       <PWAUpdateNotification />
-      <ProductTour role={currentUser?.role} setActiveModule={setActiveModule} />
+      <ProductTour role={currentUser?.role} activeModule={activeModule} setActiveModule={setActiveModule} />
     </div>
   );
 }

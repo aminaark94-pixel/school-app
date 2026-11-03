@@ -359,7 +359,7 @@ export const OwnerDashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div data-tour="owner-schools" className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {schools.map((s) => {
             const schoolAdmins = admins.filter((a) => a.school_id === s.id);
             const studentCount = allStudents.filter((std) => std.school_id === s.id).length;
@@ -571,7 +571,7 @@ export const OwnerDashboard: React.FC = () => {
       )}
 
       {/* 3. Register New School + Admin Form */}
-      <div className="bg-[#FAF8F2] border border-[#EDE7C7] rounded-3xl p-5 sm:p-6 space-y-4">
+      <div data-tour="owner-create" className="bg-[#FAF8F2] border border-[#EDE7C7] rounded-3xl p-5 sm:p-6 space-y-4">
         <div className="flex items-center gap-2">
           <Building2 className="w-5 h-5 text-[#8B0000]" />
           <div>

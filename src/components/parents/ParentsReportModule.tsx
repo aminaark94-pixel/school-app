@@ -242,7 +242,7 @@ export const ParentsReportModule: React.FC = () => {
       </div>
 
       {/* 3. Filter Tabs & Search */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+      <div data-tour="parents-report-tools" className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
         {/* Filter Pills */}
         <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-bold">
           <button

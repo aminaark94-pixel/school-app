@@ -438,6 +438,7 @@ export const DiaryModule: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2.5">
           {isTeacherOrAdmin ? (
             <button
+              data-tour="diary-post"
               id="btn-new-diary-entry"
               onClick={() => setIsComposeOpen(true)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-white bg-[#8B0000] hover:opacity-90 shadow-sm shadow-[#8B0000]/20 transition active:scale-95"
@@ -544,7 +545,7 @@ export const DiaryModule: React.FC = () => {
       )}
 
       {/* Class & Subject Filter Bar */}
-      <div className="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div data-tour="diary-filters" className="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-3">
           {!isParent && (
             <div className="flex items-center gap-2">
@@ -666,7 +667,7 @@ export const DiaryModule: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5">
+        <div data-tour="diary-feed" className="grid grid-cols-1 gap-5">
           {filteredDiary.map((entry) => {
             const hasParentRead = currentStudentObj
               ? entry.read_by_parents.some(

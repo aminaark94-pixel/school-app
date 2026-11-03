@@ -274,7 +274,7 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* 2. Tabs: one horizontally scrollable strip with short labels on phones */}
-      <div className="bg-white p-2 sm:p-3 rounded-3xl shadow-sm border border-[#EDE7C7] overflow-x-auto no-scrollbar">
+      <div data-tour="admin-tabs" className="bg-white p-2 sm:p-3 rounded-3xl shadow-sm border border-[#EDE7C7] overflow-x-auto no-scrollbar">
         <div className="flex items-center gap-1.5 min-w-max">
           {TABS.map(({ id, domId, Icon, full, short }) => (
             <button
@@ -304,7 +304,7 @@ export const AdminDashboard: React.FC = () => {
 
       {/* TAB: ROSTER */}
       {activeTab === 'roster' && (
-        <div className="bg-white rounded-3xl sm:rounded-[32px] shadow-sm border border-[#EDE7C7] overflow-hidden">
+        <div data-tour="admin-roster" className="bg-white rounded-3xl sm:rounded-[32px] shadow-sm border border-[#EDE7C7] overflow-hidden">
           {/* Filters */}
           <div className="p-3 sm:p-5 border-b border-[#EDE7C7] bg-[#FAF8F2] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-2 sm:gap-3">

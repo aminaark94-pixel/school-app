@@ -19,7 +19,7 @@ export const PWAInstallButton: React.FC = () => {
   // Chromium / Android / Desktop flow
   if (isInstallable) {
     return (
-      <button
+      <button data-tour="install-app"
         id="pwa-install-btn"
         onClick={install}
         className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-blue-700 active:scale-95 transition"
@@ -35,7 +35,7 @@ export const PWAInstallButton: React.FC = () => {
   if (isIOS) {
     return (
       <>
-        <button
+        <button data-tour="install-app"
           id="pwa-install-ios-btn"
           onClick={() => setShowIOSGuide(true)}
           className="flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
@@ -99,7 +99,7 @@ export const PWAInstallButton: React.FC = () => {
   }
 
   return (
-    <button
+    <button data-tour="install-app"
       id="pwa-install-manual-btn"
       onClick={() => alert('To install this app on your device:\n• On Chrome/Edge: Click the install icon in the address bar.\n• On Mobile: Tap browser menu (⋮) -> "Add to Home screen" / "Install".')}
       className="hidden sm:flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 transition"

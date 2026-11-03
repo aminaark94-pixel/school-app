@@ -412,7 +412,7 @@ export const TeacherProgressModule: React.FC = () => {
       </div>
 
       {/* 3. Filter & Month Navigation Bar */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+      <div data-tour="teacher-kpi-tools" className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
         {/* Month Selector */}
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-slate-400" />

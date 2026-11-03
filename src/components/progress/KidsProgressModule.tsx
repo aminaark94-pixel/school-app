@@ -288,7 +288,7 @@ export const KidsProgressModule: React.FC = () => {
         <div className="space-y-6">
           {/* Pari's 4 Kids Switcher Tabs */}
           {parentChildren.length > 1 && (
-            <div className="bg-[#FAF8F2] p-3 rounded-3xl border border-[#EDE7C7] space-y-2">
+            <div data-tour="progress-child" className="bg-[#FAF8F2] p-3 rounded-3xl border border-[#EDE7C7] space-y-2">
               <div className="flex items-center justify-between px-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#5B0202]">
                   Enrolled Children of {currentUser?.full_name} ({parentChildren.length} Kids)
@@ -464,7 +464,7 @@ export const KidsProgressModule: React.FC = () => {
       {isTeacherOrAdmin && (
         <div className="space-y-5">
           {/* Controls Bar: Filter by Class, Search, Quick Counts */}
-          <div className="bg-white rounded-3xl border border-[#EDE7C7] p-5 space-y-3">
+          <div data-tour="progress-record" className="bg-white rounded-3xl border border-[#EDE7C7] p-5 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Filter className="w-4 h-4 text-[#8B0000]" />

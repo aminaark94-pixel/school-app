@@ -78,7 +78,7 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
 
   return (
     <>
-      <header
+      <header data-tour="primary-navigation"
         className="text-white shadow-xl relative z-40 border-b-2"
         style={{
           background:

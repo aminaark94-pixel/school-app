@@ -156,7 +156,7 @@ export const ResultCardModule: React.FC = () => {
               <label className="block text-[11px] font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]">
                 Select Scholar
               </label>
-              <select
+              <select data-tour="results-student"
                 id="select-student-report"
                 value={activeStudent.id}
                 onChange={(e) => setSelectedStudentId(e.target.value)}
@@ -228,6 +228,7 @@ export const ResultCardModule: React.FC = () => {
 
             {/* Print / Download Button */}
             <button
+              data-tour="results-export"
               id="export-pdf-button"
               onClick={handleDownloadPDF}
               disabled={!isFeePaid || isExporting}

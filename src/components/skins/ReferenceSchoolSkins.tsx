@@ -65,7 +65,7 @@ const ReferenceHeader: React.FC<Props> = ({ activeModule = 'portal', setActiveMo
   };
 
   return (
-    <header
+    <header data-tour="primary-navigation"
       className="relative z-40 text-white shadow-xl"
       style={{ backgroundColor: ideas ? '#061121' : '#1e293b' }}
     >
@@ -150,7 +150,7 @@ const ReferencePortal: React.FC<Pick<Props, 'setActiveModule' | 'style'>> = ({ s
         </div>
       </section>
 
-      <section>
+      <section data-tour="portal-services">
         <div className="mb-3 flex items-end justify-between gap-3">
           <div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--t-primary)]">Your dashboard</p><h2 className="text-lg font-black text-[var(--t-ink)]">School services</h2></div>
           <span className="text-xs font-semibold text-slate-500">Tap to open</span>

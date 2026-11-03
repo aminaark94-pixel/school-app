@@ -93,7 +93,7 @@ export const ExamsDatesheetModule: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div data-tour="datesheet-tools" className="flex items-center gap-2.5">
           {/* Class Grade Selector */}
           <select
             id="select-datesheet-class"

@@ -218,7 +218,7 @@ export const AttendanceModule: React.FC = () => {
       </div>
 
       {/* 2. Filters (2-column grid on phones) + actions */}
-      <div className="bg-white p-4 sm:p-6 rounded-3xl sm:rounded-[28px] shadow-sm border border-[#EDE7C7]">
+      <div data-tour="attendance-filters" className="bg-white p-4 sm:p-6 rounded-3xl sm:rounded-[28px] shadow-sm border border-[#EDE7C7]">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:items-end">
             <div>
@@ -356,7 +356,7 @@ export const AttendanceModule: React.FC = () => {
       </div>
 
       {/* 5. Roster */}
-      <div className="bg-white rounded-3xl sm:rounded-[28px] shadow-sm border border-[#EDE7C7] overflow-hidden">
+      <div data-tour="attendance-roster" className="bg-white rounded-3xl sm:rounded-[28px] shadow-sm border border-[#EDE7C7] overflow-hidden">
         <div className="p-3 sm:p-4 border-b border-[#EDE7C7] bg-[#FAF8F2] flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <Users className="w-4 h-4 text-[#8B0000] shrink-0" />
