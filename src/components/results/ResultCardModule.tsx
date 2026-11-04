@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Lock,
   Unlock,
@@ -27,6 +27,7 @@ export const ResultCardModule: React.FC = () => {
     students,
     fees,
     results,
+    isLoading,
     payFeeForStudent,
     updateFeeStatus,
   } = useSchoolData();
@@ -40,12 +41,20 @@ export const ResultCardModule: React.FC = () => {
   const parentChildren = students.filter(
     (s) => s.parent_id === currentUser?.id || s.parent_email === currentUser?.email
   );
-  const availableStudents =
-    currentUser?.role === 'parent' && parentChildren.length > 0 ? parentChildren : students;
+  // Parents must never fall back to the whole school roster when no child is linked.
+  const availableStudents = currentUser?.role === 'parent' ? parentChildren : students;
 
   const [selectedStudentId, setSelectedStudentId] = useState<string>(
     availableStudents[0]?.id || ''
   );
+
+  // The live roster arrives after the first render. Keep the selected id in sync
+  // so Results does not incorrectly show an empty state while real data is loading.
+  useEffect(() => {
+    if (availableStudents.length > 0 && !availableStudents.some((student) => student.id === selectedStudentId)) {
+      setSelectedStudentId(availableStudents[0].id);
+    }
+  }, [availableStudents, selectedStudentId]);
 
   // Keep selected student synced if list changes
   const activeStudent =
@@ -94,13 +103,25 @@ export const ResultCardModule: React.FC = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="text-center py-16 bg-white rounded-3xl border border-[#EDE7C7] p-8" role="status">
+        <GraduationCap className="w-12 h-12 text-[#8B0000] mx-auto mb-3 animate-pulse" />
+        <h3 className="text-base font-bold text-[#200E01] font-['Cormorant_Garamond',serif] italic text-xl">Loading student records…</h3>
+        <p className="text-xs text-[#5B0202]/70 mt-1">Fetching the live school roster and results.</p>
+      </div>
+    );
+  }
+
   if (!activeStudent) {
     return (
       <div className="text-center py-16 bg-white rounded-3xl border border-[#EDE7C7] p-8">
         <GraduationCap className="w-12 h-12 text-[#8B0000] mx-auto mb-3" />
         <h3 className="text-base font-bold text-[#200E01] font-['Cormorant_Garamond',serif] italic text-xl">No Student Records Found</h3>
         <p className="text-xs text-[#5B0202]/70 mt-1">
-          Add or import students via the Admin Panel to view official transcripts.
+          {currentUser?.role === 'parent'
+            ? 'No child is linked to this parent account yet. Ask the school office to link the student profile.'
+            : 'Add or import students via the Admin Panel to view official transcripts.'}
         </p>
       </div>
     );

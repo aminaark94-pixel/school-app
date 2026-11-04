@@ -21,7 +21,7 @@ import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { PageTourButton, ProductTour, triggerPageTour } from './components/ProductTour';
 
 export default function App() {
-  const { currentSchool, currentUser } = useSchoolData();
+  const { currentSchool, currentUser, isOwnerCampusView, exitOwnerCampusView } = useSchoolData();
   const skin = useSkin();
   
   // Persist active module across refreshes (F5 / Ctrl+F5) using hash and localStorage
@@ -85,7 +85,7 @@ export default function App() {
 
   // The platform Owner is not scoped to any single school (school_id is null),
   // so it gets its own top-level screen instead of the per-school portal below.
-  if (currentUser?.role === 'owner') {
+  if (currentUser?.role === 'owner' && !isOwnerCampusView) {
     return (
       <div className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex flex-col app-bottom-clear">
         <RoleSwitcherBar />
@@ -105,6 +105,19 @@ export default function App() {
     >
       {/* 1. Account / persona bar */}
       <RoleSwitcherBar />
+
+      {isOwnerCampusView && (
+        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs font-semibold text-amber-950">
+          Viewing {currentSchool?.name || 'selected campus'} as platform owner (read-only)
+          <button
+            type="button"
+            onClick={exitOwnerCampusView}
+            className="ml-3 underline font-bold hover:text-[#8B0000]"
+          >
+            Return to Owner Dashboard
+          </button>
+        </div>
+      )}
 
       {/* 2. Header + navigation — each skin can supply its own; falls back to the shared Navbar */}
       <SkinHeader activeModule={activeModule} setActiveModule={setActiveModule} />

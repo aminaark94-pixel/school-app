@@ -298,7 +298,7 @@ export const DiaryModule: React.FC = () => {
     (a) => a.student_id === selectedStudentId && a.date === todayDateStr && a.status === 'absent'
   );
 
-  const handleCreateEntry = (e: React.FormEvent) => {
+  const handleCreateEntry = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation: Must have either attachments (PDF/photos) or written text
@@ -329,16 +329,21 @@ export const DiaryModule: React.FC = () => {
         ? `[Review attached Work Planner PDF / Class Work notes]\nComplete daily questions and transcribe assigned exercises into homework register.`
         : 'Complete daily exercises and practice workbook questions.');
 
-    addDiaryEntry({
-      class_id: formClass,
-      section: formSection,
-      subject: formSubject,
-      date: todayDateStr,
-      classwork: finalClasswork,
-      homework: finalHomework,
-      due_date: formDueDate,
-      attachments,
-    });
+    try {
+      await addDiaryEntry({
+        class_id: formClass,
+        section: formSection,
+        subject: formSubject,
+        date: todayDateStr,
+        classwork: finalClasswork,
+        homework: finalHomework,
+        due_date: formDueDate,
+        attachments,
+      });
+    } catch {
+      // diaryStore has already retained the form and shown the specific error.
+      return;
+    }
 
     // Reset Form
     setFormClasswork('');

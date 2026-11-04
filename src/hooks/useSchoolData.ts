@@ -49,6 +49,9 @@ export function useSchoolData() {
   const isSupabaseActive = isSupabaseConfigured() && Boolean(profile);
   const [remote, setRemote] = useState<RemoteData | null>(null);
   const [remoteError, setRemoteError] = useState<string | null>(null);
+  // A platform owner may open one tenant campus at a time. This changes the
+  // data scope for viewing only; it does not impersonate a school admin.
+  const [ownerCampusSchoolId, setOwnerCampusSchoolId] = useState<string | null>(null);
 
   // Cloud collections: one shared realtime store per table when signed in, the
   // local demo store otherwise. All five follow the same attach/detach pattern.
@@ -58,7 +61,11 @@ export function useSchoolData() {
   const alertState = useAlertStore();
   const datesheetState = useDatesheetStore();
 
-  const cloudSchoolId = isSupabaseActive ? profile?.school_id ?? null : null;
+  const cloudSchoolId = isSupabaseActive
+    ? profile?.role === 'owner'
+      ? ownerCampusSchoolId
+      : profile?.school_id ?? null
+    : null;
 
   useEffect(() => {
     if (!cloudSchoolId) return;
@@ -178,14 +185,16 @@ export function useSchoolData() {
   const currentSchool = useMemo(() => {
     if (isSupabaseActive) {
       return (
-        authSchool ??
+        (profile?.role === 'owner' && ownerCampusSchoolId
+          ? remote?.schools.find((school) => school.id === ownerCampusSchoolId)
+          : authSchool) ??
         remote?.schools.find((s) => s.id === profile?.school_id) ??
         remote?.schools[0] ??
         null
       );
     }
     return localSchools.find((s) => s.id === localCurrentSchoolId) || localSchools[0] || null;
-  }, [isSupabaseActive, remote, authSchool, profile, localSchools, localCurrentSchoolId]);
+  }, [isSupabaseActive, remote, authSchool, profile, ownerCampusSchoolId, localSchools, localCurrentSchoolId]);
 
   const localUsers = useMemo(() => LocalStore.getUsers(), [tick]);
   const allUsers = useMemo(() => {
@@ -398,14 +407,20 @@ export function useSchoolData() {
     }
   }, [currentUser?.id, currentUser?.role]);
 
-  // Set Current School (local demo mode only - signed-in users get their own school)
+  // Set Current School. Signed-in owners can enter a read-only tenant campus;
+  // everyone else remains locked to their authenticated school.
   const setCurrentSchoolId = useCallback(
     (id: string) => {
-      if (usingRemote) return;
+      if (usingRemote) {
+        if (profile?.role === 'owner') setOwnerCampusSchoolId(id);
+        return;
+      }
       LocalStore.setCurrentSchoolId(id);
     },
-    [usingRemote]
+    [usingRemote, profile?.role]
   );
+
+  const exitOwnerCampusView = useCallback(() => setOwnerCampusSchoolId(null), []);
 
   // Set Current User (local demo mode only)
   const setCurrentUserId = useCallback(
@@ -1316,6 +1331,8 @@ export function useSchoolData() {
     saveSchoolSupabaseConfig,
     removeSchoolSupabaseConfig,
     setCurrentSchoolId,
+    isOwnerCampusView: Boolean(ownerCampusSchoolId),
+    exitOwnerCampusView,
     setCurrentUserId,
     switchRole,
     markAttendance,

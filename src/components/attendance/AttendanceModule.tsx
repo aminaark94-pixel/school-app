@@ -126,7 +126,8 @@ export const AttendanceModule: React.FC = () => {
   const presentCount = Object.values(attendanceState).filter((s) => s === 'present').length;
   const absentCount = Object.values(attendanceState).filter((s) => s === 'absent').length;
   const lateCount = Object.values(attendanceState).filter((s) => s === 'late').length;
-  const attendanceRate = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 100;
+  // No roster means no attendance has been recorded — it must never look like 100%.
+  const attendanceRate = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : null;
 
   const toggleStatus = (studentId: string, status: AttendanceStatus) => {
     if (!canEditAttendance) return;
@@ -210,7 +211,7 @@ export const AttendanceModule: React.FC = () => {
                 Attendance rate
               </span>
               <p className="text-xl sm:text-2xl font-bold text-white font-['Cormorant_Garamond',serif] italic">
-                {attendanceRate}%
+                {attendanceRate === null ? '—' : `${attendanceRate}%`}
               </p>
             </div>
           </div>
@@ -350,7 +351,7 @@ export const AttendanceModule: React.FC = () => {
             Attendance Rate
           </span>
           <div className="text-2xl font-black text-[#8B0000] mt-1 font-['Cormorant_Garamond',serif] italic">
-            {attendanceRate}%
+            {attendanceRate === null ? '—' : `${attendanceRate}%`}
           </div>
         </div>
       </div>

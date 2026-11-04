@@ -365,12 +365,20 @@ async function uploadAttachments(
       // Sample/preset pictures are already normal web links; only device photos (data:) get uploaded.
       if (!att.url.startsWith('data:')) return att;
 
-      const blob = await compressToJpeg(att.url);
-      const path = `${schoolId}/${entryId}/${att.id}.jpg`;
+      const isPdf = att.type === 'document' || att.url.startsWith('data:application/pdf');
+      // A PDF is a binary document, not an image. Loading it into an <img> was the
+      // reason the previous uploader rejected valid planner PDFs on phones.
+      const blob = isPdf
+        ? await fetch(att.url).then(async (response) => {
+            if (!response.ok) throw new Error('Could not read the PDF.');
+            return response.blob();
+          })
+        : await compressToJpeg(att.url);
+      const path = `${schoolId}/${entryId}/${att.id}.${isPdf ? 'pdf' : 'jpg'}`;
       const { error } = await supabase.storage
         .from(BUCKET)
-        .upload(path, blob, { contentType: 'image/jpeg', upsert: false });
-      if (error) throw new Error(`Photo upload failed: ${error.message}`);
+        .upload(path, blob, { contentType: isPdf ? 'application/pdf' : 'image/jpeg', upsert: false });
+      if (error) throw new Error(`${isPdf ? 'PDF' : 'Photo'} upload failed: ${error.message}`);
 
       const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
       return { ...att, url: data.publicUrl };
@@ -389,8 +397,8 @@ function storagePathFromUrl(url: string): string | null {
 // Actions (all optimistic)
 // ---------------------------------------------------------------------------
 
-/** Posts a diary entry. Returns the optimistic entry immediately; the upload + save continue in the background. */
-function addEntry(input: NewDiaryInput, author: DiaryAuthor): DiaryEntry {
+/** Posts a diary entry optimistically, but resolves only after its files and row are safely stored. */
+async function addEntry(input: NewDiaryInput, author: DiaryAuthor): Promise<DiaryEntry> {
   const id = newId();
   const optimistic: DiaryEntry = {
     id,
@@ -412,40 +420,39 @@ function addEntry(input: NewDiaryInput, author: DiaryAuthor): DiaryEntry {
   pendingIds.add(id);
   setState({ entries: [optimistic, ...state.entries] });
 
-  void (async () => {
-    try {
-      const supabase = getSupabase();
-      if (!supabase) throw new Error('Supabase is not configured.');
+  try {
+    const supabase = getSupabase();
+    if (!supabase) throw new Error('Supabase is not configured.');
 
-      const attachments = await uploadAttachments(supabase, author.school_id, id, optimistic.attachments ?? []);
+    const attachments = await uploadAttachments(supabase, author.school_id, id, optimistic.attachments ?? []);
 
-      const { error } = await supabase.from('diary_entries').insert({
-        id,
-        school_id: author.school_id,
-        teacher_id: author.teacher_id,
-        teacher_name: author.teacher_name,
-        class_id: input.class_id,
-        section: input.section,
-        subject: input.subject,
-        entry_date: input.date,
-        classwork: input.classwork,
-        homework: input.homework,
-        due_date: input.due_date || null,
-        attachments,
-      });
-      if (error) throw error;
+    const { error } = await supabase.from('diary_entries').insert({
+      id,
+      school_id: author.school_id,
+      teacher_id: author.teacher_id,
+      teacher_name: author.teacher_name,
+      class_id: input.class_id,
+      section: input.section,
+      subject: input.subject,
+      entry_date: input.date,
+      classwork: input.classwork,
+      homework: input.homework,
+      due_date: input.due_date || null,
+      attachments,
+    });
+    if (error) throw error;
 
-      pendingIds.delete(id);
-      // Swap the on-device previews for the hosted photo links.
-      setState({ entries: state.entries.map((e) => (e.id === id ? { ...e, attachments } : e)) });
-    } catch (err) {
-      pendingIds.delete(id);
-      setState({ entries: state.entries.filter((e) => e.id !== id) });
-      reportFailure('Diary post failed', err);
-    }
-  })();
-
-  return optimistic;
+    pendingIds.delete(id);
+    // Swap the on-device previews for the hosted file links.
+    const saved = { ...optimistic, attachments };
+    setState({ entries: state.entries.map((e) => (e.id === id ? saved : e)) });
+    return saved;
+  } catch (err) {
+    pendingIds.delete(id);
+    setState({ entries: state.entries.filter((e) => e.id !== id) });
+    reportFailure('Diary post failed', err);
+    throw err;
+  }
 }
 
 /** Parent signature ("Mark Diary as Read"). */
