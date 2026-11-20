@@ -135,13 +135,6 @@ export const RoleSwitcherBar: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <span
-              title="Connected to the live database"
-              className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-full bg-[#2D1605] border border-[#5B0202] text-[10px] font-bold text-emerald-300"
-            >
-              <Database className="w-3 h-3" />
-              <span className="hidden sm:inline">Live database</span>
-            </span>
             <button
               onClick={signOut}
               className="inline-flex items-center justify-center gap-1 min-h-[36px] px-3 rounded-xl bg-[#2D1605] hover:bg-[#3D1E07] border border-[#5B0202] font-bold transition"
@@ -154,7 +147,7 @@ export const RoleSwitcherBar: React.FC = () => {
 
         {remoteError && (
           <div className="max-w-7xl mx-auto mt-2 rounded-xl bg-rose-950/60 border border-rose-700 px-3 py-1.5 text-[11px] font-semibold text-rose-100">
-            Database error: {remoteError}
+            School records could not load. Refresh the page to try again.
           </div>
         )}
       </div>

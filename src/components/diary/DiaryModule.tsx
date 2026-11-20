@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { diarySubjects } from '../CampusHome';
 import {
   BookOpen,
   Calendar,
@@ -38,7 +39,7 @@ interface AttachmentItem {
 // Sample clean printable work planner PDF for testing & upload
 const SAMPLE_PLANNER_PDF = '/sample-daily-work-planner.pdf';
 
-export const DiaryModule: React.FC = () => {
+export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubject = 'All' }) => {
   const {
     currentUser,
     students,
@@ -60,9 +61,10 @@ export const DiaryModule: React.FC = () => {
   // Class filters for teachers
   const availableClasses = Array.from(new Set(students.map((s) => s.class_id)));
   const [selectedClass, setSelectedClass] = useState<string>(
-    isParent && defaultStudent ? defaultStudent.class_id : availableClasses[0] || 'Grade 10'
+    isParent && defaultStudent ? defaultStudent.class_id : 'All'
   );
-  const [selectedSubject, setSelectedSubject] = useState<string>('All');
+  const [selectedSubject, setSelectedSubject] = useState(initialSubject);
+  useEffect(() => setSelectedSubject(initialSubject), [initialSubject]);
   const [isComposeOpen, setIsComposeOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'feed' | 'absent_catchup'>('feed');
 
@@ -99,18 +101,7 @@ export const DiaryModule: React.FC = () => {
   const [activeImageModal, setActiveImageModal] = useState<{ url: string; caption: string } | null>(null);
   const [readReceiptModalEntry, setReadReceiptModalEntry] = useState<DiaryEntry | null>(null);
 
-  const subjectsList = [
-    'All',
-    'Mathematics',
-    'Physics',
-    'Chemistry',
-    'Biology',
-    'English Literature',
-    'Computer Science',
-    'Urdu',
-    'Islamiat',
-    'Social Studies',
-  ];
+  const subjectsList = ['All', ...diarySubjects];
 
   // Helper to determine if an attachment URL or object is a PDF
   const isPdfAttachment = (att: {
@@ -561,6 +552,7 @@ export const DiaryModule: React.FC = () => {
                 onChange={(e) => setSelectedClass(e.target.value)}
                 className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 font-bold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#8B0000]"
               >
+                <option value="All">All classes</option>
                 {availableClasses.map((cls) => (
                   <option key={cls} value={cls}>
                     {cls}
@@ -580,7 +572,7 @@ export const DiaryModule: React.FC = () => {
             >
               {subjectsList.map((sub) => (
                 <option key={sub} value={sub}>
-                  {sub}
+                  {sub === 'All' ? 'All subjects' : sub}
                 </option>
               ))}
             </select>
@@ -588,7 +580,7 @@ export const DiaryModule: React.FC = () => {
         </div>
 
         <div className="text-[11px] font-semibold text-slate-400">
-          Showing {filteredDiary.length} entries for today
+          {filteredDiary.length} {filteredDiary.length === 1 ? 'entry' : 'entries'}
         </div>
       </div>
 

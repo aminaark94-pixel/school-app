@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RoleSwitcherBar } from './components/RoleSwitcherBar';
-import { Navbar, AppModule } from './components/Navbar';
-import { DribbbleAppShell } from './components/dribbble/DribbbleAppShell';
+import type { AppModule } from './components/Navbar';
+import { CampusNavigation, CampusHome, pageNames } from './components/CampusHome';
+import { PWAInstallButton } from './components/PWAInstallButton';
 import { DiaryModule } from './components/diary/DiaryModule';
 import { AttendanceModule } from './components/attendance/AttendanceModule';
 import { ResultCardModule } from './components/results/ResultCardModule';
@@ -17,14 +18,15 @@ import { OfflineIndicator } from './components/OfflineIndicator';
 import { PWAUpdateNotification } from './components/PWAUpdateNotification';
 import { useSchoolData } from './hooks/useSchoolData';
 import { useSkin } from './hooks/useSkin';
-import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { PageTourButton, ProductTour, triggerPageTour } from './components/ProductTour';
 
 export default function App() {
   const { currentSchool, currentUser, isOwnerCampusView, exitOwnerCampusView } = useSchoolData();
   const skin = useSkin();
+  const [homeSubject, setHomeSubject] = useState('All');
+  const role = currentUser?.role;
   
-  // Persist active module across refreshes (F5 / Ctrl+F5) using hash and localStorage
+  // Keep direct page links and browser Back working. A bare URL opens Subjects.
   const [activeModule, setActiveModuleState] = useState<AppModule>(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '') as AppModule;
@@ -32,230 +34,117 @@ export default function App() {
         'portal', 'diary', 'attendance', 'results', 'progress', 'teacher-progress', 'parents-report', 'communication', 'datesheets', 'updates', 'admin'
       ];
       if (validModules.includes(hash)) return hash;
-      const saved = localStorage.getItem('sms_active_module') as AppModule;
-      if (saved && validModules.includes(saved)) return saved;
     }
     return 'portal';
   });
 
   const setActiveModule = useCallback((m: AppModule) => {
+    setHomeSubject('All');
     setActiveModuleState(m);
     try {
-      localStorage.setItem('sms_active_module', m);
       if (typeof window !== 'undefined') {
-        window.location.hash = m === 'portal' ? '' : m;
+        const url = new URL(window.location.href);
+        url.hash = m === 'portal' ? '' : m;
+        if (url.href !== window.location.href) window.history.pushState(null, '', url);
       }
     } catch {}
   }, []);
 
   useEffect(() => {
     const handleHash = () => {
-      const hash = window.location.hash.replace('#', '') as AppModule;
+      const hash = (window.location.hash.replace('#', '') || 'portal') as AppModule;
       const validModules: AppModule[] = [
         'portal', 'diary', 'attendance', 'results', 'progress', 'teacher-progress', 'parents-report', 'communication', 'datesheets', 'updates', 'admin'
       ];
       if (validModules.includes(hash)) {
+        setHomeSubject('All');
         setActiveModuleState(hash);
       }
     };
     window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
+    window.addEventListener('popstate', handleHash);
+    return () => {
+      window.removeEventListener('hashchange', handleHash);
+      window.removeEventListener('popstate', handleHash);
+    };
   }, []);
 
-  // Each skin can supply its own header/nav and portal/home screen (lib/skins.ts);
-  // falls back to the shared components when a skin doesn't provide one.
-  const SkinHeader = skin.Header ?? Navbar;
-  const SkinPortal = skin.Portal ?? DribbbleAppShell;
+  const openPage = (module: AppModule) => {
+    setActiveModule(module);
+    window.scrollTo({ top: 0 });
+  };
 
-  // School administration & Teacher Appraisals are exclusively for admin; Parents Report Card is for admin & teachers only.
-  React.useEffect(() => {
-    if (
-      currentUser?.role !== 'admin' &&
-      (activeModule === 'admin' || activeModule === 'teacher-progress')
-    ) {
-      setActiveModule('portal');
-    }
-    if (
-      currentUser?.role === 'parent' &&
-      activeModule === 'parents-report'
-    ) {
-      setActiveModule('portal');
-    }
-  }, [currentUser, activeModule, setActiveModule]);
+  const openSubject = (subject: string) => {
+    openPage('diary');
+    setHomeSubject(subject);
+  };
 
-  // The platform Owner is not scoped to any single school (school_id is null),
-  // so it gets its own top-level screen instead of the per-school portal below.
-  if (currentUser?.role === 'owner' && !isOwnerCampusView) {
+  if (role === 'owner' && !isOwnerCampusView) {
     return (
-      <div className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex flex-col app-bottom-clear">
+      <div className="min-h-dvh bg-[var(--t-bg)] text-slate-900">
         <RoleSwitcherBar />
-        <main className="flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 lg:p-8">
+        <main className="mx-auto max-w-5xl p-4 sm:p-8">
+          <h1 data-tour="page-heading" className="mb-5 text-3xl font-bold">Manage schools</h1>
           <OwnerDashboard />
         </main>
-        <ProductTour role="owner" activeModule={activeModule} setActiveModule={setActiveModule} />
+        <ProductTour key={role} role={role} activeModule={activeModule} setActiveModule={setActiveModule} />
         <OfflineIndicator />
       </div>
     );
   }
 
+  const allowed = activeModule === 'admin' || activeModule === 'teacher-progress'
+    ? role === 'admin'
+    : activeModule === 'parents-report'
+      ? role === 'admin' || role === 'teacher'
+      : true;
+
   return (
-    <div
-      className="min-h-dvh bg-[var(--t-bg)] text-[var(--t-ink)] flex flex-col app-bottom-clear"
-      style={{ fontFamily: 'var(--t-font-sans, "Plus Jakarta Sans", sans-serif)' }}
-    >
-      {/* 1. Account / persona bar */}
+    <div className="min-h-dvh bg-slate-50 text-slate-900" style={{ fontFamily: 'var(--t-font-sans)' }}>
       <RoleSwitcherBar />
+      <header className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
+          <button type="button" onClick={() => openPage('portal')} className="flex items-center gap-3 text-left text-lg font-bold">
+            {currentSchool?.logo_url && <img src={currentSchool.logo_url} alt="" className="h-10 w-10 rounded-lg object-contain" />}
+            {currentSchool?.name || skin.name}
+          </button>
+          <PWAInstallButton />
+        </div>
+        <CampusNavigation role={role} activeModule={activeModule} onNavigate={openPage} />
+      </header>
 
       {isOwnerCampusView && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs font-semibold text-amber-950">
-          Viewing {currentSchool?.name || 'selected campus'} as platform owner (read-only)
-          <button
-            type="button"
-            onClick={exitOwnerCampusView}
-            className="ml-3 underline font-bold hover:text-[#8B0000]"
-          >
-            Return to Owner Dashboard
-          </button>
+        <div className="bg-amber-50 p-3 text-center text-sm">
+          Read-only campus view. <button type="button" onClick={exitOwnerCampusView} className="font-bold underline">Back to schools</button>
         </div>
       )}
 
-      {/* 2. Header + navigation — each skin can supply its own; falls back to the shared Navbar */}
-      <SkinHeader activeModule={activeModule} setActiveModule={setActiveModule} />
-
-      {/* 3. Main workspace */}
-      <main className={`skin-content skin-content-${skin.id} flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6`}>
-        {/* Module title (sub-modules only). Compact on phones: no long blurb, no duplicate school pill. */}
+      <main className="mx-auto max-w-6xl space-y-6 px-4 pb-28 pt-6 sm:px-6 sm:pt-9">
         {activeModule !== 'portal' && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 pb-1 sm:pb-2">
-            <div className="min-w-0">
-              <button
-                onClick={() => setActiveModule('portal')}
-                className="inline-flex items-center gap-1 min-h-[44px] sm:min-h-0 -ml-1 pl-1 pr-3 text-xs font-bold text-[var(--t-primary)] hover:underline"
-                style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Back to Campus Portal</span>
-              </button>
-              <h2
-                className="text-lg sm:text-2xl font-bold tracking-tight text-[var(--t-ink)] italic leading-snug"
-                style={{ fontFamily: 'var(--t-font-display, "Cormorant Garamond", serif)' }}
-              >
-                {activeModule === 'diary' && 'Digital Student Diary & Homework Feed'}
-                {activeModule === 'attendance' && 'Attendance Register'}
-                {activeModule === 'results' && 'Student Result Cards & Fee-Locked Transcript'}
-                {activeModule === 'progress' && 'Kids Monthly Progress & Character Assessment'}
-                {activeModule === 'teacher-progress' && "Teacher's Progress & Regularity Appraisal"}
-                {activeModule === 'parents-report' && 'Parents Report Card & App Vigilance Analytics'}
-                {activeModule === 'communication' && 'Complaints & Support Tickets Desk (Parents ⇄ Teachers ⇄ Admin)'}
-                {activeModule === 'datesheets' && 'Examinations Schedule & Syllabus'}
-                {activeModule === 'updates' && 'Platform Live Changelog & Deployment Status (PKT)'}
-                {activeModule === 'admin' && 'School Administration & Data Import'}
-              </h2>
-              <div className="mt-2 sm:hidden">
-                <PageTourButton onClick={triggerPageTour} />
-              </div>
-              <p className="hidden sm:block text-sm text-[var(--t-ink)]/70 mt-1 font-medium">
-                {activeModule === 'diary' &&
-                  'Daily classwork & homework log with Class Work & Planner PDF scans, absent student catch-up, and verified parent read receipts.'}
-                {activeModule === 'attendance' &&
-                  'Record, review, and maintain daily class attendance for your school.'}
-                {activeModule === 'results' &&
-                  'Conditional exam card unlock with fee status verification. Download branded official PDFs with school seal.'}
-                {activeModule === 'progress' &&
-                  'Holistic monthly evaluation across Language, Discipline, Writing, Reading, and Cleaning with badges and star ratings.'}
-                {activeModule === 'teacher-progress' &&
-                  'Confidential school incharge & management assessment of faculty across Language, Dressing, Working, and Regularity / Absenteeism.'}
-                {activeModule === 'parents-report' &&
-                  'Confidential teacher & management index tracking parental app usage, diary reads, and flagging students requiring extense attention in class.'}
-                {activeModule === 'communication' &&
-                  'Collaborative complaint and inquiry tickets between Parents and Teachers with immediate School Administration notification & dual reply oversight.'}
-                {activeModule === 'datesheets' &&
-                  'Printable examination timetables, room assignments, and chapter-wise syllabus for grades.'}
-                {activeModule === 'updates' &&
-                  'Real-time release log and live verification clock for Karachi Standard Time (PKT).'}
-                {activeModule === 'admin' &&
-                  'Batch import student records from CSV, manage student lifecycles with soft-delete, and customize theme branding.'}
-              </p>
-            </div>
-
-            {/* School pill: desktop only (the school name is already in the phone header) */}
-            <div className="hidden sm:flex self-auto items-center gap-2">
-              <PageTourButton onClick={triggerPageTour} />
-              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-white border border-[var(--t-sand)] text-xs text-[var(--t-ink)] shadow-2xs">
-              <span
-                className="w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: currentSchool?.primary_color || '#8B0000' }}
-              />
-              <span
-                className="font-bold text-[var(--t-ink)]"
-                style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
-              >
-                {currentSchool?.name || skin.name}
-              </span>
-              </div>
-            </div>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h1 data-tour="page-heading" className="text-2xl font-bold sm:text-3xl">{pageNames[activeModule]}</h1>
+            {allowed && activeModule !== 'updates' && <PageTourButton onClick={triggerPageTour} />}
           </div>
         )}
-
-        {/* Parent role restricted warning */}
-        {currentUser?.role !== 'admin' && activeModule === 'admin' && (
-          <div className="p-4 rounded-3xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-3 shadow-2xs">
-            <ShieldAlert className="w-5 h-5 text-amber-600 flex-shrink-0" />
-            <div>
-              <p className="font-extrabold">Access Restricted by Role Level Security (RLS)</p>
-              <p className="font-normal text-amber-800 mt-0.5">
-                Administrative tools are available to teachers and school admins only. Parents can view their linked children's diary, attendance, fees, circulars, and report cards.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Dynamic module rendering */}
-        {activeModule === 'portal' && <SkinPortal setActiveModule={setActiveModule} />}
-        {activeModule === 'diary' && <DiaryModule />}
-        {activeModule === 'attendance' && <AttendanceModule />}
-        {activeModule === 'results' && <ResultCardModule />}
-        {activeModule === 'progress' && <KidsProgressModule />}
-        {activeModule === 'teacher-progress' && currentUser?.role === 'admin' && <TeacherProgressModule />}
-        {activeModule === 'parents-report' && (currentUser?.role === 'admin' || currentUser?.role === 'teacher') && <ParentsReportModule />}
-        {activeModule === 'communication' && <CommunicationModule />}
-        {activeModule === 'datesheets' && <ExamsDatesheetModule />}
-        {activeModule === 'updates' && <UpdatesPage />}
-        {/* Admin area intentionally keeps its own fixed Imperial look regardless of the
-            published app skin — the owner asked for this to stay as-is. */}
-        {activeModule === 'admin' && currentUser?.role === 'admin' && <AdminDashboard />}
+        {!allowed ? <p className="rounded-xl border border-slate-200 bg-white p-5">This page is available to school staff with access.</p> : <>
+          {activeModule === 'portal' && <CampusHome role={role} onNavigate={openPage} onSubject={openSubject} />}
+          {activeModule === 'diary' && <DiaryModule initialSubject={homeSubject} />}
+  {activeModule === 'attendance' && <AttendanceModule />}
+  {activeModule === 'results' && <ResultCardModule />}
+  {activeModule === 'progress' && <KidsProgressModule />}
+  {activeModule === 'teacher-progress' && currentUser?.role === 'admin' && <TeacherProgressModule />}
+  {activeModule === 'parents-report' && (currentUser?.role === 'admin' || currentUser?.role === 'teacher') && <ParentsReportModule />}
+  {activeModule === 'communication' && <CommunicationModule />}
+  {activeModule === 'datesheets' && <ExamsDatesheetModule />}
+  {activeModule === 'updates' && <UpdatesPage />}
+  {/* Admin area intentionally keeps its own fixed Imperial look regardless of the
+  published app skin — the owner asked for this to stay as-is. */}
+  {activeModule === 'admin' && currentUser?.role === 'admin' && <AdminDashboard />}
+        </>}
       </main>
-
-      {/* 4. Footer (short on phones) */}
-      <footer className="mt-auto border-t border-[var(--t-sand)] bg-[var(--t-bg)] py-3 sm:py-4 px-4 sm:px-6 text-center text-xs text-[var(--t-ink)]/70">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span
-              className="font-bold text-[var(--t-ink)]"
-              style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
-            >
-              {skin.name} • School Management PWA
-            </span>
-            <button
-              type="button"
-              onClick={() => setActiveModule('updates')}
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200 transition cursor-pointer"
-              title="Click to view live Karachi Time changelog and deployed features"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>v2.7.4 (Live PKT)</span>
-            </button>
-          </div>
-          <span className="hidden sm:inline text-[11px] text-[var(--t-primary)] font-semibold">
-            Digital Diary • Class Work & Planner PDF • Zero Paper Circulars • Fee-Locked Reports
-          </span>
-        </div>
-      </footer>
-
-      {/* 5. Offline & PWA Update indicators */}
       <OfflineIndicator />
       <PWAUpdateNotification />
-      <ProductTour role={currentUser?.role} activeModule={activeModule} setActiveModule={setActiveModule} />
+      <ProductTour key={role} role={isOwnerCampusView ? 'parent' : role} activeModule={activeModule} setActiveModule={setActiveModule} />
     </div>
   );
 }

@@ -280,6 +280,7 @@ export const AdminDashboard: React.FC = () => {
             <button
               key={id}
               id={domId}
+              data-tour={id === 'demo' ? 'admin-demo' : undefined}
               onClick={() => setActiveTab(id)}
               aria-pressed={activeTab === id}
               className={`flex items-center gap-2 min-h-[44px] px-4 rounded-2xl text-xs font-bold whitespace-nowrap transition ${
