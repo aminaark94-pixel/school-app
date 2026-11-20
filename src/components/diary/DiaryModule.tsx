@@ -358,56 +358,6 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
 
   return (
     <div className="space-y-6">
-      {/* 1. Academic Banner: Class Work & Work Planner PDF */}
-      <div className="relative rounded-[32px] overflow-hidden shadow-lg border border-[#EDE7C7] bg-[#200E01] text-[#EDE7C7]">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&auto=format&fit=crop&q=80"
-            alt="School Class Work"
-            className="w-full h-full object-cover opacity-30"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#200E01] via-[#200E01]/85 to-transparent" />
-        </div>
-
-        <div className="relative p-6 sm:p-8 z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="max-w-xl space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
-              <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Class Work &amp; Work Planner PDF • Daily Academic Log</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              Digital Student Diary &amp; Work Planner Feed
-            </h2>
-            <p className="text-xs sm:text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Instant Class Work snapshots, daily work planner PDFs (CamScanner), laboratory worksheets, absent student
-              syllabus catch-up, and verified parent signatures for Cambridge &amp; Matric streams.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="group relative rounded-2xl overflow-hidden border border-[#D4AF37]/40 w-28 h-20 shadow-md">
-              <img
-                src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=300&auto=format&fit=crop&q=80"
-                alt="Library Textbooks"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                <span className="text-[10px] font-bold text-[#EDE7C7] leading-tight">Curriculum</span>
-              </div>
-            </div>
-            <div className="group relative rounded-2xl overflow-hidden border border-[#D4AF37]/40 w-28 h-20 shadow-md hidden sm:block">
-              <img
-                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=300&auto=format&fit=crop&q=80"
-                alt="Classroom Study"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                <span className="text-[10px] font-bold text-[#EDE7C7] leading-tight">Study Hall</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* 2. Top Control & Action Bar */}
       <div className="bg-white p-5 sm:p-6 rounded-[28px] border border-[#EDE7C7] shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -440,7 +390,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-white bg-[#8B0000] hover:opacity-90 shadow-sm shadow-[#8B0000]/20 transition active:scale-95"
             >
               <Upload className="w-4 h-4" />
-              <span>Post Diary (Upload PDF / Snap or Write)</span>
+              <span>Post homework</span>
             </button>
           ) : (
             <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-[11px] font-bold text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/40">
@@ -545,7 +495,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
         <div className="flex flex-wrap items-center gap-3">
           {!isParent && (
             <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-500 uppercase tracking-wider text-[11px]">Class:</span>
+              <label htmlFor="select-diary-class" className="font-semibold text-slate-700">Class</label>
               <select
                 id="select-diary-class"
                 value={selectedClass}
@@ -563,7 +513,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
           )}
 
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-500 uppercase tracking-wider text-[11px]">Subject:</span>
+            <label htmlFor="select-diary-subject" className="font-semibold text-slate-700">Subject</label>
             <select
               id="select-diary-subject"
               value={selectedSubject}
@@ -579,7 +529,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
           </div>
         </div>
 
-        <div className="text-[11px] font-semibold text-slate-400">
+        <div className="text-sm font-semibold text-slate-700">
           {filteredDiary.length} {filteredDiary.length === 1 ? 'entry' : 'entries'}
         </div>
       </div>
@@ -1279,7 +1229,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                   className="px-6 py-2.5 rounded-2xl font-bold text-white bg-[#8B0000] hover:opacity-90 transition shadow-md shadow-[#8B0000]/20 flex items-center gap-2 active:scale-95 cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Publish to Diary Feed</span>
+                  <span>Publish homework</span>
                 </button>
               </div>
             </form>

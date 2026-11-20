@@ -163,36 +163,6 @@ export const ParentsReportModule: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Hero Banner */}
-      <div
-        className="rounded-2xl p-5 sm:p-7 text-white shadow-lg relative overflow-hidden"
-        style={{
-          background:
-            'linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, var(--t-primary) 100%)',
-          borderColor: 'var(--t-accent)',
-        }}
-      >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/10 text-amber-300 border border-amber-400/30 mb-2">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Internal Faculty &amp; Incharge Analytics</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-['Cinzel',serif]">
-              Parents Report Card &amp; App Vigilance Index
-            </h1>
-            <p className="mt-1 text-sm text-indigo-100 max-w-2xl">
-              Monitors which parents are proactive for their children vs neglectful, tracks backend app usage, diary sign-offs, and alerts teachers on who requires <strong>extense classroom attention</strong>.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 self-start md:self-center shrink-0">
-            <span className="px-3 py-1.5 rounded-xl bg-white/10 border border-white/20 text-xs font-bold text-indigo-200">
-              Logged in as: <strong className="text-white uppercase">{currentUser?.role}</strong>
-            </span>
-          </div>
-        </div>
-      </div>
 
       {/* 2. Management KPI Overview Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

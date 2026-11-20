@@ -139,6 +139,41 @@ html {
   overflow-x: hidden;
 }
 
+@media screen {
+  .school-workspace {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .school-workspace :is(h1, h2, h3, h4, label, button, input, select, textarea) {
+    font-family: inherit;
+  }
+
+  .school-workspace :is(h2, h3, h4) {
+    font-style: normal;
+    letter-spacing: normal;
+  }
+
+  .school-workspace :is(button, label, th, td) {
+    font-size: max(0.875rem, 1em);
+  }
+
+  .school-workspace :is(input, select, textarea) {
+    font-size: 1rem;
+  }
+
+  .school-workspace :is(p, small, span)[class*="text-[10px]"],
+  .school-workspace :is(p, small, span)[class*="text-[11px]"] {
+    font-size: 0.8125rem;
+  }
+
+  .school-workspace :is(button, a, input, select, textarea, summary):focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 3px;
+  }
+}
+
 body {
   min-width: 320px;
   overflow-x: hidden;

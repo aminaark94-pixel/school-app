@@ -126,16 +126,16 @@ export function ProductTour({ role = 'parent', activeModule, setActiveModule }: 
     {step && copy && createPortal(
       <div className="pointer-events-none fixed inset-0 z-[90]">
         {currentAnchor?.exact && <div aria-hidden="true" className="absolute rounded-lg ring-2 ring-white outline-2 outline-[var(--t-primary)]"
-          style={{ left: currentAnchor.rect.left, top: currentAnchor.rect.top, width: currentAnchor.rect.width, height: currentAnchor.rect.height, boxShadow: '0 0 0 9999px rgb(15 23 42 / 38%)' }} />}
+          style={{ left: currentAnchor.rect.left, top: currentAnchor.rect.top, width: currentAnchor.rect.width, height: currentAnchor.rect.height, boxShadow: '0 0 0 9999px rgb(15 23 42 / 14%)' }} />}
         <section ref={panel} tabIndex={-1} role="dialog" aria-labelledby="tour-step-title"
           onKeyDown={(event) => { if (event.key === 'Escape') close(); }}
-          className="pointer-events-auto absolute max-h-[min(45dvh,26rem)] w-[min(calc(100%-28px),350px)] overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 text-slate-900 shadow-xl"
+          className="pointer-events-auto absolute flex max-h-[min(52dvh,26rem)] w-[min(calc(100%-28px),350px)] flex-col rounded-xl border border-slate-200 bg-white p-3 text-slate-900 shadow-xl"
           style={currentAnchor ? position : { right: 14, bottom: 14 }}>
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs font-semibold text-slate-600">Step {index + 1} of {steps.length}</span>
             <button type="button" onClick={() => setLanguage(language === 'ur' ? 'en' : 'ur')} className="min-h-9 text-sm font-semibold underline">{language === 'ur' ? 'English' : 'Roman Urdu'}</button>
           </div>
-          <div aria-live="polite">
+          <div aria-live="polite" className="min-h-0 overflow-y-auto">
             <h2 id="tour-step-title" className="text-lg font-bold">{copy.title}</h2>
             {currentAnchor?.exact ? <>
               <p className="mt-1 text-sm leading-relaxed">{copy.what}</p>

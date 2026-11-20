@@ -83,7 +83,7 @@ export default function App() {
     return (
       <div className="min-h-dvh bg-[var(--t-bg)] text-slate-900">
         <RoleSwitcherBar />
-        <main className="mx-auto max-w-5xl p-4 sm:p-8">
+        <main className="school-workspace mx-auto max-w-5xl p-4 pb-24 sm:p-8">
           <h1 data-tour="page-heading" className="mb-5 text-3xl font-bold">Manage schools</h1>
           <OwnerDashboard />
         </main>
@@ -119,27 +119,25 @@ export default function App() {
         </div>
       )}
 
-      <main className="mx-auto max-w-6xl space-y-6 px-4 pb-28 pt-6 sm:px-6 sm:pt-9">
+      <main id="school-content" className="school-workspace mx-auto max-w-6xl space-y-6 px-4 pb-28 pt-6 sm:px-6 sm:pt-9">
         {activeModule !== 'portal' && (
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1 data-tour="page-heading" className="text-2xl font-bold sm:text-3xl">{pageNames[activeModule]}</h1>
-            {allowed && activeModule !== 'updates' && <PageTourButton onClick={triggerPageTour} />}
+            {allowed && <PageTourButton onClick={triggerPageTour} />}
           </div>
         )}
         {!allowed ? <p className="rounded-xl border border-slate-200 bg-white p-5">This page is available to school staff with access.</p> : <>
           {activeModule === 'portal' && <CampusHome role={role} onNavigate={openPage} onSubject={openSubject} />}
           {activeModule === 'diary' && <DiaryModule initialSubject={homeSubject} />}
-  {activeModule === 'attendance' && <AttendanceModule />}
-  {activeModule === 'results' && <ResultCardModule />}
-  {activeModule === 'progress' && <KidsProgressModule />}
-  {activeModule === 'teacher-progress' && currentUser?.role === 'admin' && <TeacherProgressModule />}
-  {activeModule === 'parents-report' && (currentUser?.role === 'admin' || currentUser?.role === 'teacher') && <ParentsReportModule />}
-  {activeModule === 'communication' && <CommunicationModule />}
-  {activeModule === 'datesheets' && <ExamsDatesheetModule />}
-  {activeModule === 'updates' && <UpdatesPage />}
-  {/* Admin area intentionally keeps its own fixed Imperial look regardless of the
-  published app skin — the owner asked for this to stay as-is. */}
-  {activeModule === 'admin' && currentUser?.role === 'admin' && <AdminDashboard />}
+          {activeModule === 'attendance' && <AttendanceModule />}
+          {activeModule === 'results' && <ResultCardModule />}
+          {activeModule === 'progress' && <KidsProgressModule />}
+          {activeModule === 'teacher-progress' && <TeacherProgressModule />}
+          {activeModule === 'parents-report' && <ParentsReportModule />}
+          {activeModule === 'communication' && <CommunicationModule />}
+          {activeModule === 'datesheets' && <ExamsDatesheetModule />}
+          {activeModule === 'updates' && <UpdatesPage />}
+          {activeModule === 'admin' && <AdminDashboard />}
         </>}
       </main>
       <OfflineIndicator />

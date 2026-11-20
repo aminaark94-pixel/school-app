@@ -26,7 +26,7 @@ import { Student } from '../../types';
 type AdminTab = 'roster' | 'faculty' | 'import' | 'branding' | 'demo';
 
 const TABS = [
-  { id: 'roster', domId: 'tab-admin-roster', Icon: Users, full: 'Scholar Management', short: 'Roster' },
+  { id: 'roster', domId: 'tab-admin-roster', Icon: Users, full: 'Students', short: 'Students' },
   { id: 'faculty', domId: 'tab-admin-faculty', Icon: Award, full: "Teacher's Progress & Regularity", short: "Teacher KPI" },
   { id: 'import', domId: 'tab-admin-import', Icon: FileSpreadsheet, full: 'CSV Batch Enrollment', short: 'Import' },
   { id: 'branding', domId: 'tab-admin-branding', Icon: Palette, full: 'School Branding', short: 'Branding' },
@@ -231,47 +231,6 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* 1. Governance banner (photo only from md up) */}
-      <div className="relative rounded-3xl sm:rounded-[32px] overflow-hidden shadow-lg border border-[#EDE7C7] bg-[#200E01] text-[#EDE7C7]">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?w=1200&auto=format&fit=crop&q=80"
-            alt="School Heritage Campus Hall"
-            loading="lazy"
-            className="hidden md:block w-full h-full object-cover opacity-35"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#200E01] via-[#200E01]/85 to-transparent" />
-        </div>
-
-        <div className="relative p-5 sm:p-8 z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
-          <div className="max-w-xl space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
-              <Building2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Registrar &amp; Bursar Secretariat</span>
-            </div>
-            <h2 className="text-xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              {currentSchool?.name || skin.name} Administration
-            </h2>
-            <p className="hidden sm:block text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Manage student enrollment, CSV admissions, school branding, and fee records for {currentSchool?.name || skin.name}.
-            </p>
-          </div>
-
-          <div className="hidden md:flex items-center gap-3">
-            <div className="relative rounded-2xl overflow-hidden border border-[#D4AF37]/40 w-28 h-20 shadow-md">
-              <img
-                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=300&auto=format&fit=crop&q=80"
-                alt="Collegiate Boardroom"
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                <span className="text-[10px] font-bold text-[#EDE7C7] leading-tight">Registrar</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* 2. Tabs: one horizontally scrollable strip with short labels on phones */}
       <div data-tour="admin-tabs" className="bg-white p-2 sm:p-3 rounded-3xl shadow-sm border border-[#EDE7C7] overflow-x-auto no-scrollbar">

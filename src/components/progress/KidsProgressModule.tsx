@@ -243,45 +243,20 @@ export const KidsProgressModule: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Banner */}
-      <div className="bg-white rounded-3xl border border-[#EDE7C7] p-5 sm:p-6 shadow-xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md">
-              <Award className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-[#200E01] font-['Cinzel',serif]">
-                  Kids Monthly Character &amp; Skills Progress
-                </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
-                  Developmental Report
-                </span>
-              </div>
-              <p className="text-xs text-[#5B0202]/70 mt-1 max-w-2xl">
-                Comprehensive monthly evaluation of junior and senior scholars across 5 fundamental pillars:{' '}
-                <b>Language, Discipline, Writing, Reading, and Cleaning (Hygiene &amp; Uniform)</b>.
-              </p>
-            </div>
-          </div>
-
-          {/* Month Selector */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Calendar className="w-4 h-4 text-[#8B0000]" />
-            <select
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="text-xs font-bold p-2 rounded-xl border border-[#EDE7C7] bg-[#FAF8F2] text-[#200E01] focus:ring-[#8B0000]"
-            >
-              <option value="October 2026">October 2026</option>
-              <option value="September 2026">September 2026</option>
-              <option value="August 2026">August 2026</option>
-              <option value="November 2026">November 2026</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      {/* Month Selector */}
+      <label className="inline-flex items-center gap-3 font-semibold">
+        Month
+        <select data-tour="progress-month"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+          className="min-h-11 text-base font-semibold px-3 rounded-xl border border-[#EDE7C7] bg-[#FAF8F2] text-[#200E01] focus:ring-[#8B0000]"
+        >
+          <option value="October 2026">October 2026</option>
+          <option value="September 2026">September 2026</option>
+          <option value="August 2026">August 2026</option>
+          <option value="November 2026">November 2026</option>
+        </select>
+      </label>
 
       {/* 2. PARENT VIEW: Multi-Child Switcher & Official Development Card */}
       {isParent && (

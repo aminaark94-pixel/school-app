@@ -329,40 +329,10 @@ export const TeacherProgressModule: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Banner */}
-      <div
-        className="rounded-2xl p-5 sm:p-7 text-white shadow-lg relative overflow-hidden"
-        style={{
-          background:
-            'linear-gradient(135deg, var(--t-primary) 0%, color-mix(in srgb, var(--t-primary) 70%, #000) 100%)',
-          borderColor: 'var(--t-accent)',
-        }}
-      >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/10 text-amber-300 border border-amber-400/30 mb-2">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Incharge &amp; Management Confidential Appraisal Desk</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight font-['Cinzel',serif]">
-              Teacher Performance &amp; Regularity Module
-            </h1>
-            <p className="mt-1 text-sm text-white/80 max-w-2xl">
-              Monthly administrative evaluation of faculty across <strong>Language Proficiency</strong>, <strong>Professional Dressing</strong>, <strong>Teaching Pedagogy / Working</strong>, and <strong>Punctuality / Regularity</strong>.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={handleOpenCreateModal}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-md transition cursor-pointer"
-            >
-              <Plus className="w-4 h-4 stroke-[3]" />
-              <span>New Faculty Appraisal</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <button type="button" data-tour="teacher-review-new" onClick={handleOpenCreateModal}
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[var(--t-primary)] px-4 font-semibold text-white">
+        <Plus size={18} aria-hidden="true" /> Add teacher review
+      </button>
 
       {/* 2. Management KPI Overview Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

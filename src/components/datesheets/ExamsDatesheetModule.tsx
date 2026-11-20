@@ -34,45 +34,6 @@ export const ExamsDatesheetModule: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Examination Hall & Campus Library Hero Banner */}
-      <div className="relative rounded-[32px] overflow-hidden shadow-lg border border-[#EDE7C7] bg-[#200E01] text-[#EDE7C7]">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=1200&auto=format&fit=crop&q=80"
-            alt="School Library & Examination Hall"
-            className="w-full h-full object-cover opacity-35"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#200E01] via-[#200E01]/85 to-transparent" />
-        </div>
-
-        <div className="relative p-6 sm:p-8 z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="max-w-xl space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
-              <CalendarDays className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>{skin.name} Examination Board • Cambridge &amp; Matriculation</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              Terminal Examination Datesheet & Syllabus
-            </h2>
-            <p className="text-xs sm:text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Official hall seating allocations, chapter breakdowns, invigilation protocol, and roll number slip verification for terminal assessments.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="group relative rounded-2xl overflow-hidden border border-[#D4AF37]/40 w-28 h-20 shadow-md">
-              <img
-                src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=300&auto=format&fit=crop&q=80"
-                alt="Exam Hall Seating"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                <span className="text-[10px] font-bold text-[#EDE7C7] leading-tight">Great Hall</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* 2. Top Control Bar */}
       <div className="bg-white p-6 rounded-[28px] border border-[#EDE7C7] shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

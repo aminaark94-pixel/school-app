@@ -1,50 +1,22 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-  CheckCircle2,
-  XCircle,
-  Clock,
-  Save,
-  Users,
-  CheckCheck,
-  Building2,
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSchoolData } from '../../hooks/useSchoolData';
-import { AttendanceStatus } from '../../types';
+import type { AttendanceStatus } from '../../types';
 
 // Local calendar date (YYYY-MM-DD). toISOString() would give the UTC date, which is "yesterday" for
 // the first hours of a local day in time zones ahead of UTC.
 const localDateString = (d: Date = new Date()) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-const STATUS_BUTTONS: Array<{
-  status: AttendanceStatus;
-  label: string;
-  Icon: LucideIcon;
-  active: string;
-}> = [
-  {
-    status: 'present',
-    label: 'Present',
-    Icon: CheckCircle2,
-    active: 'bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-300',
-  },
-  {
-    status: 'absent',
-    label: 'Absent',
-    Icon: XCircle,
-    active: 'bg-[#8B0000] text-white shadow-xs ring-2 ring-rose-300',
-  },
-  {
-    status: 'late',
-    label: 'Late',
-    Icon: Clock,
-    active: 'bg-amber-600 text-white shadow-xs ring-2 ring-amber-300',
-  },
+const statuses: { value: AttendanceStatus; label: string; active: string }[] = [
+  { value: 'present', label: 'Present', active: 'border-emerald-800 bg-emerald-100 text-emerald-950' },
+  { value: 'absent', label: 'Absent', active: 'border-rose-800 bg-rose-100 text-rose-950' },
+  { value: 'late', label: 'Late', active: 'border-amber-800 bg-amber-100 text-amber-950' },
 ];
 
-export const AttendanceModule: React.FC = () => {
-  const { students, attendance, markAttendance, currentUser } = useSchoolData();
+const field = 'mt-1 block min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900';
+
+export function AttendanceModule() {
+  const { students, attendance, markAttendance, currentUser, dataState } = useSchoolData();
   const canEditAttendance = currentUser?.role === 'admin' || currentUser?.role === 'teacher';
 
   const todayStr = useMemo(() => localDateString(), []);
@@ -67,7 +39,7 @@ export const AttendanceModule: React.FC = () => {
     return Array.from(set).sort();
   }, [activeStudents]);
 
-  const [selectedClass, setSelectedClass] = useState<string>(classes[0] || 'Grade 10');
+  const [selectedClass, setSelectedClass] = useState<string>(classes[0] || '');
   const [selectedSection, setSelectedSection] = useState<string>('All');
 
   // Student data can arrive after this screen has mounted (live database). Keep the selection valid,
@@ -100,380 +72,138 @@ export const AttendanceModule: React.FC = () => {
     });
   }, [activeStudents, selectedClass, selectedSection]);
 
-  const [attendanceState, setAttendanceState] = useState<Record<string, AttendanceStatus>>({});
-  const [isSaved, setIsSaved] = useState(false);
-  const [lastSavedTime, setLastSavedTime] = useState<string | null>(null);
-
-  // Rebuild the working state from stored attendance whenever the roster, date or stored data changes.
+  const [draft, setDraft] = useState<Record<string, AttendanceStatus>>({});
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   useEffect(() => {
-    const initial: Record<string, AttendanceStatus> = {};
-    roster.forEach((student) => {
-      const existing = attendance.find(
-        (a) => a.student_id === student.id && a.date === selectedDate
-      );
-      initial[student.id] = existing ? existing.status : 'present';
-    });
-    setAttendanceState(initial);
-  }, [roster, selectedDate, attendance]);
+    setDraft({});
+    setSaveState('idle');
+  }, [selectedClass, selectedSection, selectedDate, currentUser?.id]);
 
-  // The "saved" confirmation only resets when the teacher moves to a different class / section / date.
-  // (It must NOT reset when stored data reloads, because saving itself reloads the data.)
-  useEffect(() => {
-    setIsSaved(false);
-  }, [selectedDate, selectedClass, selectedSection]);
-
-  const totalCount = roster.length;
-  const presentCount = Object.values(attendanceState).filter((s) => s === 'present').length;
-  const absentCount = Object.values(attendanceState).filter((s) => s === 'absent').length;
-  const lateCount = Object.values(attendanceState).filter((s) => s === 'late').length;
-  // No roster means no attendance has been recorded — it must never look like 100%.
-  const attendanceRate = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : null;
-
-  const toggleStatus = (studentId: string, status: AttendanceStatus) => {
-    if (!canEditAttendance) return;
-    setAttendanceState((prev) => ({ ...prev, [studentId]: status }));
-    setIsSaved(false);
+  const recorded = useMemo(() => new Map(
+    attendance.filter((entry) => entry.date === selectedDate).map((entry) => [entry.student_id, entry.status])
+  ), [attendance, selectedDate]);
+  const rows = roster.map((student) => ({ student, status: draft[student.id] ?? recorded.get(student.id) }));
+  const changes = rows.filter(({ student, status }) => draft[student.id] && status !== recorded.get(student.id));
+  const unmarked = rows.filter(({ status }) => !status).length;
+  const saving = saveState === 'saving';
+  const changeFilter = (apply: () => void) => {
+    if (saveState === 'saved' || !changes.length || window.confirm('Leave without saving these attendance changes?')) apply();
   };
 
-  const handleMarkAllPresent = () => {
-    if (!canEditAttendance) return;
-    const updated: Record<string, AttendanceStatus> = {};
-    roster.forEach((s) => {
-      updated[s.id] = 'present';
-    });
-    setAttendanceState(updated);
-    setIsSaved(false);
+  const chooseStatus = (studentId: string, status: AttendanceStatus) => {
+    setDraft((current) => ({ ...current, [studentId]: status }));
+    setSaveState('idle');
   };
 
-  // markAttendance takes ONE array of records. (This screen used to call it once per student with three
-  // separate arguments, which threw and saved nothing.)
-  const handleSaveAttendance = () => {
-    if (!canEditAttendance) return;
-    if (roster.length === 0) return;
-    markAttendance(
-      roster.map((student) => ({
-        student_id: student.id,
-        date: selectedDate,
-        status: attendanceState[student.id] || 'present',
-      }))
-    );
-    setIsSaved(true);
-    setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+  const save = async () => {
+    if (!canEditAttendance || !selectedDate || saving || !changes.length) return;
+    setSaveState('saving');
+    try {
+      await markAttendance(changes.map(({ student }) => ({
+        student_id: student.id, status: draft[student.id], date: selectedDate,
+      })));
+      setSaveState('saved');
+    } catch {
+      setSaveState('error');
+    }
   };
 
-  const selectClass =
-    'w-full md:w-auto min-h-[44px] bg-[#FAF8F2] border border-[#EDE7C7] text-[#200E01] text-sm font-bold rounded-xl px-3.5 py-2 focus:ring-2 focus:ring-[#8B0000] focus:outline-hidden cursor-pointer';
-  const labelClass =
-    "block text-[11px] font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]";
+  const saveMessage = saveState === 'saved' ? 'Attendance saved.'
+    : saveState === 'error' ? 'Attendance could not be saved. Your changes are still here.'
+    : changes.length ? `${changes.length} unsaved ${changes.length === 1 ? 'change' : 'changes'}` : '';
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* 1. Banner (photo only from md up, keeps phones light and fast) */}
-      <div className="relative rounded-3xl sm:rounded-[32px] overflow-hidden shadow-lg border border-[#EDE7C7] bg-[#200E01] text-[#EDE7C7]">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&auto=format&fit=crop&q=80"
-            alt="School Morning Assembly"
-            loading="lazy"
-            className="hidden md:block w-full h-full object-cover opacity-35"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#200E01] via-[#200E01]/85 to-transparent" />
+    <div className="space-y-5">
+      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5" aria-labelledby="attendance-filters-title">
+        <h2 id="attendance-filters-title" className="text-xl font-bold">Choose a date and class</h2>
+        <fieldset disabled={saving} data-tour="attendance-filters" className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <label className="col-span-2 text-sm font-semibold sm:col-span-1">Date
+            <input type="date" className={field} value={selectedDate} onChange={(event) => {
+              const date = event.target.value;
+              changeFilter(() => setSelectedDate(date));
+            }} />
+          </label>
+          <label className="text-sm font-semibold">Class
+            <select className={field} value={selectedClass} disabled={!classes.length}
+              onChange={(event) => {
+                const name = event.target.value;
+                changeFilter(() => { setSelectedClass(name); setSelectedSection('All'); });
+              }}>
+              {!classes.length && <option value="">No classes</option>}
+              {classes.map((name) => <option key={name}>{name}</option>)}
+            </select>
+          </label>
+          <label className="text-sm font-semibold">Section
+            <select className={field} value={selectedSection} onChange={(event) => {
+              const section = event.target.value;
+              changeFilter(() => setSelectedSection(section));
+            }}>
+              <option value="All">All sections</option>
+              {sections.map((section) => <option key={section} value={section}>Section {section}</option>)}
+            </select>
+          </label>
+        </fieldset>
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white" aria-labelledby="attendance-students-title">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-4">
+          <div>
+            <h2 id="attendance-students-title" className="text-xl font-bold">Students</h2>
+            <p className="mt-1 text-sm text-slate-600">{rows.length} students · {unmarked} {canEditAttendance ? 'unmarked' : 'awaiting attendance'}</p>
+          </div>
+          {canEditAttendance && Boolean(unmarked) && <button type="button" disabled={saving || !selectedDate}
+            onClick={() => {
+              const unmarkedStudents = rows.filter(({ status }) => !status);
+              setDraft((current) => ({ ...current, ...Object.fromEntries(unmarkedStudents.map(({ student }) => [student.id, 'present' as const])) }));
+              setSaveState('idle');
+            }}
+            className="min-h-11 rounded-lg border border-slate-300 px-3 text-sm font-semibold hover:bg-slate-50">
+            Mark remaining present
+          </button>}
         </div>
-
-        <div className="relative p-5 sm:p-8 z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
-          <div className="max-w-xl space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
-              <Building2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Morning Roll Call</span>
-            </div>
-            <h2 className="text-xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              {canEditAttendance ? 'Daily Attendance Register' : 'Your Child\'s Attendance'}
-            </h2>
-            <p className="hidden sm:block text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              {canEditAttendance
-                ? 'Record official daily classroom attendance. Absence alerts keep parents and school staff informed.'
-                : 'View your child\'s daily attendance record. Only school staff can update attendance.'}
-            </p>
-          </div>
-
-          <div className="flex items-center justify-around md:justify-start gap-4 bg-white/15 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-white/25">
-            <div className="text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/75 font-['Cinzel',serif] block">
-                {canEditAttendance ? 'Class total' : 'Your child'}
-              </span>
-              <p className="text-xl sm:text-2xl font-bold text-white font-['Cormorant_Garamond',serif] italic">
-                {totalCount} {canEditAttendance ? 'Students' : totalCount === 1 ? 'Student' : 'Students'}
-              </p>
-            </div>
-            <div className="h-8 w-px bg-white/25" />
-            <div className="text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/75 font-['Cinzel',serif] block">
-                Attendance rate
-              </span>
-              <p className="text-xl sm:text-2xl font-bold text-white font-['Cormorant_Garamond',serif] italic">
-                {attendanceRate === null ? '—' : `${attendanceRate}%`}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Filters (2-column grid on phones) + actions */}
-      <div data-tour="attendance-filters" className="bg-white p-4 sm:p-6 rounded-3xl sm:rounded-[28px] shadow-sm border border-[#EDE7C7]">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <div className="grid grid-cols-2 gap-3 md:flex md:flex-wrap md:items-end">
-            <div>
-              <label className={labelClass} htmlFor="select-attendance-class">
-                Class Grade
-              </label>
-              <select
-                id="select-attendance-class"
-                value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value)}
-                className={selectClass}
-              >
-                {classes.length === 0 && <option value={selectedClass}>{selectedClass}</option>}
-                {classes.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className={labelClass} htmlFor="select-attendance-section">
-                Section
-              </label>
-              <select
-                id="select-attendance-section"
-                value={selectedSection}
-                onChange={(e) => setSelectedSection(e.target.value)}
-                className={selectClass}
-              >
-                <option value="All">All Sections</option>
-                {sections.map((sec) => (
-                  <option key={sec} value={sec}>
-                    Section {sec}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="col-span-2 md:col-span-1">
-              <label className={labelClass} htmlFor="select-attendance-date">
-                Attendance Date
-              </label>
-              <input
-                id="select-attendance-date"
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className={selectClass}
-              />
-            </div>
-          </div>
-
-          {canEditAttendance && <div className="flex items-center gap-2">
-            <button
-              id="mark-all-present-btn"
-              onClick={handleMarkAllPresent}
-              className="flex-1 md:flex-none flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2.5 text-xs font-bold rounded-2xl border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition active:scale-95"
-            >
-              <CheckCheck className="w-4 h-4 text-emerald-600" />
-              <span>Mark All Present</span>
-            </button>
-
-            {/* On phones the Save button lives in the sticky bar under the roster */}
-            <button
-              id="save-attendance-btn"
-              onClick={handleSaveAttendance}
-              className="hidden md:flex items-center gap-2 min-h-[44px] px-5 py-2.5 text-xs font-bold rounded-2xl bg-[#8B0000] hover:bg-[#700000] text-[#EDE7C7] shadow-md border border-[#D4AF37]/50 transition active:scale-95"
-            >
-              <Save className="w-4 h-4 text-[#D4AF37]" />
-              <span>Save Attendance</span>
-            </button>
-          </div>}
-        </div>
-
-        {isSaved && (
-          <div className="mt-4 p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>
-                Attendance saved for {roster.length} scholars at {lastSavedTime}.
-              </span>
-            </div>
-            <span className="text-[11px] text-emerald-700 font-bold">
-              Authorized by {currentUser?.full_name}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* 3. Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-4 sm:p-5 rounded-3xl bg-white border border-[#EDE7C7] shadow-sm">
-          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#5B0202] font-['Cinzel',serif]">
-            Total Enrolled
-          </span>
-          <div className="text-2xl font-black text-[#200E01] mt-1 font-['Cormorant_Garamond',serif] italic">
-            {totalCount}
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-3xl bg-emerald-50 border border-emerald-200/80 shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-800 font-['Cinzel',serif]">
-              Present
-            </span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          </div>
-          <div className="text-2xl font-black text-emerald-900 mt-1 font-['Cormorant_Garamond',serif] italic">
-            {presentCount}
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-3xl bg-rose-50 border border-rose-200/80 shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-rose-800 font-['Cinzel',serif]">
-              Absent
-            </span>
-            <XCircle className="w-4 h-4 text-rose-600" />
-          </div>
-          <div className="text-2xl font-black text-rose-900 mt-1 font-['Cormorant_Garamond',serif] italic">
-            {absentCount}
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-3xl bg-[#FAF8F2] border border-[#D4AF37]/50 shadow-sm">
-          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#8B0000] font-['Cinzel',serif]">
-            Attendance Rate
-          </span>
-          <div className="text-2xl font-black text-[#8B0000] mt-1 font-['Cormorant_Garamond',serif] italic">
-            {attendanceRate === null ? '—' : `${attendanceRate}%`}
-          </div>
-        </div>
-      </div>
-
-      {/* 5. Roster */}
-      <div data-tour="attendance-roster" className="bg-white rounded-3xl sm:rounded-[28px] shadow-sm border border-[#EDE7C7] overflow-hidden">
-        <div className="p-3 sm:p-4 border-b border-[#EDE7C7] bg-[#FAF8F2] flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <Users className="w-4 h-4 text-[#8B0000] shrink-0" />
-            <span className="text-xs font-bold text-[#5B0202] uppercase tracking-wider font-['Cinzel',serif] truncate">
-              {selectedClass} ({selectedSection === 'All' ? 'All Sections' : `Section ${selectedSection}`})
-            </span>
-          </div>
-          <span className="hidden sm:inline text-xs text-[#5B0202]/70 font-medium">
-            Single-tap switch to mark absent or late
-          </span>
-        </div>
-
-        {roster.length === 0 ? (
-          <div className="p-8 text-center text-[#5B0202]/60 text-sm">
-            No scholars found in {selectedClass}
-            {selectedSection !== 'All' ? ` Section ${selectedSection}` : ''}.
-          </div>
+        {!selectedDate || dataState === 'loading' || dataState === 'remote_error' || !rows.length ? (
+          <p className="p-4 text-slate-700" role="status">{!selectedDate ? 'Choose a date to see attendance.'
+            : dataState === 'loading' ? 'Loading students…'
+            : dataState === 'remote_error' ? 'Could not load attendance. Refresh the page to try again.'
+            : currentUser?.role === 'parent' ? 'No linked students in this class. Contact the school if you expected to see your child.'
+            : 'No students in this class and section.'}</p>
         ) : (
-          <div className="divide-y divide-[#EDE7C7]/60">
-            {roster.map((student, idx) => {
-              const currentStatus = attendanceState[student.id] || 'present';
-              return (
-                <div
-                  key={student.id}
-                  className={`p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors ${
-                    currentStatus === 'absent'
-                      ? 'bg-rose-50/50 hover:bg-rose-50'
-                      : currentStatus === 'late'
-                      ? 'bg-amber-50/50 hover:bg-amber-50'
-                      : 'hover:bg-[#FAF8F2]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 shrink-0 rounded-xl bg-[#EDE7C7] border border-[#D4AF37]/50 flex items-center justify-center font-mono font-bold text-xs text-[#5B0202]">
-                      {idx + 1}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-[#200E01] text-sm">{student.name}</span>
-                        <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#FAF8F2] text-[#5B0202] border border-[#EDE7C7]">
-                          {student.roll_number}
-                        </span>
-                      </div>
-                      <div className="text-xs text-[#5B0202]/70">
-                        {student.class_id} – Sec {student.section}
-                      </div>
-                    </div>
-                  </div>
-
-                  {canEditAttendance ? (
-                    <div className="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center sm:gap-1.5">
-                      {STATUS_BUTTONS.map(({ status, label, Icon, active }) => (
-                        <button
-                          key={status}
-                          id={`att-${status}-${student.id}`}
-                          onClick={() => toggleStatus(student.id, status)}
-                          aria-pressed={currentStatus === status}
-                          className={`flex items-center justify-center gap-1 min-h-[44px] sm:min-h-0 px-3 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition active:scale-95 ${
-                            currentStatus === status
-                              ? active
-                              : 'bg-[#FAF8F2] text-[#200E01] hover:bg-[#EDE7C7] border border-[#EDE7C7]'
-                          }`}
-                        >
-                          <Icon className="w-3.5 h-3.5" />
-                          <span>{label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <span
-                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
-                        currentStatus === 'present'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : currentStatus === 'absent'
-                            ? 'bg-rose-100 text-rose-800'
-                            : 'bg-amber-100 text-amber-800'
-                      }`}
-                    >
-                      {currentStatus === 'present' ? <CheckCircle2 className="h-3.5 w-3.5" /> : currentStatus === 'absent' ? <XCircle className="h-3.5 w-3.5" /> : <Clock className="h-3.5 w-3.5" />}
-                      {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
-                    </span>
-                  )}
+          <ul className="divide-y divide-slate-200">
+            {rows.map(({ student, status }, index) => (
+              <li key={student.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="font-semibold">{student.name}</p>
+                  <p className="text-sm text-slate-600">{student.roll_number} · Section {student.section}</p>
                 </div>
-              );
-            })}
-          </div>
+                {canEditAttendance ? (
+                  <div role="group" aria-label={`Attendance for ${student.name}`} data-tour={index === 0 ? 'attendance-roster' : undefined}
+                    className="grid grid-cols-3 gap-2">
+                    {statuses.map(({ value, label, active }) => <button key={value} type="button" disabled={saving}
+                      aria-pressed={status === value} onClick={() => chooseStatus(student.id, value)}
+                      className={`min-h-11 rounded-lg border px-2 text-sm font-semibold ${status === value ? active : 'border-slate-300 text-slate-700 hover:bg-slate-50'}`}>
+                      {label}
+                    </button>)}
+                  </div>
+                ) : (
+                  <span data-tour={index === 0 ? 'attendance-roster' : undefined}
+                    className={`self-start rounded-lg border px-3 py-2 text-sm font-semibold ${statuses.find(({ value }) => value === status)?.active ?? 'border-slate-200 bg-slate-50 text-slate-700'}`}>
+                    {statuses.find(({ value }) => value === status)?.label ?? 'Not recorded'}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
         )}
-      </div>
-
-      {/* 6. Phone-only sticky save bar: always reachable while scrolling a long roster */}
-      {canEditAttendance && roster.length > 0 && (
-        <div className="md:hidden sticky above-bottom-nav z-30">
-          <div className="rounded-2xl bg-[#200E01] text-[#EDE7C7] p-3 shadow-xl border border-[#D4AF37]/40 flex items-center justify-between gap-3">
-            <div className="text-[11px] font-bold leading-tight min-w-0">
-              <div>
-                P {presentCount} · A {absentCount} · L {lateCount}
-              </div>
-              <div className="text-[10px] font-medium text-[#EDE7C7]/70 truncate">
-                {isSaved ? `Saved at ${lastSavedTime}` : `${totalCount} scholars`}
-              </div>
-            </div>
-            <button
-              id="save-attendance-btn-mobile"
-              onClick={handleSaveAttendance}
-              className="shrink-0 flex items-center gap-2 min-h-[44px] px-5 rounded-2xl bg-[#8B0000] border border-[#D4AF37]/60 text-xs font-bold text-[#EDE7C7] active:scale-95 transition"
-            >
-              {isSaved ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-              ) : (
-                <Save className="w-4 h-4 text-[#D4AF37]" />
-              )}
-              <span>{isSaved ? 'Saved' : 'Save'}</span>
-            </button>
-          </div>
+      </section>
+      {canEditAttendance && selectedDate && rows.length > 0 && dataState !== 'loading' && dataState !== 'remote_error' && (
+        <div className="sticky bottom-16 z-30 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:bottom-4">
+          <p role="status" className={saveState === 'error' ? 'text-sm text-rose-800' : 'text-sm text-slate-700'}>{saveMessage || 'Choose a status for each student.'}</p>
+          <button type="button" data-tour="attendance-save" disabled={saving || changes.length === 0 || saveState === 'saved'} onClick={save}
+            className="min-h-11 rounded-lg bg-[var(--t-primary)] px-4 text-sm font-semibold text-white disabled:bg-slate-200 disabled:text-slate-700">
+            {saving ? 'Saving…' : 'Save attendance'}
+          </button>
         </div>
       )}
     </div>
   );
-};
+}

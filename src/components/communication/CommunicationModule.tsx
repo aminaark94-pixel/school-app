@@ -298,53 +298,26 @@ export const CommunicationModule: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header Quadrangle Banner */}
-      <div className="relative rounded-[32px] overflow-hidden shadow-lg border border-[#EDE7C7] bg-[#200E01] text-[#EDE7C7]">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&auto=format&fit=crop&q=80"
-            alt="School Quadrangle"
-            className="w-full h-full object-cover opacity-35"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#200E01] via-[#200E01]/85 to-transparent" />
-        </div>
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {isParent && (
+          <button
+            onClick={handleOpenParentModal}
+            className="min-h-11 px-4 py-2.5 rounded-lg text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md flex items-center gap-2 transition cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Message a teacher</span>
+          </button>
+        )}
 
-        <div className="relative p-6 sm:p-8 z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="max-w-2xl space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
-              <Ticket className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Complaints &amp; Support Tickets Desk (Parents ⇄ Faculty ⇄ Management)</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic leading-tight">
-              Parent-Teacher Complaints, Inquiries &amp; Official Circulars
-            </h2>
-            <p className="text-xs sm:text-sm text-[#EDE7C7]/80 leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
-              Structured ticket desk for parent complaints to teachers, teacher student conduct reports, and immediate dual-notification to School Administration with collaborative reply threads.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {isParent && (
-              <button
-                onClick={handleOpenParentModal}
-                className="px-4 py-2.5 rounded-xl text-xs font-black bg-emerald-600 hover:bg-emerald-500 text-white shadow-md flex items-center gap-2 transition cursor-pointer"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Raise Complaint to Teacher</span>
-              </button>
-            )}
-
-            {isTeacherOrAdmin && (
-              <button
-                onClick={handleOpenTeacherModal}
-                className="px-4 py-2.5 rounded-xl text-xs font-black bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md flex items-center gap-2 transition cursor-pointer"
-              >
-                <AlertCircle className="w-4 h-4" />
-                <span>Raise Student Notice / Complaint</span>
-              </button>
-            )}
-          </div>
-        </div>
+        {isTeacherOrAdmin && (
+          <button
+            onClick={handleOpenTeacherModal}
+            className="min-h-11 px-4 py-2.5 rounded-lg text-sm font-semibold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md flex items-center gap-2 transition cursor-pointer"
+          >
+            <AlertCircle className="w-4 h-4" />
+            <span>Contact a parent</span>
+          </button>
+        )}
       </div>
 
       {/* 2. Top Navigation Tabs */}
@@ -363,8 +336,8 @@ export const CommunicationModule: React.FC = () => {
           </div>
           <div>
             <h3 className="text-lg font-bold text-[#200E01] flex items-center gap-2 font-['Cormorant_Garamond',serif] italic leading-tight">
-              {subModule === 'tickets' && 'Complaints & Support Tickets Desk'}
-              {subModule === 'notices' && 'Official Digital Circulars & Gazettes'}
+              {subModule === 'tickets' && 'Conversations'}
+              {subModule === 'notices' && 'School notices'}
               {subModule === 'automation' && 'Annual Holiday & Fee Automation Calendar'}
               {subModule === 'broadcast' && 'WhatsApp & Android SMS Gateway'}
             </h3>
@@ -388,7 +361,7 @@ export const CommunicationModule: React.FC = () => {
             }`}
           >
             <Ticket className="w-4 h-4 text-[#8B0000]" />
-            <span>Complaints &amp; Tickets ({ticketKpis.open})</span>
+            <span>Conversations ({ticketKpis.open})</span>
             {ticketKpis.urgent > 0 && (
               <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
             )}
@@ -403,7 +376,7 @@ export const CommunicationModule: React.FC = () => {
             }`}
           >
             <Megaphone className="w-4 h-4 text-[#8B0000]" />
-            <span>Digital Circulars ({notices.length})</span>
+            <span>School notices ({notices.length})</span>
           </button>
 
           {isTeacherOrAdmin && (

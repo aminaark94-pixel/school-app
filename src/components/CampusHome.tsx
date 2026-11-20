@@ -34,7 +34,7 @@ interface NavigationProps {
 export function CampusNavigation({ role, activeModule, onNavigate }: NavigationProps & { activeModule: AppModule }) {
   const otherPages = services.filter(({ id, roles }) => id !== 'attendance' && id !== 'results' && (!roles || (role && roles.includes(role))));
   return (
-    <nav data-tour="primary-navigation" aria-label="School pages" className="mx-auto flex max-w-6xl flex-wrap items-center gap-1 px-4 pb-3 sm:px-6">
+    <nav data-tour="primary-navigation" aria-label="School pages" className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-4 pb-3 sm:px-6">
       {primary.map((id) => (
         <button key={id} type="button" aria-current={id === activeModule ? 'page' : undefined}
           onClick={() => onNavigate(id)}
@@ -57,7 +57,7 @@ export function CampusNavigation({ role, activeModule, onNavigate }: NavigationP
 export function CampusHome({ role, onNavigate, onSubject }: NavigationProps & { onSubject: (subject: string) => void }) {
   return (
     <>
-      <section aria-labelledby="subjects" className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-7">
+      <section aria-labelledby="subjects" className="rounded-2xl border border-slate-300 bg-white p-4 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 id="subjects" data-tour="page-heading" className="text-3xl font-bold">Subjects</h1>
@@ -69,7 +69,7 @@ export function CampusHome({ role, onNavigate, onSubject }: NavigationProps & { 
           {diarySubjects.map((subject, index) => (
             <button key={subject} type="button" data-tour={index === 0 ? 'subject-card' : undefined}
               onClick={() => onSubject(subject)}
-              className="flex min-h-14 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-left text-sm font-semibold hover:border-[var(--t-primary)] hover:bg-white">
+              className="flex min-h-14 items-center gap-2 rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-left text-base font-semibold hover:border-[var(--t-primary)] hover:bg-white">
               <BookOpen aria-hidden="true" className="size-4 shrink-0 text-[var(--t-primary)]" />
               {subject}
             </button>
@@ -77,7 +77,7 @@ export function CampusHome({ role, onNavigate, onSubject }: NavigationProps & { 
         </div>
       </section>
       <section aria-labelledby="school-services">
-        <h2 id="school-services" className="mb-3 text-xl font-bold">School tools</h2>
+        <h2 id="school-services" className="mb-3 text-2xl font-bold">School tools</h2>
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {services.filter(({ roles }) => !roles || (role && roles.includes(role))).map(({ id, icon: Icon, description }) => (
             <button key={id} type="button" onClick={() => onNavigate(id)}

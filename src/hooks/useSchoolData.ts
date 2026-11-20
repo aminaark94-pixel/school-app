@@ -458,7 +458,16 @@ export function useSchoolData() {
 
   // Mark attendance for a batch of students & automatically trigger absence alerts
   const markAttendance = useCallback(
-    (records: Array<{ student_id: string; status: AttendanceStatus; date: string }>) => {
+    async (records: Array<{ student_id: string; status: AttendanceStatus; date: string }>) => {
+      if (isSupabaseActive) {
+        const supabase = getSupabase();
+        if (!usingRemote || !supabase) throw new Error('School records are unavailable.');
+        const { error } = await supabase.from('attendance').upsert(
+          records.map((record) => ({ ...record, marked_by: currentUser?.id })),
+          { onConflict: 'student_id,date' }
+        );
+        if (error) throw error;
+      }
       const allStudentsList = usingRemote ? remote!.students : LocalStore.getStudents();
       const absentees = records
         .filter((r) => r.status === 'absent')
@@ -509,26 +518,7 @@ export function useSchoolData() {
       }
 
       if (usingRemote) {
-        const supabase = getSupabase();
-        if (!supabase) return;
-        supabase
-          .from('attendance')
-          .upsert(
-            records.map((r) => ({
-              student_id: r.student_id,
-              date: r.date,
-              status: r.status,
-              marked_by: currentUser?.id,
-            })),
-            { onConflict: 'student_id,date' }
-          )
-          .then(({ error }) => {
-            if (error) {
-              setRemoteError(error.message);
-              return;
-            }
-            refreshRemote();
-          });
+        void refreshRemote();
         return;
       }
 
@@ -557,7 +547,7 @@ export function useSchoolData() {
       });
       LocalStore.saveAttendance(updated);
     },
-    [usingRemote, remote, currentUser, refreshRemote, cloudSchoolId]
+    [isSupabaseActive, usingRemote, remote, currentUser, refreshRemote, cloudSchoolId]
   );
 
   // Pay or update Fee

@@ -102,61 +102,7 @@ export const UpdatesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Live Deployment & Karachi Clock Header */}
-      <div className="bg-white rounded-3xl border border-[#EDE7C7] p-5 sm:p-6 shadow-xs space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <History className="w-6 h-6 text-[#8B0000]" />
-              <h1 className="text-xl sm:text-2xl font-bold text-[#200E01] font-['Cinzel',serif]">
-                System Deployment &amp; Live Updates Hub
-              </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300">
-                Live on Vercel
-              </span>
-            </div>
-            <p className="text-xs text-[#5B0202]/70 mt-1 max-w-2xl">
-              Real-time changelog and deployment audit trail stamped with exact <b>Karachi Time (PKT / UTC+5)</b>.
-              Verify that every feature request has been built, tested, and pushed to the live production site.
-            </p>
-          </div>
-
-          {/* Karachi Live Clock Card */}
-          <div className="p-3.5 rounded-2xl bg-[#FAF8F2] border border-[#EDE7C7] flex items-center gap-3 shrink-0 shadow-2xs">
-            <div className="w-10 h-10 rounded-xl bg-[#8B0000] text-white flex items-center justify-center font-bold">
-              <Clock className="w-5 h-5 text-[#D4AF37]" />
-            </div>
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#5B0202]/70 block">
-                Official Karachi Time (PKT)
-              </span>
-              <span className="text-xs font-mono font-bold text-[#200E01] block">
-                {khiLiveTime || 'Calculating...'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Live URL Pill */}
-        <div className="pt-3 border-t border-[#EDE7C7] flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-2 text-slate-700">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-            <span>Production Endpoint:</span>
-            <a
-              href="https://school-app-nine-beta.vercel.app"
-              target="_blank"
-              rel="noreferrer"
-              className="font-mono font-bold text-[#8B0000] hover:underline inline-flex items-center gap-1"
-            >
-              https://school-app-nine-beta.vercel.app
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
-          <span className="text-[11px] text-[#5B0202]/70">
-            Current User: <b>{currentUser?.full_name}</b> ({currentUser?.role})
-          </span>
-        </div>
-      </div>
+      <p data-tour="app-updates" className="text-slate-700">See what has changed in the school app.</p>
 
       {/* 2. Ready-To-Test Demo Accounts (1-Click Switch) */}
       <div className="bg-[#FAF8F2] rounded-3xl border border-[#EDE7C7] p-5 sm:p-6 space-y-4">

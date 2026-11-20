@@ -305,33 +305,12 @@ export const OwnerDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Platform Owner Header */}
-      <div className="pb-4 border-b border-[#EDE7C7]">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-6 h-6 text-[#8B0000]" />
-              <h1 className="text-2xl font-bold text-[#200E01] font-['Cinzel',serif]">
-                SaaS Owner Administration
-              </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
-                Super Admin
-              </span>
-            </div>
-            <p className="text-xs text-[#5B0202]/70 mt-1 max-w-2xl">
-              You are signed in as the SaaS Platform Seller ({profile?.full_name || profile?.email || 'Platform Owner'}).
-              Manage all client institutions, configure dedicated Supabase database projects per school, issue school admin
-              credentials, and inject realistic demonstration packages.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#8B0000]/10 text-[#8B0000] border border-[#8B0000]/20">
-              <Layers className="w-3.5 h-3.5" />
-              {schools.length} Active Schools
-            </span>
-          </div>
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-slate-700">Open a school to see its campus.</p>
+        <a href="#add-school" onClick={(event) => {
+          event.preventDefault();
+          document.getElementById('add-school')?.scrollIntoView({ block: 'start' });
+        }} className="inline-flex min-h-11 items-center rounded-lg bg-[var(--t-primary)] px-4 font-semibold text-white">Add school</a>
       </div>
 
       {actionSuccessNotice && (
@@ -571,7 +550,7 @@ export const OwnerDashboard: React.FC = () => {
       )}
 
       {/* 3. Register New School + Admin Form */}
-      <div data-tour="owner-create" className="bg-[#FAF8F2] border border-[#EDE7C7] rounded-3xl p-5 sm:p-6 space-y-4">
+      <div id="add-school" data-tour="owner-create" className="bg-white border border-slate-200 rounded-xl p-5 sm:p-6 space-y-4">
         <div className="flex items-center gap-2">
           <Building2 className="w-5 h-5 text-[#8B0000]" />
           <div>
