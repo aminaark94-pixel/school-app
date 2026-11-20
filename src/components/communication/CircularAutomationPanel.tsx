@@ -1,3 +1,4 @@
+import { todayPK, formatDate } from '../../lib/dates';
 import React, { useState, useMemo } from 'react';
 import {
   Calendar,
@@ -96,7 +97,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
       category: rule.category,
       target_audience: 'all',
       priority: rule.priority,
-      publish_date: new Date().toISOString().split('T')[0],
+      publish_date: todayPK(),
     });
 
     setSuccessToast(`Published official circular: "${rule.title}"`);
@@ -121,7 +122,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
           category: rule.category,
           target_audience: 'all',
           priority: rule.priority,
-          publish_date: new Date().toISOString().split('T')[0],
+          publish_date: todayPK(),
         });
         addedCount++;
       }
@@ -242,7 +243,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
                 </span>
                 <h3 className="text-base font-bold text-[#200E01]">{nextMilestone.rule.title}</h3>
                 <p className="text-xs text-[#5B0202]/70">
-                  Target Date: {nextMilestone.targetDate.toLocaleDateString(undefined, { dateStyle: 'full' })} (
+                  Target Date: {formatDate(nextMilestone.targetDate)} (
                   {nextMilestone.daysRemaining === 0
                     ? 'TODAY'
                     : nextMilestone.daysRemaining === 1

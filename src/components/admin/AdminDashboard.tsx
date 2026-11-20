@@ -38,7 +38,7 @@ export const AdminDashboard: React.FC = () => {
     students,
     fees,
     currentSchool,
-    importSchoolDemoData,
+    isDemoMode,
     softDeleteStudent,
     restoreStudent,
     permanentDeleteStudent,
@@ -46,18 +46,6 @@ export const AdminDashboard: React.FC = () => {
     linkParentToStudent,
   } = useSchoolData();
   const skin = useSkin();
-  const [isDemoLoading, setIsDemoLoading] = useState(false);
-
-  const handleLoadDemoForSchool = () => {
-    if (!currentSchool) return;
-    setIsDemoLoading(true);
-    try {
-      importSchoolDemoData(currentSchool.id, currentSchool.name);
-    } finally {
-      setIsDemoLoading(false);
-    }
-  };
-
   const [activeTab, setActiveTab] = useState<AdminTab>('roster');
   const [showTrash, setShowTrash] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -235,7 +223,7 @@ export const AdminDashboard: React.FC = () => {
       {/* 2. Tabs: one horizontally scrollable strip with short labels on phones */}
       <div data-tour="admin-tabs" className="bg-white p-2 sm:p-3 rounded-3xl shadow-sm border border-[#EDE7C7] overflow-x-auto no-scrollbar">
         <div className="flex items-center gap-1.5 min-w-max">
-          {TABS.map(({ id, domId, Icon, full, short }) => (
+          {TABS.filter(({ id }) => id !== 'demo' || isDemoMode).map(({ id, domId, Icon, full, short }) => (
             <button
               key={id}
               id={domId}
@@ -306,12 +294,11 @@ export const AdminDashboard: React.FC = () => {
                 <p className="text-[#5B0202]/70 font-bold text-xs">{emptyMessage}</p>
                 {!showTrash && (
                   <button
-                    onClick={handleLoadDemoForSchool}
-                    disabled={isDemoLoading}
+                    onClick={() => setActiveTab(isDemoMode ? 'demo' : 'import')}
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 text-[#EDE7C7] font-extrabold text-xs shadow-md cursor-pointer"
                   >
                     <Sparkles className="w-4 h-4 text-amber-200" />
-                    <span>{isDemoLoading ? 'Loading...' : `✨ Load 26 Scholars for ${currentSchool?.name || 'this School'}`}</span>
+                    <span>{isDemoMode ? 'Open Sample Tools' : 'Import students'}</span>
                   </button>
                 )}
               </div>
@@ -377,12 +364,11 @@ export const AdminDashboard: React.FC = () => {
                         </p>
                         {!showTrash && (
                           <button
-                            onClick={handleLoadDemoForSchool}
-                            disabled={isDemoLoading}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-[#EDE7C7] font-extrabold text-xs shadow-md transition cursor-pointer"
+                            onClick={() => setActiveTab(isDemoMode ? 'demo' : 'import')}
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-[#EDE7C7] font-extrabold text-xs shadow-md transition cursor-pointer"
                           >
                             <Sparkles className="w-4 h-4 text-amber-200" />
-                            <span>{isDemoLoading ? 'Loading...' : `✨ Load 26 Scholars for ${currentSchool?.name || 'this School'}`}</span>
+                            <span>{isDemoMode ? 'Open Sample Tools' : 'Import students'}</span>
                           </button>
                         )}
                       </div>
@@ -429,7 +415,7 @@ export const AdminDashboard: React.FC = () => {
       {activeTab === 'faculty' && <TeacherProgressModule />}
       {activeTab === 'import' && <CsvStudentImport />}
       {activeTab === 'branding' && <SchoolBrandingSettings />}
-      {activeTab === 'demo' && <DemoDataManager onNavigateToRoster={() => setActiveTab('roster')} />}
+      {isDemoMode && activeTab === 'demo' && <DemoDataManager onNavigateToRoster={() => setActiveTab('roster')} />}
     </div>
   );
 };

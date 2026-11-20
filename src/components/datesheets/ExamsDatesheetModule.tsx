@@ -1,3 +1,4 @@
+import { formatDate } from '../../lib/dates';
 import React, { useState } from 'react';
 import {
   CalendarDays,
@@ -120,7 +121,7 @@ export const ExamsDatesheetModule: React.FC = () => {
                     <tr key={item.id} className={idx % 2 === 0 ? 'bg-white hover:bg-[#FAF8F2]/60 transition' : 'bg-[#FAF8F2]/30 hover:bg-[#FAF8F2]/80 transition'}>
                       <td className="py-4 px-5 whitespace-nowrap">
                         <span className="font-bold text-[#200E01] block text-xs">
-                          {new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          {formatDate(item.date)}
                         </span>
                         <span className="text-[11px] text-[#8B0000] font-bold">{item.day}</span>
                       </td>

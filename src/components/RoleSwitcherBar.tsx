@@ -54,13 +54,11 @@ export const RoleSwitcherBar: React.FC = () => {
     setCurrentUserId,
     switchRole,
     resetToDefaults,
-    importSchoolDemoData,
-    isLiveData,
+    isDemoMode,
     remoteError,
   } = useSchoolData();
   const skin = useSkin();
   const { signOut } = useAuth();
-  const [isDemoLoading, setIsDemoLoading] = useState(false);
   const [khiTime, setKhiTime] = useState('');
 
   useEffect(() => {
@@ -80,32 +78,13 @@ export const RoleSwitcherBar: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleQuickLoadDemo = () => {
-    if (!currentSchool) return;
-    setIsDemoLoading(true);
-    try {
-      const stats = importSchoolDemoData(currentSchool.id, currentSchool.name);
-      alert(
-        `🎉 Demonstration Dataset Loaded for ${currentSchool.name}!\n\n` +
-        `• ${stats.studentsCount} Scholars across O-Levels, Matric, Grade 8 & Primary\n` +
-        `• ${stats.diaryCount} Diary Lessons (with CamScanner Work Planners)\n` +
-        `• ${stats.feesCount} PKR Fee Vouchers (Paid & Pending)\n` +
-        `• ${stats.resultsCount} Academic Result Cards & Transcripts\n` +
-        `• ${stats.attendanceCount} Daily Attendance Logs & Mock Timetables`
-      );
-    } catch (e) {
-      alert('Error loading demo data: ' + String(e));
-    } finally {
-      setIsDemoLoading(false);
-    }
-  };
 
   // ---------------------------------------------------------------------
   // Signed in against Supabase: school and role come from the account and
   // are enforced by RLS, so there is nothing to switch. One slim row on
   // phones (school name is already in the header below).
   // ---------------------------------------------------------------------
-  if (isLiveData) {
+  if (!isDemoMode) {
     return (
       <div data-tour="role-bar" className="bg-[#200E01] text-[#EDE7C7] border-b border-[#5B0202] text-xs py-1.5 md:py-2.5 px-3 sm:px-6 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
@@ -271,16 +250,6 @@ export const RoleSwitcherBar: React.FC = () => {
               {khiTime || 'PKT'}
             </span>
           </a>
-
-          <button
-            onClick={handleQuickLoadDemo}
-            disabled={isDemoLoading}
-            title="1-Click Load Realistic Demo Data: 26 Pakistani scholars across O-Levels, Matric, primary, fees, and CamScanner homework planners"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 hover:from-amber-500 hover:to-amber-700 text-[#EDE7C7] border border-amber-400 font-extrabold shadow-sm transition disabled:opacity-50 cursor-pointer text-xs"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-            <span>{isDemoLoading ? 'Loading...' : '✨ 1-Click Demo (26 Students)'}</span>
-          </button>
 
           <button
             onClick={() => {

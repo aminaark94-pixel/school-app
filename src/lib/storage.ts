@@ -1,3 +1,4 @@
+import { todayPK } from './dates';
 import {
   MonthlyKidsProgress,
   TeacherProgressEvaluation,
@@ -1326,27 +1327,27 @@ export const INITIAL_ATTENDANCE: Attendance[] = [
   {
     id: 'att-1',
     student_id: 'student-1',
-    date: new Date().toISOString().split('T')[0],
+    date: todayPK(),
     status: 'present',
     marked_by: 'user-teacher-apex',
   },
   {
     id: 'att-2',
     student_id: 'student-2',
-    date: new Date().toISOString().split('T')[0],
+    date: todayPK(),
     status: 'present',
     marked_by: 'user-teacher-apex',
   },
   {
     id: 'att-3',
     student_id: 'student-3',
-    date: new Date().toISOString().split('T')[0],
+    date: todayPK(),
     status: 'absent',
     marked_by: 'user-teacher-apex',
   },
 ];
 
-const TODAY_STR = new Date().toISOString().split('T')[0];
+const TODAY_STR = todayPK();
 
 export const INITIAL_DIARY: DiaryEntry[] = [
   {
@@ -1358,7 +1359,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Completed Exercise 4.3 (Quadratic equations by factorization method). Discussed standard form ax² + bx + c = 0 and solved examples 7 to 11 in class work.',
     homework: 'Solve textbook Questions 5, 8, 12 on neat registers. Prepare Theorem 4.1 for tomorrow morning test.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-apex',
     teacher_name: 'Prof. Asim Munir',
     attachments: [
@@ -1397,7 +1398,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Chapter 14: Electromagnetic Induction. Lab demonstration of Faraday Law with bar magnet, coil, and galvanometer.',
     homework: 'Write practical observations in Physics Lab Journal (Experiment 6). Complete numerical problems 1 to 4 on page 142.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-apex',
     teacher_name: 'Prof. Asim Munir',
     attachments: [
@@ -1420,7 +1421,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Analyzed Act III Scene 2 of Julius Caesar (Mark Antony speech). Discussed rhetorical questions and emotional appeal.',
     homework: 'Write a 250-word critique analyzing Antony persuasive techniques. Memorize lines 75-90.',
-    due_date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 2),
     teacher_id: 'user-teacher-apex',
     teacher_name: 'Prof. Asim Munir',
     attachments: [
@@ -1451,7 +1452,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Chapter 3: Periodic Table trends in electronegativity, ionization energy and atomic radii across periods.',
     homework: 'Draw the periodic table trend trend chart in practical journal and solve review exercise 3.2.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-science',
     teacher_name: 'Mr. Shahbaz Gill (Physics Faculty)',
     attachments: [
@@ -1490,7 +1491,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Python Programming: While loops, conditional statements and multiplication tables in IDLE.',
     homework: 'Write a program to calculate prime numbers between 1 and 50 and print output.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-general',
     teacher_name: 'Prof. Asim Munir (Teacher)',
     attachments: [
@@ -1514,7 +1515,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Microscopic examination of plant onion epidermal cells vs human cheek epithelial cells.',
     homework: 'Label cell wall, nucleus, cytoplasm and vacuole on worksheet 7.1.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-science',
     teacher_name: 'Mr. Shahbaz Gill (Physics Faculty)',
     attachments: [
@@ -1546,7 +1547,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Fractions to Decimals conversions and recurring decimal representations.',
     homework: 'Exercise 2.4 questions 1 to 12 in homework register.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-apex',
     teacher_name: 'Prof. Asim Munir',
     attachments: [
@@ -1577,7 +1578,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Long division with two-digit divisors, quotient and remainder checks.',
     homework: 'Textbook page 58 Exercise 3.4 sums 1 through 10.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-apex',
     teacher_name: 'Prof. Asim Munir',
     attachments: [
@@ -1609,7 +1610,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Sabaq "Quid-e-Azam ki Zindagi": Reading, imla words and alfaz-maani discussion.',
     homework: 'Write 5 sentences using newly learned vocabulary words in neat register.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-general',
     teacher_name: 'Prof. Asim Munir (Teacher)',
     attachments: [
@@ -1641,7 +1642,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Living things and their habitats: Desert, aquatic and polar animal adaptations.',
     homework: 'Color the animal habitat chart on project page 22.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-english',
     teacher_name: 'Ms. Hina Bukhari (English Incharge)',
     attachments: [
@@ -1673,7 +1674,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Oxford Reading Tree Book 4: Group reading. Urdu Haroof-e-Tahajji joint handwriting practice.',
     homework: 'Read pages 12 to 16 with parents. Practice joined letters on 4-line notebook.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-english',
     teacher_name: 'Ms. Hina Bukhari (English Incharge)',
     attachments: [
@@ -1705,7 +1706,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Phonics sound blends "sh", "ch", "th". Counting numbers in tens up to 100 on abacus.',
     homework: 'Complete worksheet 1.3: Match words with pictures and color the shapes.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-english',
     teacher_name: 'Ms. Hina Bukhari (English Incharge)',
     attachments: [
@@ -1737,7 +1738,7 @@ export const INITIAL_DIARY: DiaryEntry[] = [
     date: TODAY_STR,
     classwork: 'Letter sounds "s, a, t, p". Tracing vertical and horizontal lines in sand tray. Sing-along rhyme: "Twinkle Twinkle Little Star".',
     homework: 'Trace the letter "A" on Page 14 of Oxford Reading Tree Activity Book with crayon.',
-    due_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    due_date: todayPK(new Date(), 1),
     teacher_id: 'user-teacher-english',
     teacher_name: 'Ms. Hina Bukhari (English Incharge)',
     attachments: [
@@ -2642,6 +2643,8 @@ export const INITIAL_PARENTS_REPORT: ParentReportCard[] = [
   },
 ];
 
+let demoInitialized = false;
+
 export const LocalStore = {
   getParentsReportCards(): ParentReportCard[] {
     try {
@@ -2955,9 +2958,6 @@ export const LocalStore = {
     const raw = localStorage.getItem(STORAGE_KEYS.DATESHEETS);
     if (!raw) {
       localStorage.setItem(STORAGE_KEYS.DATESHEETS, JSON.stringify(INITIAL_DATESHEETS));
-    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(INITIAL_PROGRESS));
-    localStorage.setItem(STORAGE_KEYS.TEACHER_PROGRESS, JSON.stringify(INITIAL_TEACHER_PROGRESS));
-    localStorage.setItem(STORAGE_KEYS.PARENTS_REPORT, JSON.stringify(INITIAL_PARENTS_REPORT));
       return INITIAL_DATESHEETS;
     }
     return JSON.parse(raw);
@@ -2976,13 +2976,6 @@ export const LocalStore = {
     localStorage.setItem(STORAGE_KEYS.CURRENT_SCHOOL, schoolId);
     // Remove temporary preview override so school's native skin/branding displays
     localStorage.removeItem('owner_skin_v1');
-
-    // Make sure the chosen school has complete data immediately so UI never goes blank
-    const studentsOfSchool = this.getStudents().filter((s) => s.school_id === schoolId);
-    if (studentsOfSchool.length === 0) {
-      const targetSchool = this.getSchools().find((s) => s.id === schoolId);
-      this.importSchoolDemoData(schoolId, targetSchool?.name);
-    }
 
     // Also adjust current user to match school if needed
     const users = this.getUsers().filter((u) => u.school_id === schoolId);
@@ -3054,84 +3047,49 @@ export const LocalStore = {
       this.saveSchools([...existingSchools, newSchool]);
     }
 
-    // 2. Merge users (keep existing, add missing admin/teacher/parents)
-    const existingUsers = this.getUsers();
-    const existingUserIds = new Set(existingUsers.map((u) => u.id));
-    const newUsers = generated.users.filter((u) => !existingUserIds.has(u.id));
-    if (newUsers.length > 0) {
-      this.saveUsers([...existingUsers, ...newUsers]);
-    }
-
-    // 3. Students: Remove previous students for this school, append 26 new
-    const existingStudents = this.getStudents();
-    const studentsOtherSchools = existingStudents.filter((s) => s.school_id !== schoolId);
-    const oldStudentIdsOfSchool = new Set(existingStudents.filter((s) => s.school_id === schoolId).map((s) => s.id));
-    this.saveStudents([...studentsOtherSchools, ...generated.students]);
-
-    // 4. Fees: Remove fees belonging to old students of this school, append new
-    const existingFees = this.getFees();
-    const feesOtherSchools = existingFees.filter((f) => !oldStudentIdsOfSchool.has(f.student_id));
-    this.saveFees([...feesOtherSchools, ...generated.fees]);
-
-    // 5. Attendance: Remove attendance belonging to old students of this school, append new
-    const existingAtt = this.getAttendance();
-    const attOtherSchools = existingAtt.filter((a) => !oldStudentIdsOfSchool.has(a.student_id));
-    this.saveAttendance([...attOtherSchools, ...generated.attendance]);
-
-    // 6. Results: Remove results belonging to old students of this school, append new
-    const existingRes = this.getResults();
-    const resOtherSchools = existingRes.filter((r) => !oldStudentIdsOfSchool.has(r.student_id));
-    this.saveResults([...resOtherSchools, ...generated.results]);
-
-    // 7. Diary: Remove old diary for this school, append new
-    const existingDiary = this.getDiary();
-    const diaryOtherSchools = existingDiary.filter((d) => d.school_id !== schoolId);
-    this.saveDiary([...diaryOtherSchools, ...generated.diary]);
-
-    // 8. Notices: Remove old notices for this school, append new
-    const existingNotices = this.getNotices();
-    const noticesOtherSchools = existingNotices.filter((n) => n.school_id !== schoolId);
-    this.saveNotices([...noticesOtherSchools, ...generated.notices]);
-
-    // 9. Queries
-    const existingQueries = this.getQueries();
-    const queriesOtherSchools = existingQueries.filter((q) => q.school_id !== schoolId);
-    this.saveQueries([...queriesOtherSchools, ...generated.queries]);
-
-    // 10. Alerts
-    const existingAlerts = this.getAlerts();
-    const alertsOtherSchools = existingAlerts.filter((a) => a.school_id !== schoolId);
-    this.saveAlerts([...alertsOtherSchools, ...generated.alerts]);
-
-    // 11. Datesheets
-    const existingDatesheets = this.getDatesheets();
-    const datesheetsOtherSchools = existingDatesheets.filter((d) => d.school_id !== schoolId);
-    this.saveDatesheets([...datesheetsOtherSchools, ...generated.datesheets]);
-
-    // 12. Kids Monthly Progress
-    const existingProgress = this.getProgressReports();
-    const progressOtherSchools = existingProgress.filter((p) => p.school_id !== schoolId);
-    this.saveProgressReports([...progressOtherSchools, ...generated.kidsProgress]);
-
-    // 13. Teacher Appraisals
-    const existingTeacherProgress = this.getTeacherProgressReports();
-    const teacherProgressOtherSchools = existingTeacherProgress.filter((t) => t.school_id !== schoolId);
-    this.saveTeacherProgressReports([...teacherProgressOtherSchools, ...generated.teacherProgress]);
-
-    // 14. Parents Reports
-    const existingParentsReports = this.getParentsReportCards();
-    const parentsReportsOtherSchools = existingParentsReports.filter((p) => p.school_id !== schoolId);
-    this.saveParentsReportCards([...parentsReportsOtherSchools, ...generated.parentsReports]);
-
-    emitChange();
-
-    return {
-      studentsCount: generated.students.length,
-      feesCount: generated.fees.length,
-      diaryCount: generated.diary.length,
-      resultsCount: generated.results.length,
-      attendanceCount: generated.attendance.length,
+    const seedEmpty = <T extends { id: string }>(
+      existing: T[], belongsToSchool: (row: T) => boolean, sample: T[], save: (rows: T[]) => void
+    ): number => {
+      if (existing.some(belongsToSchool)) return 0;
+      const ids = new Set(existing.map((row) => row.id));
+      const added = sample.filter((row) => {
+        if (ids.has(row.id)) return false;
+        ids.add(row.id);
+        return true;
+      });
+      if (added.length) save([...existing, ...added]);
+      return added.length;
     };
+    const forSchool = (row: { school_id: string | null }) => row.school_id === schoolId;
+
+    seedEmpty(this.getUsers(), forSchool, generated.users, this.saveUsers);
+    const userIds = new Set(this.getUsers().filter(forSchool).map((user) => user.id));
+    const studentsCount = seedEmpty(this.getStudents(), forSchool, generated.students.map((student) =>
+      student.parent_id && !userIds.has(student.parent_id) ? { ...student, parent_id: '' } : student
+    ), this.saveStudents);
+    const studentIds = new Set(this.getStudents().filter(forSchool).map((student) => student.id));
+    const forStudent = (row: { student_id: string }) => studentIds.has(row.student_id);
+    const feesCount = seedEmpty(this.getFees(), forStudent, generated.fees.filter(forStudent), this.saveFees);
+    const attendanceCount = seedEmpty(this.getAttendance(), forStudent, generated.attendance.filter(forStudent), this.saveAttendance);
+    const resultsCount = seedEmpty(this.getResults(), forStudent, generated.results.filter(forStudent), this.saveResults);
+    const diaryCount = seedEmpty(this.getDiary(), forSchool,
+      generated.diary.filter((entry) => userIds.has(entry.teacher_id)), this.saveDiary);
+
+    seedEmpty(this.getNotices(), forSchool, generated.notices, this.saveNotices);
+    seedEmpty(this.getQueries(), forSchool, generated.queries.filter((query) =>
+      studentIds.has(query.student_id) && userIds.has(query.parent_id) && (!query.teacher_id || userIds.has(query.teacher_id))
+    ), this.saveQueries);
+    seedEmpty(this.getAlerts(), forSchool, generated.alerts.filter(forStudent), this.saveAlerts);
+    seedEmpty(this.getDatesheets(), forSchool, generated.datesheets, this.saveDatesheets);
+    seedEmpty(this.getProgressReports(), forSchool, generated.kidsProgress.filter(forStudent), this.saveProgressReports);
+    seedEmpty(this.getTeacherProgressReports(), forSchool, generated.teacherProgress.filter((report) =>
+      userIds.has(report.teacher_id)
+    ), this.saveTeacherProgressReports);
+    seedEmpty(this.getParentsReportCards(), forSchool, generated.parentsReports.filter((report) =>
+      userIds.has(report.parent_id) && report.children.every(forStudent)
+    ), this.saveParentsReportCards);
+
+    return { studentsCount, feesCount, diaryCount, resultsCount, attendanceCount };
   },
 
   purgeSchoolData(schoolId: string) {
@@ -3253,6 +3211,12 @@ export const LocalStore = {
       localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify([]));
     }
     emitChange();
+  },
+
+  initializeDemoData() {
+    if (demoInitialized) return;
+    this.ensureAllSchoolsData();
+    demoInitialized = true;
   },
 
   ensureAllSchoolsData() {

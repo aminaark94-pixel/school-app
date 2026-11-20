@@ -1,3 +1,4 @@
+import { todayPK } from '../../lib/dates';
 import React, { useRef, useState } from 'react';
 import {
   Database,
@@ -17,7 +18,6 @@ import {
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { FullSchoolDataset } from '../../lib/storage';
-import { getSupabase } from '../../lib/supabase';
 
 export interface DemoDataManagerProps {
   onNavigateToRoster?: () => void;
@@ -41,8 +41,8 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
     exportFullDataset,
     clearAllDemoData,
     resetToDefaults,
-    isSupabaseActive,
-    refreshRemoteData,
+    isDemoMode,
+    currentUser,
   } = useSchoolData();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -52,7 +52,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
 
   // 1. Upload & Import Custom Demo JSON file
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (isSupabaseActive) {
+    if (!isDemoMode) {
       setErrorMsg('This browser-only demo importer is disabled for a live Supabase school. It would otherwise claim success while changing only this device. Use the secured server-side demo seeder.');
       return;
     }
@@ -103,22 +103,9 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
         setErrorMsg('No active institution selected.');
         return;
       }
-      if (isSupabaseActive) {
-        const supabase = getSupabase();
-        if (!supabase) throw new Error('Supabase connection is unavailable. Please sign in again.');
-        const { data, error } = await supabase.functions.invoke('seed-demo-data');
-        if (error) throw new Error(error.message);
-        if (!data?.success) throw new Error(data?.error || 'The secured demo seeder did not complete.');
-        await refreshRemoteData();
-        setSuccessMsg(
-          `Official cloud demonstration dataset loaded for ${currentSchool.name}! (${data.students} scholars across ${data.classes} classes, including Class 10 (O-Levels) Mathematics).`
-        );
-        return;
-      }
-
       const stats = importSchoolDemoData(currentSchool.id, currentSchool.name);
       setSuccessMsg(
-        `Official demonstration dataset loaded for ${currentSchool.name}! (${stats.studentsCount} scholars across Cambridge O-Levels, Matric & Primary, ${stats.diaryCount} diary lessons & ${stats.feesCount} PKR fee vouchers).`
+        `Added ${stats.studentsCount} students, ${stats.diaryCount} diary entries and ${stats.feesCount} fee records for ${currentSchool.name}. Existing records were kept.`
       );
     } catch (err) {
       console.error('Load demo error:', err);
@@ -136,7 +123,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `school-app-demo-dataset-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `school-app-demo-dataset-${todayPK()}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -149,7 +136,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
 
   // 4. Purge / Wipe Demo Data for Current School
   const handlePurgeDemoData = () => {
-    if (isSupabaseActive) {
+    if (!isDemoMode) {
       setErrorMsg('This browser-only purge is disabled for a live Supabase school. Use the secured server-side onboarding flow so real tenant records cannot be removed accidentally.');
       return;
     }
@@ -168,6 +155,8 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
     }
     setErrorMsg(null);
   };
+
+  if (!isDemoMode || (currentUser?.role !== 'admin' && currentUser?.role !== 'owner')) return null;
 
   return (
     <div className="space-y-6">
@@ -323,6 +312,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
                 <span>Sample .json</span>
               </a>
 
+              <a className="min-h-11 rounded-xl border bg-white p-3 text-center font-semibold" href="/sample-daily-work-planner.pdf" download>Sample PDF</a>
               <button
                 onClick={handleExportLiveJson}
                 className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 shadow-2xs transition active:scale-95 cursor-pointer"

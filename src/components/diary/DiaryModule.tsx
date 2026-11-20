@@ -1,3 +1,4 @@
+import { todayPK, formatDate } from '../../lib/dates';
 import React, { useState, useRef, useEffect } from 'react';
 import { diarySubjects } from '../CampusHome';
 import {
@@ -20,11 +21,9 @@ import {
   FileText,
   Download,
   Maximize2,
-  RefreshCw,
 } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import { DiaryEntry } from '../../types';
-import { LocalStore } from '../../lib/storage';
 
 interface AttachmentItem {
   id: string;
@@ -36,8 +35,6 @@ interface AttachmentItem {
   isPdf?: boolean;
 }
 
-// Sample clean printable work planner PDF for testing & upload
-const SAMPLE_PLANNER_PDF = '/sample-daily-work-planner.pdf';
 
 export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubject = 'All' }) => {
   const {
@@ -48,18 +45,22 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
     markDiaryAsRead,
     deleteDiaryEntry,
     attendance,
+    diaryError,
+    diaryLoading,
+    refreshDiary,
   } = useSchoolData();
 
   const isTeacherOrAdmin = currentUser?.role === 'teacher' || currentUser?.role === 'admin';
   const isParent = currentUser?.role === 'parent';
 
   // Parent's linked students
-  const parentStudents = students.filter((s) => s.parent_id === currentUser?.id);
-  const defaultStudent = parentStudents[0] || students[0];
-  const [selectedStudentId, setSelectedStudentId] = useState<string>(defaultStudent?.id || '');
+  const parentStudents = students.filter((s) => !s.is_deleted && s.parent_id === currentUser?.id);
+  const defaultStudent = isParent ? parentStudents[0] : students[0];
+  const [preferredStudentId, setSelectedStudentId] = useState('');
+  const selectedStudentId = parentStudents.find((student) => student.id === preferredStudentId)?.id ?? defaultStudent?.id ?? '';
 
   // Class filters for teachers
-  const availableClasses = Array.from(new Set(students.map((s) => s.class_id)));
+  const availableClasses = Array.from(new Set(students.filter((s) => !s.is_deleted).map((s) => s.class_id)));
   const [selectedClass, setSelectedClass] = useState<string>(
     isParent && defaultStudent ? defaultStudent.class_id : 'All'
   );
@@ -72,13 +73,16 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
   const [primaryInputMode, setPrimaryInputMode] = useState<'photo' | 'text'>('photo');
 
   // New Diary Form State
-  const [formClass, setFormClass] = useState<string>(availableClasses[0] || 'Grade 10');
-  const [formSection, setFormSection] = useState<string>('A');
+  const [preferredClass, setFormClass] = useState('');
+  const formClass = availableClasses.includes(preferredClass) ? preferredClass : availableClasses[0] ?? '';
+  const sectionsForClass = [...new Set(students.filter((s) => !s.is_deleted && s.class_id === formClass).map((s) => s.section))].sort();
+  const [preferredSection, setFormSection] = useState('All');
+  const formSection = sectionsForClass.includes(preferredSection) ? preferredSection : 'All';
   const [formSubject, setFormSubject] = useState<string>('Mathematics');
   const [formClasswork, setFormClasswork] = useState<string>('');
   const [formHomework, setFormHomework] = useState<string>('');
   const [formDueDate, setFormDueDate] = useState<string>(
-    new Date(Date.now() + 86400000).toISOString().split('T')[0]
+    todayPK(new Date(), 1)
   );
 
   // Attachment State (PDF / Class Work Photo)
@@ -216,61 +220,11 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
     if (e.target) e.target.value = '';
   };
 
-  // Quick Presets: Scanned Work Planner PDF, Class Work Notes, Practice Worksheet
-  const addPresetAttachment = (presetType: 'planner_pdf' | 'classwork_photo' | 'worksheet' | 'handwritten') => {
-    if (presetType === 'planner_pdf') {
-      setUploadedAttachments((prev) => [
-        ...prev,
-        {
-          id: `preset-pdf-${Date.now()}`,
-          url: SAMPLE_PLANNER_PDF,
-          caption: 'Daily Work Planner (CamScanner Scanned PDF) - Full Page Schedule',
-          type: 'planner_pdf',
-          fileSize: '142.5 KB',
-          fileName: 'Grade10_Daily_Work_Planner.pdf',
-          isPdf: true,
-        },
-      ]);
-      return;
-    }
-
-    const presets = {
-      classwork_photo: {
-        url: 'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=800&auto=format&fit=crop&q=80',
-        caption: 'Class Work Notes - Formula derivations & step-by-step example',
-        fileName: 'Class_Work_Lecture.jpg',
-      },
-      worksheet: {
-        url: 'https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=800&auto=format&fit=crop&q=80',
-        caption: 'Class Exercise Practice Worksheet (Questions 1 to 10)',
-        fileName: 'Practice_Worksheet_Ch4.jpg',
-      },
-      handwritten: {
-        url: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&auto=format&fit=crop&q=80',
-        caption: 'Teacher Handwritten Class Notes & Derivations',
-        fileName: 'Teacher_Handwritten_Notes.jpg',
-      },
-    };
-
-    const chosen = presets[presetType];
-    setUploadedAttachments((prev) => [
-      ...prev,
-      {
-        id: `preset-img-${Date.now()}`,
-        url: chosen.url,
-        caption: chosen.caption,
-        type: presetType,
-        fileName: chosen.fileName,
-        fileSize: 'Sample',
-        isPdf: false,
-      },
-    ]);
-  };
-
   // Filter diary entries
   const filteredDiary = diary.filter((entry) => {
     if (isParent) {
-      const activeStudent = students.find((s) => s.id === selectedStudentId);
+      const activeStudent = parentStudents.find((s) => s.id === selectedStudentId);
+      if (!activeStudent) return false;
       if (activeStudent) {
         const matchesClass = entry.class_id === activeStudent.class_id;
         const matchesSection = entry.section === 'All' || entry.section === activeStudent.section;
@@ -284,13 +238,17 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
   });
 
   const currentStudentObj = students.find((s) => s.id === selectedStudentId);
-  const todayDateStr = new Date().toISOString().split('T')[0];
+  const todayDateStr = todayPK();
   const isCurrentStudentAbsentToday = attendance.some(
     (a) => a.student_id === selectedStudentId && a.date === todayDateStr && a.status === 'absent'
   );
 
   const handleCreateEntry = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formClass) {
+      alert('Add students to a class before posting homework.');
+      return;
+    }
 
     // Validation: Must have either attachments (PDF/photos) or written text
     if (uploadedAttachments.length === 0 && !formClasswork.trim() && !formHomework.trim()) {
@@ -348,13 +306,8 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
     markDiaryAsRead(entry.id, currentStudentObj.id, currentStudentObj.name);
   };
 
-  // Load fresh sample diary data (clears stale localStorage diary cache)
-  const handleLoadSampleData = () => {
-    LocalStore.resetDiaryToSample();
-    // Also reset selected class to match the sample data class
-    setSelectedClass('Class 10 (O-Levels)');
-    setSelectedSubject('All');
-  };
+  if (diaryLoading) return <p role="status">Loading diary…</p>;
+  if (diaryError) return <div role="alert"><p>Diary could not load.</p><button type="button" className="min-h-11 underline" onClick={refreshDiary}>Try again</button></div>;
 
   return (
     <div className="space-y-6">
@@ -397,27 +350,6 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               <span>Parent View (Switch to Teacher/Admin above to post)</span>
             </div>
           )}
-
-          {/* Load Sample Data Button — always visible for quick testing */}
-          <button
-            onClick={handleLoadSampleData}
-            title="Reset diary to built-in sample entries (3 subjects with PDF & photos)"
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl font-bold text-xs text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/50 hover:bg-[#F0E8D0] transition active:scale-95 shadow-sm"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Load Sample Data</span>
-          </button>
-
-          {/* Download Sample PDF file for quick test uploading */}
-          <a
-            href="/sample-daily-work-planner.pdf"
-            download="sample-daily-work-planner.pdf"
-            title="Download sample CamScanner Work Planner PDF to test uploading from phone"
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl font-bold text-xs text-amber-900 bg-amber-50 border border-amber-300 hover:bg-amber-100 transition active:scale-95 shadow-sm"
-          >
-            <Download className="w-3.5 h-3.5 text-amber-700" />
-            <span>Sample PDF File</span>
-          </a>
 
           {/* Sub Tab Switcher */}
           <div className="flex items-center p-1 bg-[#F4F4F4] rounded-2xl border border-slate-200/80 text-xs font-bold">
@@ -471,7 +403,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                       </option>
                     ))
                   ) : (
-                    <option value={students[0]?.id}>{students[0]?.name} (Demo Student)</option>
+                    <option value="">No linked student</option>
                   )}
                 </select>
                 {isCurrentStudentAbsentToday && (
@@ -582,7 +514,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
             No Diary Entries For This Selection Yet
           </h4>
           <p className="text-xs text-slate-500 max-w-md mx-auto">
-            Teachers haven't posted notes or work planner PDFs for this class/subject today.
+            {isParent && !selectedStudentId ? 'Ask your school to link your child to this account.' : 'No homework matches these filters.'}
           </p>
           {isTeacherOrAdmin && (
             <button
@@ -593,25 +525,6 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               Upload Work Planner PDF or Class Work Notes
             </button>
           )}
-          {/* Quick fix: load sample demo data */}
-          <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-center gap-2">
-            <p className="w-full text-[11px] text-slate-400 mb-1">First time? Load sample entries or download test file:</p>
-            <button
-              onClick={handleLoadSampleData}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/50 hover:bg-[#F0E8D0] transition shadow-xs"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              Load Sample Diary Data (3 Subjects)
-            </button>
-            <a
-              href="/sample-daily-work-planner.pdf"
-              download="sample-daily-work-planner.pdf"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-amber-900 bg-amber-50 border border-amber-300 hover:bg-amber-100 transition shadow-xs"
-            >
-              <Download className="w-3.5 h-3.5 text-amber-700" />
-              Download Test Sample PDF
-            </a>
-          </div>
         </div>
       ) : (
         <div data-tour="diary-feed" className="grid grid-cols-1 gap-5">
@@ -641,7 +554,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-500 font-medium mt-0.5">
-                        Recorded by {entry.teacher_name} • {entry.date}
+                        Recorded by {entry.teacher_name} • {formatDate(entry.date)}
                       </p>
                     </div>
                   </div>
@@ -800,7 +713,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                         </span>
                         {entry.due_date && (
                           <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-amber-200/80 text-amber-950 flex items-center gap-1">
-                            <Clock className="w-3 h-3" /> Due: {entry.due_date}
+                            <Clock className="w-3 h-3" /> Due: {formatDate(entry.due_date)}
                           </span>
                         )}
                       </div>
@@ -931,9 +844,8 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                     onChange={(e) => setFormSection(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-bold focus:ring-2 focus:ring-[#8B0000]"
                   >
-                    <option value="A">Section A</option>
-                    <option value="B">Section B</option>
                     <option value="All">All Sections</option>
+                    {sectionsForClass.map((section) => <option key={section} value={section}>Section {section}</option>)}
                   </select>
                 </div>
 
@@ -978,16 +890,6 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                         <Upload className="w-3.5 h-3.5 text-white" />
                         <span>Upload PDF or Photo</span>
                       </button>
-
-                      <a
-                        href="/sample-daily-work-planner.pdf"
-                        download="sample-daily-work-planner.pdf"
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-xs bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition"
-                        title="Download test sample PDF to phone to test uploading"
-                      >
-                        <Download className="w-3.5 h-3.5 text-white" />
-                        <span>Download Sample PDF</span>
-                      </a>
 
                       <button
                         type="button"
@@ -1075,42 +977,6 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                         className="w-full bg-white border border-slate-300 rounded-xl p-2 font-medium focus:ring-2 focus:ring-[#8B0000]"
                       />
                     </div>
-                  </div>
-
-                  {/* Quick Preset Buttons for Instant Testing */}
-                  <div className="pt-1 flex flex-wrap items-center gap-2 text-[11px]">
-                    <span className="font-bold text-slate-500">Quick Testing Samples:</span>
-                    <button
-                      type="button"
-                      onClick={() => addPresetAttachment('planner_pdf')}
-                      className="px-2.5 py-1 rounded-lg bg-rose-50 border border-rose-300 text-rose-800 font-extrabold hover:bg-rose-100 flex items-center gap-1"
-                    >
-                      <FileText className="w-3 h-3 text-rose-700" />
-                      <span>+ Scanned Work Planner PDF</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => addPresetAttachment('classwork_photo')}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-[#8B0000] font-bold hover:bg-[#FAF8F2]"
-                    >
-                      + Class Work Sample
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => addPresetAttachment('worksheet')}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-blue-700 font-bold hover:bg-blue-50"
-                    >
-                      + Worksheet Sample
-                    </button>
-                    <a
-                      href="/sample-daily-work-planner.pdf"
-                      download="sample-daily-work-planner.pdf"
-                      className="px-2.5 py-1 rounded-lg bg-amber-50 border border-amber-300 text-amber-900 font-extrabold hover:bg-amber-100 flex items-center gap-1"
-                      title="Download sample PDF file to your phone to test the real file upload"
-                    >
-                      <Download className="w-3 h-3 text-amber-700" />
-                      <span>Download Test PDF</span>
-                    </a>
                   </div>
 
                   {/* Attached Files & Gallery Preview */}
@@ -1379,7 +1245,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                       </div>
                       <div className="text-right">
                         <span className="text-[10px] text-slate-600 font-semibold block">
-                          {new Date(r.read_at).toLocaleDateString()}
+                          {formatDate(r.read_at)}
                         </span>
                         <span className="text-[10px] text-[#8B0000] font-bold block">
                           {new Date(r.read_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

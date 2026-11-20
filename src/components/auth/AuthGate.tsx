@@ -11,7 +11,7 @@ import { LoginScreen } from './LoginScreen';
  *    button live in RoleSwitcherBar, so nothing is duplicated here.
  */
 export function AuthGate({ children }: { children: React.ReactNode }) {
-  const { enabled, loading, session, profile, profileError, signOut } = useAuth();
+  const { enabled, loading, session, profile, profileError, signOut, refreshProfile } = useAuth();
 
   if (!enabled) {
     return <>{children}</>;
@@ -37,10 +37,10 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         <div className="max-w-md w-full rounded-3xl bg-white border border-[#EDE7C7] p-6 text-center shadow-sm">
           <ShieldAlert className="w-8 h-8 text-amber-600 mx-auto" />
           <h2 className="mt-3 text-lg font-bold text-[#200E01]">Profile not linked</h2>
-          <p className="mt-2 text-xs text-[#5B0202]/90 font-medium">
-            {profileError ??
-              'This account is not attached to a school yet, so there is nothing to show.'}
+          <p className="mt-2 text-sm text-[#5B0202]/90 font-medium">
+            {profileError ? 'We could not load your school profile. Try again or contact your school.' : 'Ask your school to link this account.'}
           </p>
+          <button type="button" onClick={refreshProfile} className="mr-3 mt-5 min-h-11 rounded-xl border px-4 font-semibold">Try again</button>
           <button
             type="button"
             onClick={signOut}

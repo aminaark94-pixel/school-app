@@ -1,3 +1,4 @@
+import { formatDate } from '../../lib/dates';
 import React from 'react';
 import { Result, School, Student, Fee } from '../../types';
 import { Award, CheckCircle2, ShieldCheck, Building2, GraduationCap } from 'lucide-react';
@@ -113,7 +114,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
         </div>
         <div>
           <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-[10px]">Date Certified</span>
-          <span className="font-bold text-[#200E01]">{new Date(result.created_at).toLocaleDateString()}</span>
+          <span className="font-bold text-[#200E01]">{formatDate(result.created_at)}</span>
         </div>
       </div>
 

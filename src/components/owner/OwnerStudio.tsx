@@ -714,6 +714,7 @@ const OwnerStudio: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 export const OwnerStudioGate: React.FC = () => {
   const [open, setOpen] = useState<boolean>(() => isOwnerHash());
+  const { isDemoMode, currentUser, isLiveData } = useSchoolData();
 
   useEffect(() => {
     const onHash = () => setOpen(isOwnerHash());
@@ -721,7 +722,7 @@ export const OwnerStudioGate: React.FC = () => {
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  if (!open) return null;
+  if (!open || (!isDemoMode && (!isLiveData || currentUser?.role !== 'owner'))) return null;
 
   return (
     <OwnerStudio

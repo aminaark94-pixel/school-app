@@ -79,6 +79,7 @@ export const OwnerDashboard: React.FC = () => {
     currentSchool,
     setCurrentSchoolId,
     importSchoolDemoData,
+    isDemoMode,
     purgeSchoolData,
     allStudents,
   } = useSchoolData();
@@ -236,7 +237,7 @@ export const OwnerDashboard: React.FC = () => {
       const existingUsers = LocalStore.getUsers();
       LocalStore.saveUsers([...existingUsers, newAdmin]);
 
-      if (autoPopulateDemo) {
+      if (isDemoMode && autoPopulateDemo) {
         importSchoolDemoData(newSchoolId, newSchool.name);
       }
 
@@ -419,11 +420,12 @@ export const OwnerDashboard: React.FC = () => {
                     <ArrowRight className="w-3 h-3" />
                   </button>
 
+                  {isDemoMode && (
                   <button
                     onClick={() => {
                       const stats = importSchoolDemoData(s.id, s.name);
                       setActionSuccessNotice(
-                        `Populated 26 scholars, 8 diary lessons, 26 fee vouchers & result cards for ${s.name}!`
+                        `Added ${stats.studentsCount} students and ${stats.diaryCount} diary entries for ${s.name}. Existing records were kept.`
                       );
                       load();
                     }}
@@ -432,6 +434,7 @@ export const OwnerDashboard: React.FC = () => {
                     <Sparkles className="w-3 h-3 text-amber-700" />
                     <span>Load 26 Demo</span>
                   </button>
+                  )}
 
                   <button
                     onClick={() => handleOpenDbConfig(s.id)}
@@ -441,6 +444,7 @@ export const OwnerDashboard: React.FC = () => {
                     <span>DB Config</span>
                   </button>
 
+                  {isDemoMode && (
                   <button
                     onClick={() => handlePurgeSchool(s.id, s.name)}
                     className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold text-rose-700 border border-rose-200 hover:bg-rose-50 transition ml-auto"
@@ -448,6 +452,7 @@ export const OwnerDashboard: React.FC = () => {
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
+                  )}
                 </div>
               </div>
             );
@@ -558,7 +563,7 @@ export const OwnerDashboard: React.FC = () => {
               Onboard New School Client
             </h2>
             <p className="text-xs text-[#5B0202]/70">
-              Instantly create a new school tenant with selected theme branding, admin account credentials, and pre-loaded demonstration data.
+              Instantly create a new school with branding and its own admin account.
             </p>
           </div>
         </div>
@@ -666,6 +671,7 @@ export const OwnerDashboard: React.FC = () => {
             />
           </div>
 
+          {isDemoMode && (
           <div className="sm:col-span-2 flex items-center gap-2 pt-1">
             <input
               type="checkbox"
@@ -678,6 +684,7 @@ export const OwnerDashboard: React.FC = () => {
               Auto-generate 26 demo scholars (Class 10 O-Levels, Class 9 Matric, Grade 8, Grade 5 with fees, diary & results)
             </label>
           </div>
+          )}
         </div>
 
         {createError && (
@@ -720,7 +727,7 @@ export const OwnerDashboard: React.FC = () => {
       </div>
 
       {/* 4. Demonstration & Sample Data Operations Center */}
-      <DemoDataManager />
+      {isDemoMode && <DemoDataManager />}
     </div>
   );
 };

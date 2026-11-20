@@ -1,3 +1,4 @@
+import { todayPK } from '../../lib/dates';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   MessageSquare,
@@ -260,7 +261,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
     const parentName = student.parent_name || 'Respected Guardian';
     const schoolName = currentSchool?.name || 'School';
     const amount = fee ? fee.amount.toLocaleString() : '12,500';
-    const dueDate = fee?.due_date || new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+    const dueDate = fee?.due_date || todayPK(new Date(), 7);
 
     return template
       .replace(/{parent_name}/g, parentName)

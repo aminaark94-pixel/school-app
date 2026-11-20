@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { formatDate } from '../../lib/dates';
 import {
   Clock,
   CheckCircle2,
@@ -20,7 +21,7 @@ import { useSchoolData } from '../../hooks/useSchoolData';
 import { UserRole } from '../../types';
 
 export const UpdatesPage: React.FC = () => {
-  const { currentUser, switchRole, setCurrentUserId } = useSchoolData();
+  const { currentUser, switchRole, setCurrentUserId, isDemoMode } = useSchoolData();
   const [copiedText, setCopiedText] = useState<string | null>(null);
 
   // Live Karachi Time ticker
@@ -37,12 +38,7 @@ export const UpdatesPage: React.FC = () => {
         second: '2-digit',
         hour12: true,
       });
-      const dateFormatted = now.toLocaleDateString('en-US', {
-        timeZone: 'Asia/Karachi',
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      });
+      const dateFormatted = formatDate(now);
       setKhiLiveTime(`${dateFormatted}, ${formatted} PKT`);
     };
 
@@ -105,6 +101,7 @@ export const UpdatesPage: React.FC = () => {
       <p data-tour="app-updates" className="text-slate-700">See what has changed in the school app.</p>
 
       {/* 2. Ready-To-Test Demo Accounts (1-Click Switch) */}
+      {isDemoMode && (
       <div className="bg-[#FAF8F2] rounded-3xl border border-[#EDE7C7] p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -169,6 +166,7 @@ export const UpdatesPage: React.FC = () => {
           })}
         </div>
       </div>
+      )}
 
       {/* 3. Chronological Update Timeline with Karachi Time */}
       <div className="space-y-4">

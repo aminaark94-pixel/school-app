@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { getSupabase, isSupabaseConfigured } from './supabase';
 import type { School, User, UserRole } from '../types';
@@ -11,6 +11,7 @@ export interface SchoolOption {
 interface AuthContextValue {
   /** True when Supabase credentials are present. When false the app runs in local demo mode. */
   enabled: boolean;
+  isDemoMode: boolean;
   loading: boolean;
   session: Session | null;
   profile: User | null;
@@ -38,8 +39,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<User | null>(null);
   const [school, setSchool] = useState<School | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
+  const profileRequest = useRef(0);
 
   const loadProfile = useCallback(async (activeSession: Session | null) => {
+    const request = ++profileRequest.current;
     const supabase = getSupabase();
     if (!supabase || !activeSession) {
       setProfile(null);
@@ -54,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .eq('id', activeSession.user.id)
       .maybeSingle();
 
+    if (request !== profileRequest.current) return;
     if (userError) {
       setProfileError(userError.message);
       setProfile(null);
@@ -70,15 +74,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    setProfileError(null);
-    setProfile(userRow as User);
-
-    const { data: schoolRow } = await supabase
+    const user = userRow as User;
+    const { data: schoolRow, error: schoolError } = user.school_id ? await supabase
       .from('schools')
       .select('*')
-      .eq('id', (userRow as User).school_id)
-      .maybeSingle();
+      .eq('id', user.school_id)
+      .maybeSingle() : { data: null, error: null };
 
+    if (request !== profileRequest.current) return;
+    if (schoolError) {
+      setProfileError(schoolError.message);
+      setProfile(null);
+      setSchool(null);
+      return;
+    }
+    setProfileError(null);
+    setProfile(user);
     setSchool((schoolRow as School) ?? null);
   }, []);
 
@@ -89,24 +100,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    let cancelled = false;
-
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (cancelled) return;
-      setSession(data.session);
-      await loadProfile(data.session);
-      if (!cancelled) setLoading(false);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
-      if (cancelled) return;
+    let activeUserId: string | null | undefined;
+    let timer: number | undefined;
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
-      await loadProfile(newSession);
-      if (!cancelled) setLoading(false);
+      const userId = newSession?.user.id ?? null;
+      if (userId === activeUserId) return;
+      activeUserId = userId;
+      const request = ++profileRequest.current;
+      window.clearTimeout(timer);
+      setProfile(null);
+      setSchool(null);
+      setProfileError(null);
+      setLoading(Boolean(newSession));
+      if (!newSession) return;
+      // Profile requests must run outside the auth callback's lock.
+      timer = window.setTimeout(() => {
+        void loadProfile(newSession)
+          .catch(() => { if (activeUserId === userId && profileRequest.current === request + 1) setProfileError('Unable to load your school profile.'); })
+          .finally(() => { if (activeUserId === userId && profileRequest.current === request + 1) setLoading(false); });
+      }, 0);
     });
 
     return () => {
-      cancelled = true;
+      profileRequest.current++;
+      window.clearTimeout(timer);
       listener.subscription.unsubscribe();
     };
   }, [enabled, loadProfile]);
@@ -160,11 +178,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const refreshProfile = useCallback(async () => {
-    await loadProfile(session);
+    setLoading(true);
+    const request = profileRequest.current + 1;
+    try {
+      await loadProfile(session);
+    } catch {
+      if (request === profileRequest.current) setProfileError('Unable to load your school profile.');
+    } finally {
+      if (request === profileRequest.current) setLoading(false);
+    }
   }, [loadProfile, session]);
 
   const value: AuthContextValue = {
     enabled,
+    isDemoMode: !enabled,
     loading,
     session,
     profile,

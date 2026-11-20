@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { todayPK } from '../lib/dates';
+import { createContext, createElement, useContext, useEffect, useState, useMemo, useCallback, type ReactNode } from 'react';
 import {
   Attendance,
   AttendanceStatus,
@@ -17,7 +18,7 @@ import {
   ParentReportCard,
 } from '../types';
 import { LocalStore, FullSchoolDataset, SchoolSupabaseConfig } from '../lib/storage';
-import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import { useAuth } from '../lib/authContext';
 import { useDiaryStore, diaryActions } from '../lib/diaryStore';
 import { useNoticeStore, noticeActions } from '../lib/noticeStore';
@@ -39,14 +40,14 @@ interface RemoteData {
 
 export type DataState = 'loading' | 'remote' | 'empty_remote' | 'remote_error' | 'demo';
 
-export function useSchoolData() {
+function useSchoolDataState() {
   const [tick, setTick] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const { profile, school: authSchool } = useAuth();
+  const { profile, school: authSchool, isDemoMode } = useAuth();
 
   // Supabase drives the core tables only when credentials exist AND the user is signed in
   // with a linked profile row. Otherwise everything falls back to the local demo store.
-  const isSupabaseActive = isSupabaseConfigured() && Boolean(profile);
+  const isSupabaseActive = !isDemoMode && Boolean(profile);
   const [remote, setRemote] = useState<RemoteData | null>(null);
   const [remoteError, setRemoteError] = useState<string | null>(null);
   // A platform owner may open one tenant campus at a time. This changes the
@@ -87,12 +88,13 @@ export function useSchoolData() {
     // The local demo store is a separate mode.  Never touch it while a real
     // Supabase session is active: doing so made the UI report a successful
     // import while the visible data was still being read from Supabase.
-    if (!isSupabaseActive) LocalStore.ensureAllSchoolsData();
+    if (!isDemoMode) return;
     const unsubscribe = LocalStore.subscribe(() => {
       setTick((t) => t + 1);
     });
+    LocalStore.initializeDemoData();
     return unsubscribe;
-  }, [isSupabaseActive]);
+  }, [isDemoMode]);
 
   // ---------------------------------------------------------------------------
   // Remote loading
@@ -100,6 +102,8 @@ export function useSchoolData() {
   const refreshRemote = useCallback(async () => {
     const supabase = getSupabase();
     if (!supabase || !profile) return;
+    setRemoteError(null);
+    try {
 
     const [schoolsRes, usersRes, studentsRes, attendanceRes, feesRes, resultsRes, kidsRes, teacherRes, parentRes] =
       await Promise.all([
@@ -139,6 +143,9 @@ export function useSchoolData() {
       teacherProgress: (teacherRes?.data ?? []) as TeacherProgressEvaluation[],
       parentsReports: (parentRes?.data ?? []) as ParentReportCard[],
     });
+    } catch {
+      setRemoteError('Unable to load school records.');
+    }
   }, [profile]);
 
   useEffect(() => {
@@ -162,17 +169,17 @@ export function useSchoolData() {
 
   // Explicit architectural state: loading, successful remote data, empty remote data, remote error, or demo mode
   const dataState: DataState = useMemo(() => {
-    if (!isSupabaseActive) return 'demo';
+    if (isDemoMode) return 'demo';
     if (isLoading || (remote === null && !remoteError)) return 'loading';
     if (remoteError) return 'remote_error';
     if (remote && remote.students.length === 0) return 'empty_remote';
     return 'remote';
-  }, [isSupabaseActive, isLoading, remote, remoteError]);
+  }, [isDemoMode, isLoading, remote, remoteError]);
 
   // ---------------------------------------------------------------------------
   // Core collections (strictly isolated: remote in authenticated mode, never blinking demo data)
   // ---------------------------------------------------------------------------
-  const localSchools = useMemo(() => LocalStore.getSchools(), [tick]);
+  const localSchools = useMemo(() => isDemoMode ? LocalStore.getSchools() : [], [tick, isDemoMode]);
   const schools = useMemo(() => {
     if (isSupabaseActive) {
       if (remote) return remote.schools;
@@ -189,14 +196,14 @@ export function useSchoolData() {
           ? remote?.schools.find((school) => school.id === ownerCampusSchoolId)
           : authSchool) ??
         remote?.schools.find((s) => s.id === profile?.school_id) ??
-        remote?.schools[0] ??
+        (profile?.role === 'owner' && !ownerCampusSchoolId ? remote?.schools[0] : undefined) ??
         null
       );
     }
     return localSchools.find((s) => s.id === localCurrentSchoolId) || localSchools[0] || null;
   }, [isSupabaseActive, remote, authSchool, profile, ownerCampusSchoolId, localSchools, localCurrentSchoolId]);
 
-  const localUsers = useMemo(() => LocalStore.getUsers(), [tick]);
+  const localUsers = useMemo(() => isDemoMode ? LocalStore.getUsers() : [], [tick, isDemoMode]);
   const allUsers = useMemo(() => {
     if (isSupabaseActive) {
       if (remote) return remote.users;
@@ -218,7 +225,7 @@ export function useSchoolData() {
     return usersInSchool[0] || localUsers[0] || null;
   }, [isSupabaseActive, profile, localUsers, localCurrentUserId, currentSchool, usersInSchool]);
 
-  const localStudents = useMemo(() => LocalStore.getStudents(), [tick]);
+  const localStudents = useMemo(() => isDemoMode ? LocalStore.getStudents() : [], [tick, isDemoMode]);
   const allStudents = useMemo(() => {
     if (isSupabaseActive) {
       return remote ? remote.students : [];
@@ -231,16 +238,9 @@ export function useSchoolData() {
     [allStudents, currentSchool]
   );
 
-  // Guarantee demo auto-population ONLY in pure local demo mode (never in Supabase mode)
-  useEffect(() => {
-    if (!isSupabaseActive && currentSchool?.id && studentsInSchool.length === 0) {
-      LocalStore.importSchoolDemoData(currentSchool.id, currentSchool.name);
-    }
-  }, [isSupabaseActive, currentSchool, studentsInSchool.length]);
-
-  const localAttendance = useMemo(() => LocalStore.getAttendance(), [tick]);
-  const localFees = useMemo(() => LocalStore.getFees(), [tick]);
-  const localResults = useMemo(() => LocalStore.getResults(), [tick]);
+  const localAttendance = useMemo(() => isDemoMode ? LocalStore.getAttendance() : [], [tick, isDemoMode]);
+  const localFees = useMemo(() => isDemoMode ? LocalStore.getFees() : [], [tick, isDemoMode]);
+  const localResults = useMemo(() => isDemoMode ? LocalStore.getResults() : [], [tick, isDemoMode]);
 
   const allAttendance = useMemo(() => {
     if (isSupabaseActive) return remote ? remote.attendance : [];
@@ -277,24 +277,24 @@ export function useSchoolData() {
   // Diary, notices, chat, absence alerts and datesheets all live in Supabase (realtime)
   // once signed in; local demo store otherwise. See lib/*Store.ts.
   const allDiary = useMemo(
-    () => (cloudSchoolId ? diaryState.entries : LocalStore.getDiary()),
-    [tick, cloudSchoolId, diaryState.entries]
+    () => (isDemoMode ? LocalStore.getDiary() : cloudSchoolId ? diaryState.entries : []),
+    [tick, isDemoMode, cloudSchoolId, diaryState.entries]
   );
   const allNotices = useMemo(
-    () => (cloudSchoolId ? noticeState.items : LocalStore.getNotices()),
-    [tick, cloudSchoolId, noticeState.items]
+    () => (isDemoMode ? LocalStore.getNotices() : cloudSchoolId ? noticeState.items : []),
+    [tick, isDemoMode, cloudSchoolId, noticeState.items]
   );
   const allQueries = useMemo(
-    () => (cloudSchoolId ? chatState.queries : LocalStore.getQueries()),
-    [tick, cloudSchoolId, chatState.queries]
+    () => (isDemoMode ? LocalStore.getQueries() : cloudSchoolId ? chatState.queries : []),
+    [tick, isDemoMode, cloudSchoolId, chatState.queries]
   );
   const allAlerts = useMemo(
-    () => (cloudSchoolId ? alertState.items : LocalStore.getAlerts()),
-    [tick, cloudSchoolId, alertState.items]
+    () => (isDemoMode ? LocalStore.getAlerts() : cloudSchoolId ? alertState.items : []),
+    [tick, isDemoMode, cloudSchoolId, alertState.items]
   );
   const allDatesheets = useMemo(
-    () => (cloudSchoolId ? datesheetState.items : LocalStore.getDatesheets()),
-    [tick, cloudSchoolId, datesheetState.items]
+    () => (isDemoMode ? LocalStore.getDatesheets() : cloudSchoolId ? datesheetState.items : []),
+    [tick, isDemoMode, cloudSchoolId, datesheetState.items]
   );
 
   const diaryInSchool = useMemo(
@@ -402,22 +402,22 @@ export function useSchoolData() {
 
   // Real-time parent app telemetry tracker: Automatically records parent login & app sessions
   useEffect(() => {
-    if (currentUser?.role === 'parent' && currentUser?.id) {
+    if (isDemoMode && currentUser?.role === 'parent' && currentUser?.id) {
       LocalStore.recordParentAppActivity(currentUser.id, 'login');
     }
-  }, [currentUser?.id, currentUser?.role]);
+  }, [isDemoMode, currentUser?.id, currentUser?.role]);
 
   // Set Current School. Signed-in owners can enter a read-only tenant campus;
   // everyone else remains locked to their authenticated school.
   const setCurrentSchoolId = useCallback(
     (id: string) => {
-      if (usingRemote) {
+      if (!isDemoMode) {
         if (profile?.role === 'owner') setOwnerCampusSchoolId(id);
         return;
       }
       LocalStore.setCurrentSchoolId(id);
     },
-    [usingRemote, profile?.role]
+    [isDemoMode, profile?.role]
   );
 
   const exitOwnerCampusView = useCallback(() => setOwnerCampusSchoolId(null), []);
@@ -425,17 +425,17 @@ export function useSchoolData() {
   // Set Current User (local demo mode only)
   const setCurrentUserId = useCallback(
     (id: string) => {
-      if (usingRemote) return;
+      if (!isDemoMode) return;
       LocalStore.setCurrentUserId(id);
     },
-    [usingRemote]
+    [isDemoMode]
   );
 
   // Switch role helper - disabled once real accounts are in play, because the
   // role comes from the signed-in account and is enforced by RLS.
   const switchRole = useCallback(
     (role: UserRole) => {
-      if (usingRemote) return;
+      if (!isDemoMode) return;
       const match = usersInSchool.find((u) => u.role === role);
       if (match) {
         LocalStore.setCurrentUserId(match.id);
@@ -453,7 +453,7 @@ export function useSchoolData() {
         LocalStore.setCurrentUserId(newUser.id);
       }
     },
-    [usingRemote, usersInSchool, currentSchool, allUsers]
+    [isDemoMode, usersInSchool, currentSchool, allUsers]
   );
 
   // Mark attendance for a batch of students & automatically trigger absence alerts
@@ -609,7 +609,7 @@ export function useSchoolData() {
               student_id: studentId,
               amount: 450,
               status: 'paid',
-              due_date: new Date().toISOString().split('T')[0],
+              due_date: todayPK(),
               term: 'Fall Term 2025',
               receipt_number: receipt,
             });
@@ -640,7 +640,7 @@ export function useSchoolData() {
           student_id: studentId,
           amount: 450,
           status: 'paid',
-          due_date: new Date().toISOString().split('T')[0],
+          due_date: todayPK(),
           updated_at: new Date().toISOString(),
           term: 'Fall Term 2025',
           receipt_number: `REC-${Date.now().toString().slice(-6)}`,
@@ -1349,6 +1349,7 @@ export function useSchoolData() {
     acknowledgeAlert,
     saveDatesheet,
     isSupabaseActive,
+    isDemoMode,
     isLiveData: usingRemote,
     dataState,
     remoteError,
@@ -1356,10 +1357,24 @@ export function useSchoolData() {
     isLoading,
     // Realtime connection status, in case a screen wants to show it.
     diaryLive: diaryState.live,
+    diaryLoading: !isDemoMode && diaryState.loading,
+    refreshDiary: diaryActions.refresh,
     diaryError: diaryState.error,
     noticesLive: noticeState.live,
     chatLive: chatState.live,
     alertsLive: alertState.live,
     datesheetsLive: datesheetState.live,
   };
+}
+
+const SchoolDataContext = createContext<ReturnType<typeof useSchoolDataState> | null>(null);
+
+export function SchoolDataProvider({ children }: { children: ReactNode }) {
+  return createElement(SchoolDataContext.Provider, { value: useSchoolDataState() }, children);
+}
+
+export function useSchoolData() {
+  const value = useContext(SchoolDataContext);
+  if (!value) throw new Error('School data requires an active school session.');
+  return value;
 }

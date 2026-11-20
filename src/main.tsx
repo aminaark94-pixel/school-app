@@ -4,15 +4,18 @@ import App from './App.tsx';
 import {OwnerStudioGate} from './components/owner/OwnerStudio.tsx';
 import {AuthProvider} from './lib/authContext.tsx';
 import {AuthGate} from './components/auth/AuthGate.tsx';
+import {SchoolDataProvider} from './hooks/useSchoolData';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <AuthGate>
-        <App />
+        <SchoolDataProvider>
+          <App />
+          <OwnerStudioGate />
+        </SchoolDataProvider>
       </AuthGate>
-      <OwnerStudioGate />
     </AuthProvider>
   </StrictMode>,
 );

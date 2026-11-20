@@ -1,3 +1,4 @@
+import { todayPK } from '../../lib/dates';
 import React from 'react';
 import { BookOpen, Camera, ChevronRight, Clock, CheckCheck, Send } from 'lucide-react';
 import { useSchoolData } from '../../hooks/useSchoolData';
@@ -18,7 +19,7 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
   const { currentUser, students, diary } = useSchoolData();
 
   const isStaff = currentUser?.role === 'teacher' || currentUser?.role === 'admin';
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = todayPK();
 
   if (isStaff) {
     const todays = diary.filter((d) => d.date === todayStr);

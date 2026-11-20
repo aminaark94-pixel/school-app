@@ -1,11 +1,7 @@
+import { todayPK } from '../../lib/dates';
 import { useEffect, useMemo, useState } from 'react';
 import { useSchoolData } from '../../hooks/useSchoolData';
 import type { AttendanceStatus } from '../../types';
-
-// Local calendar date (YYYY-MM-DD). toISOString() would give the UTC date, which is "yesterday" for
-// the first hours of a local day in time zones ahead of UTC.
-const localDateString = (d: Date = new Date()) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 const statuses: { value: AttendanceStatus; label: string; active: string }[] = [
   { value: 'present', label: 'Present', active: 'border-emerald-800 bg-emerald-100 text-emerald-950' },
@@ -19,7 +15,7 @@ export function AttendanceModule() {
   const { students, attendance, markAttendance, currentUser, dataState } = useSchoolData();
   const canEditAttendance = currentUser?.role === 'admin' || currentUser?.role === 'teacher';
 
-  const todayStr = useMemo(() => localDateString(), []);
+  const todayStr = useMemo(() => todayPK(), []);
   const [selectedDate, setSelectedDate] = useState<string>(todayStr);
 
   const activeStudents = useMemo(

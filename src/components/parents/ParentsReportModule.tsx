@@ -1,3 +1,4 @@
+import { formatDate } from '../../lib/dates';
 import React, { useState, useMemo } from 'react';
 import {
   Users,
@@ -569,7 +570,7 @@ export const ParentsReportModule: React.FC = () => {
                     <span>Last Faculty Contact:</span>
                     <span className="font-mono font-bold text-slate-700">
                       {card.last_contacted_date
-                        ? new Date(card.last_contacted_date).toLocaleDateString()
+                        ? formatDate(card.last_contacted_date)
                         : 'Not logged'}
                     </span>
                   </div>

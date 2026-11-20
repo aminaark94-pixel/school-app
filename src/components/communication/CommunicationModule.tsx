@@ -1,3 +1,4 @@
+import { todayPK, formatDate } from '../../lib/dates';
 import React, { useState, useMemo } from 'react';
 import {
   Bell,
@@ -288,7 +289,7 @@ export const CommunicationModule: React.FC = () => {
       category: noticeCategory,
       target_audience: 'all',
       priority: noticePriority,
-      publish_date: new Date().toISOString().split('T')[0],
+      publish_date: todayPK(),
     });
 
     setNoticeTitle('');
@@ -940,7 +941,7 @@ export const CommunicationModule: React.FC = () => {
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-semibold">
                     <span>By: {notice.author_name}</span>
-                    <span>{new Date(notice.publish_date).toLocaleDateString()}</span>
+                    <span>{formatDate(notice.publish_date)}</span>
                   </div>
                 </article>
               );

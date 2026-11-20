@@ -21,7 +21,7 @@ import { useSkin } from './hooks/useSkin';
 import { PageTourButton, ProductTour, triggerPageTour } from './components/ProductTour';
 
 export default function App() {
-  const { currentSchool, currentUser, isOwnerCampusView, exitOwnerCampusView } = useSchoolData();
+  const { currentSchool, currentUser, isOwnerCampusView, exitOwnerCampusView, dataState, refreshRemote, isLiveData } = useSchoolData();
   const skin = useSkin();
   const [homeSubject, setHomeSubject] = useState('All');
   const role = currentUser?.role;
@@ -78,6 +78,22 @@ export default function App() {
     openPage('diary');
     setHomeSubject(subject);
   };
+
+  if (!isLiveData && dataState === 'loading') {
+    return <main role="status" className="school-workspace mx-auto max-w-xl space-y-4 p-5 text-slate-900">
+      <p className="font-semibold">Loading school records…</p>
+      <div aria-hidden="true" className="h-20 rounded-xl bg-slate-200 motion-safe:animate-pulse" />
+      <div aria-hidden="true" className="h-28 rounded-xl bg-slate-200 motion-safe:animate-pulse" />
+    </main>;
+  }
+
+  if (!isLiveData && dataState === 'remote_error') {
+    return <main role="alert" className="school-workspace mx-auto max-w-xl space-y-4 p-5 text-slate-900">
+      <h1 className="text-xl font-bold">School records could not load</h1>
+      <button type="button" onClick={refreshRemote} className="min-h-11 rounded-lg bg-[var(--t-primary)] px-4 font-semibold text-white">Try again</button>
+      <RoleSwitcherBar />
+    </main>;
+  }
 
   if (role === 'owner' && !isOwnerCampusView) {
     return (

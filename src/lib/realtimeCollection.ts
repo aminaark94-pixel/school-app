@@ -76,9 +76,10 @@ export function createCollectionStore<Row extends object, T>(
   let attachedSchoolId: string | null = null;
   let refCount = 0;
   let channel: RealtimeChannel | null = null;
-  let teardownTimer: ReturnType<typeof setTimeout> | null = null;
+  let attachmentVersion = 0;
 
   async function fetchAll(schoolId: string) {
+    const version = attachmentVersion;
     const supabase = getSupabase();
     if (!supabase) return;
     setState({ loading: true });
@@ -90,7 +91,7 @@ export function createCollectionStore<Row extends object, T>(
       .order(orderColumn, { ascending })
       .limit(opts.limit ?? 500);
 
-    if (attachedSchoolId !== schoolId) return;
+    if (attachedSchoolId !== schoolId || version !== attachmentVersion) return;
 
     if (error) {
       setState({ loading: false, error: error.message });
@@ -117,14 +118,16 @@ export function createCollectionStore<Row extends object, T>(
   }
 
   function openChannel(schoolId: string) {
+    const version = attachmentVersion;
     const supabase = getSupabase();
     if (!supabase) return;
     channel = supabase
-      .channel(`${opts.table}-${schoolId}`)
+      .channel(`${opts.table}-${schoolId}-${version}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: opts.table, filter: `${schoolColumn}=eq.${schoolId}` },
         (payload) => {
+          if (version !== attachmentVersion) return;
           if (payload.eventType === 'DELETE') {
             const oldRow = payload.old as Record<string, unknown>;
             const id = typeof oldRow.id === 'string' ? oldRow.id : null;
@@ -135,6 +138,7 @@ export function createCollectionStore<Row extends object, T>(
         }
       )
       .subscribe((status) => {
+        if (version !== attachmentVersion) return;
         if (status === 'SUBSCRIBED') {
           setState({ live: true });
           void fetchAll(schoolId);
@@ -145,6 +149,7 @@ export function createCollectionStore<Row extends object, T>(
   }
 
   function teardown() {
+    attachmentVersion++;
     const supabase = getSupabase();
     if (channel && supabase) void supabase.removeChannel(channel);
     channel = null;
@@ -153,10 +158,6 @@ export function createCollectionStore<Row extends object, T>(
   }
 
   function attach(schoolId: string): () => void {
-    if (teardownTimer) {
-      clearTimeout(teardownTimer);
-      teardownTimer = null;
-    }
     refCount += 1;
 
     if (attachedSchoolId !== schoolId) {
@@ -171,12 +172,7 @@ export function createCollectionStore<Row extends object, T>(
       if (released) return;
       released = true;
       refCount = Math.max(0, refCount - 1);
-      if (refCount === 0) {
-        teardownTimer = setTimeout(() => {
-          if (refCount === 0) teardown();
-          teardownTimer = null;
-        }, 250);
-      }
+      if (refCount === 0) teardown();
     };
   }
 

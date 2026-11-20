@@ -176,9 +176,10 @@ const pendingIds = new Set<string>();
 let attachedSchoolId: string | null = null;
 let refCount = 0;
 let channel: RealtimeChannel | null = null;
-let teardownTimer: ReturnType<typeof setTimeout> | null = null;
+let attachmentVersion = 0;
 
 async function fetchAll(schoolId: string) {
+  const version = attachmentVersion;
   const supabase = getSupabase();
   if (!supabase) return;
 
@@ -195,7 +196,7 @@ async function fetchAll(schoolId: string) {
   ]);
 
   // The user may have switched school / signed out while we were waiting.
-  if (attachedSchoolId !== schoolId) return;
+  if (attachedSchoolId !== schoolId || version !== attachmentVersion) return;
 
   const failure = entriesRes.error ?? readsRes.error;
   if (failure) {
@@ -247,15 +248,17 @@ function applyReceipt(row: ReadRow) {
 }
 
 function openChannel(schoolId: string) {
+  const version = attachmentVersion;
   const supabase = getSupabase();
   if (!supabase) return;
 
   channel = supabase
-    .channel(`diary-${schoolId}`)
+    .channel(`diary-${schoolId}-${version}`)
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'diary_entries', filter: `school_id=eq.${schoolId}` },
       (payload) => {
+        if (version !== attachmentVersion) return;
         if (payload.eventType === 'DELETE') {
           const id = (payload.old as { id?: string }).id;
           if (id) setState({ entries: state.entries.filter((e) => e.id !== id) });
@@ -270,6 +273,7 @@ function openChannel(schoolId: string) {
       (payload) => applyReceipt(payload.new as unknown as ReadRow)
     )
     .subscribe((status) => {
+      if (version !== attachmentVersion) return;
       if (status === 'SUBSCRIBED') {
         setState({ live: true });
         // Catch anything that happened while we were connecting or offline.
@@ -281,6 +285,7 @@ function openChannel(schoolId: string) {
 }
 
 function teardown() {
+  attachmentVersion++;
   const supabase = getSupabase();
   if (channel && supabase) {
     void supabase.removeChannel(channel);
@@ -295,10 +300,6 @@ function teardown() {
  * the connection is shared and closed when the last one lets go.
  */
 function attach(schoolId: string): () => void {
-  if (teardownTimer) {
-    clearTimeout(teardownTimer);
-    teardownTimer = null;
-  }
 
   refCount += 1;
 
@@ -314,13 +315,7 @@ function attach(schoolId: string): () => void {
     if (released) return;
     released = true;
     refCount = Math.max(0, refCount - 1);
-    if (refCount === 0) {
-      // Small delay so React StrictMode's mount/unmount/mount does not reconnect twice.
-      teardownTimer = setTimeout(() => {
-        if (refCount === 0) teardown();
-        teardownTimer = null;
-      }, 250);
-    }
+    if (refCount === 0) teardown();
   };
 }
 

@@ -121,9 +121,10 @@ function sortNewest(items: CommunicationQuery[]): CommunicationQuery[] {
 let attachedSchoolId: string | null = null;
 let refCount = 0;
 let channel: RealtimeChannel | null = null;
-let teardownTimer: ReturnType<typeof setTimeout> | null = null;
+let attachmentVersion = 0;
 
 async function fetchAll(schoolId: string) {
+  const version = attachmentVersion;
   const supabase = getSupabase();
   if (!supabase) return;
   setState({ loading: true });
@@ -133,7 +134,7 @@ async function fetchAll(schoolId: string) {
     supabase.from('communication_messages').select('*').eq('school_id', schoolId).order('sent_at').limit(5000),
   ]);
 
-  if (attachedSchoolId !== schoolId) return;
+  if (attachedSchoolId !== schoolId || version !== attachmentVersion) return;
 
   const failure = queriesRes.error ?? messagesRes.error;
   if (failure) {
@@ -179,14 +180,16 @@ function applyMessageRow(row: MessageRow) {
 }
 
 function openChannel(schoolId: string) {
+  const version = attachmentVersion;
   const supabase = getSupabase();
   if (!supabase) return;
   channel = supabase
-    .channel(`chat-${schoolId}`)
+    .channel(`chat-${schoolId}-${version}`)
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'communication_queries', filter: `school_id=eq.${schoolId}` },
       (payload) => {
+        if (version !== attachmentVersion) return;
         if (payload.eventType === 'DELETE') return;
         applyQueryRow(payload.new as unknown as QueryRow);
       }
@@ -197,6 +200,7 @@ function openChannel(schoolId: string) {
       (payload) => applyMessageRow(payload.new as unknown as MessageRow)
     )
     .subscribe((status) => {
+      if (version !== attachmentVersion) return;
       if (status === 'SUBSCRIBED') {
         setState({ live: true });
         void fetchAll(schoolId);
@@ -207,6 +211,7 @@ function openChannel(schoolId: string) {
 }
 
 function teardown() {
+  attachmentVersion++;
   const supabase = getSupabase();
   if (channel && supabase) void supabase.removeChannel(channel);
   channel = null;
@@ -215,10 +220,6 @@ function teardown() {
 }
 
 function attach(schoolId: string): () => void {
-  if (teardownTimer) {
-    clearTimeout(teardownTimer);
-    teardownTimer = null;
-  }
   refCount += 1;
   if (attachedSchoolId !== schoolId) {
     if (attachedSchoolId) teardown();
@@ -231,12 +232,7 @@ function attach(schoolId: string): () => void {
     if (released) return;
     released = true;
     refCount = Math.max(0, refCount - 1);
-    if (refCount === 0) {
-      teardownTimer = setTimeout(() => {
-        if (refCount === 0) teardown();
-        teardownTimer = null;
-      }, 250);
-    }
+    if (refCount === 0) teardown();
   };
 }
 
