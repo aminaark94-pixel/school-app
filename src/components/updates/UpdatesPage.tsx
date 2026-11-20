@@ -102,15 +102,15 @@ export const UpdatesPage: React.FC = () => {
 
       {/* 2. Ready-To-Test Demo Accounts (1-Click Switch) */}
       {isDemoMode && (
-      <div className="bg-[#FAF8F2] rounded-3xl border border-[#EDE7C7] p-5 sm:p-6 space-y-4">
+      <div className="bg-[var(--t-bg)] rounded-[var(--t-radius-card,1.5rem)] border border-[var(--t-sand)] p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <UserCheck className="w-5 h-5 text-[#8B0000]" />
-            <h2 className="text-base font-bold text-[#200E01] font-['Cinzel',serif]">
+            <UserCheck className="w-5 h-5 text-[var(--t-primary)]" />
+            <h2 className="text-base font-bold text-[var(--t-ink)] font-[family-name:var(--t-font-display)]">
               Test Accounts &amp; Quick Persona Logins
             </h2>
           </div>
-          <span className="text-xs text-[#5B0202]/70 font-medium">Click any row to test instantly</span>
+          <span className="text-xs text-[var(--t-ink)]/70 font-medium">Click any row to test instantly</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -119,10 +119,10 @@ export const UpdatesPage: React.FC = () => {
             return (
               <div
                 key={acc.id}
-                className={`p-4 rounded-2xl border transition shadow-xs flex flex-col justify-between ${
+                className={`p-4 rounded-xl border transition shadow-xs flex flex-col justify-between ${
                   isCurrent
-                    ? 'bg-white border-[#8B0000] ring-2 ring-[#8B0000]/20'
-                    : 'bg-white border-[#EDE7C7] hover:border-[#D4AF37]'
+                    ? 'bg-white border-[var(--t-primary)] ring-2 ring-[var(--t-primary)]/20'
+                    : 'bg-white border-[var(--t-sand)] hover:border-[var(--t-accent)]'
                 }`}
               >
                 <div className="space-y-1.5">
@@ -131,17 +131,17 @@ export const UpdatesPage: React.FC = () => {
                       {acc.badge}
                     </span>
                     {isCurrent && (
-                      <span className="px-2 py-0.5 rounded-md text-xs font-black uppercase tracking-wider bg-red-100 text-[#8B0000]">
+                      <span className="px-2 py-0.5 rounded-md text-xs font-black uppercase tracking-wider bg-red-100 text-[var(--t-primary)]">
                         Active Now
                       </span>
                     )}
                   </div>
-                  <h3 className="text-sm font-bold text-[#200E01]">{acc.name}</h3>
-                  <p className="text-xs font-mono text-[#5B0202]/80">{acc.email}</p>
+                  <h3 className="text-sm font-bold text-[var(--t-ink)]">{acc.name}</h3>
+                  <p className="text-xs font-mono text-[var(--t-ink)]/80">{acc.email}</p>
                   <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{acc.desc}</p>
                 </div>
 
-                <div className="pt-3 mt-2 border-t border-[#EDE7C7]/60 flex items-center justify-between gap-2">
+                <div className="pt-3 mt-2 border-t border-[var(--t-sand)]/60 flex items-center justify-between gap-2">
                   <button
                     onClick={() => copyCreds(acc.email)}
                     className="text-xs font-bold text-slate-500 hover:text-slate-800 inline-flex items-center gap-1"

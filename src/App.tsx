@@ -135,7 +135,7 @@ export default function App() {
         </div>
       )}
 
-      <main id="school-content" className="school-workspace mx-auto space-y-6 px-4 pb-28 pt-6">
+      <main id="school-content" className={`school-workspace skin-content-${skin.id} mx-auto space-y-6 px-4 pb-28 pt-6`}>
         {activeModule !== 'portal' && (
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1 data-tour="page-heading" className="text-2xl font-bold sm:text-3xl">{pageNames[activeModule]}</h1>

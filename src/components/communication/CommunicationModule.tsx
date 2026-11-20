@@ -322,13 +322,13 @@ export const CommunicationModule: React.FC = () => {
       </div>
 
       {/* 2. Top Navigation Tabs */}
-      <div className="bg-white p-4 sm:p-5 rounded-[28px] border border-[#EDE7C7] shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-white p-4 sm:p-5 rounded-[var(--t-radius-card,1.5rem)] border border-[var(--t-sand)] shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-[#EDE7C7] font-black shadow-xs bg-[#8B0000] border border-[#D4AF37]/40">
+          <div className="w-11 h-11 rounded-2xl flex items-center justify-center text-[var(--t-on-primary,#fff)] font-black shadow-xs bg-[var(--t-primary)] border border-[var(--t-accent)]/40">
             {subModule === 'tickets' ? (
-              <Ticket className="w-5 h-5 text-[#D4AF37]" />
+              <Ticket className="w-5 h-5 text-[var(--t-accent)]" />
             ) : subModule === 'notices' ? (
-              <Megaphone className="w-5 h-5 text-[#D4AF37]" />
+              <Megaphone className="w-5 h-5 text-[var(--t-accent)]" />
             ) : subModule === 'automation' ? (
               <Zap className="w-5 h-5 text-amber-300" />
             ) : (
@@ -336,13 +336,13 @@ export const CommunicationModule: React.FC = () => {
             )}
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#200E01] flex items-center gap-2 font-['Cormorant_Garamond',serif] italic leading-tight">
+            <h3 className="text-lg font-bold text-[var(--t-ink)] flex items-center gap-2 font-[family-name:var(--t-font-display)] leading-tight">
               {subModule === 'tickets' && 'Conversations'}
               {subModule === 'notices' && 'School notices'}
               {subModule === 'automation' && 'Annual Holiday & Fee Automation Calendar'}
               {subModule === 'broadcast' && 'WhatsApp & Android SMS Gateway'}
             </h3>
-            <p className="text-xs text-[#5B0202]/70 font-medium">
+            <p className="text-xs text-[var(--t-ink)]/70 font-medium">
               {subModule === 'tickets' && 'Collaborative ticketing with instant teacher and admin oversight.'}
               {subModule === 'notices' && 'Zero-paper verified administrative broadcasts.'}
               {subModule === 'automation' && 'Pre-scheduled gazette breaks and 4-stage tuition reminders.'}
@@ -352,16 +352,16 @@ export const CommunicationModule: React.FC = () => {
         </div>
 
         {/* Tab Buttons */}
-        <div data-tour="communication-tabs" className="flex flex-wrap items-center p-1 bg-slate-100/90 rounded-2xl border border-slate-200/80 text-xs font-bold">
+        <div data-tour="communication-tabs" className="flex flex-wrap items-center p-1 bg-slate-100/90 rounded-xl border border-slate-200/80 text-xs font-bold">
           <button
             onClick={() => setSubModule('tickets')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition cursor-pointer font-extrabold ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition cursor-pointer font-extrabold ${
               subModule === 'tickets'
-                ? 'bg-white text-[#8B0000] shadow-xs'
+                ? 'bg-white text-[var(--t-primary)] shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Ticket className="w-4 h-4 text-[#8B0000]" />
+            <Ticket className="w-4 h-4 text-[var(--t-primary)]" />
             <span>Conversations ({ticketKpis.open})</span>
             {ticketKpis.urgent > 0 && (
               <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
@@ -370,13 +370,13 @@ export const CommunicationModule: React.FC = () => {
 
           <button
             onClick={() => setSubModule('notices')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition cursor-pointer font-extrabold ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition cursor-pointer font-extrabold ${
               subModule === 'notices'
-                ? 'bg-white text-[#8B0000] shadow-xs'
+                ? 'bg-white text-[var(--t-primary)] shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Megaphone className="w-4 h-4 text-[#8B0000]" />
+            <Megaphone className="w-4 h-4 text-[var(--t-primary)]" />
             <span>School notices ({notices.length})</span>
           </button>
 
@@ -384,9 +384,9 @@ export const CommunicationModule: React.FC = () => {
             <>
               <button
                 onClick={() => setSubModule('automation')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition cursor-pointer font-extrabold ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition cursor-pointer font-extrabold ${
                   subModule === 'automation'
-                    ? 'bg-[#8B0000] text-white shadow-xs'
+                    ? 'bg-[var(--t-primary)] text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
                 }`}
               >

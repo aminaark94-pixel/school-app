@@ -37,6 +37,8 @@
   /* Height of the fixed bottom tab bar on phones (excludes the device safe-area inset). */
   --bottom-nav-h: 4rem;
   --t-on-primary: #fff;
+  --t-primary-dark: color-mix(in srgb, var(--t-primary, #0C1F38) 85%, black);
+  --t-primary-deep: color-mix(in srgb, var(--t-primary, #0C1F38) 70%, black);
   --school-surface: #fff;
   --school-muted: #415166;
   --school-focus: #1758a1;
@@ -61,6 +63,11 @@
   utilities to the active skin tokens here so a skin applies across the whole
   application, including while Vite is running in development mode.
 */
+html[data-skin] {
+  --t-primary-dark: color-mix(in srgb, var(--t-primary) 85%, black);
+  --t-primary-deep: color-mix(in srgb, var(--t-primary) 70%, black);
+}
+
 html[data-skin] [class*="bg-[#8B0000"],
 html[data-skin] [class*="from-[#8B0000"],
 html[data-skin] [class*="via-[#8B0000"],
@@ -90,21 +97,29 @@ html[data-skin] [class*="from-[#D4AF37"],
 html[data-skin] [class*="via-[#D4AF37"],
 html[data-skin] [class*="to-[#D4AF37"] { background-color: var(--t-accent) !important; }
 
-html[data-skin] [class*="text-[#8B0000"] { color: var(--t-primary) !important; }
-html[data-skin] [class*="text-[#700000"] { color: var(--t-primary-dark) !important; }
-html[data-skin] [class*="text-[#5B0202"] { color: var(--t-primary-deep) !important; }
-html[data-skin] [class*="text-[#200E01"] { color: var(--t-ink) !important; }
-html[data-skin] [class*="text-[#EDE7C7"] { color: var(--t-sand) !important; }
-html[data-skin] [class*="text-[#FAF8F2"] { color: var(--t-bg) !important; }
-html[data-skin] [class*="text-[#D4AF37"] { color: var(--t-accent) !important; }
+html[data-skin] [class*="bg-[#8B0000]/10"] { background-color: color-mix(in srgb, var(--t-primary) 10%, transparent) !important; }
+html[data-skin] [class*="bg-[#8B0000]/20"] { background-color: color-mix(in srgb, var(--t-primary) 20%, transparent) !important; }
+html[data-skin] [class*="bg-[#5B0202]/80"] { background-color: color-mix(in srgb, var(--t-primary-deep) 80%, transparent) !important; }
 
-html[data-skin] [class*="border-[#8B0000"] { border-color: var(--t-primary) !important; }
+html[data-skin] [class*="text-[#8B0000]"] { color: var(--t-primary) !important; }
+html[data-skin] [class*="text-[#700000"] { color: var(--t-primary-dark) !important; }
+html[data-skin] [class*="text-[#5B0202]"] { color: color-mix(in srgb, var(--t-ink) 75%, var(--t-primary)) !important; }
+html[data-skin] [class*="text-[#200E01]"] { color: var(--t-ink) !important; }
+html[data-skin] [class*="text-[#EDE7C7]"] { color: var(--t-sand) !important; }
+html[data-skin] [class*="text-[#FAF8F2]"] { color: var(--t-bg) !important; }
+html[data-skin] [class*="text-[#D4AF37]"] { color: var(--t-accent) !important; }
+
+html[data-skin] [class*="border-[#8B0000]"] { border-color: var(--t-primary) !important; }
 html[data-skin] [class*="border-[#700000"] { border-color: var(--t-primary-dark) !important; }
-html[data-skin] [class*="border-[#5B0202"] { border-color: var(--t-primary-deep) !important; }
-html[data-skin] [class*="border-[#200E01"] { border-color: var(--t-ink) !important; }
-html[data-skin] [class*="border-[#EDE7C7"] { border-color: var(--t-sand) !important; }
-html[data-skin] [class*="border-[#FAF8F2"] { border-color: var(--t-bg) !important; }
-html[data-skin] [class*="border-[#D4AF37"] { border-color: var(--t-accent) !important; }
+html[data-skin] [class*="border-[#5B0202]"] { border-color: var(--t-primary-deep) !important; }
+html[data-skin] [class*="border-[#200E01]"] { border-color: var(--t-ink) !important; }
+html[data-skin] [class*="border-[#EDE7C7]"] { border-color: var(--t-sand) !important; }
+html[data-skin] [class*="border-[#FAF8F2]"] { border-color: var(--t-bg) !important; }
+html[data-skin] [class*="border-[#D4AF37]"] { border-color: var(--t-accent) !important; }
+html[data-skin] [class*="border-[#D4AF37]/30"] { border-color: color-mix(in srgb, var(--t-accent) 30%, transparent) !important; }
+html[data-skin] [class*="border-[#D4AF37]/40"] { border-color: color-mix(in srgb, var(--t-accent) 40%, transparent) !important; }
+html[data-skin] [class*="border-[#D4AF37]/50"] { border-color: color-mix(in srgb, var(--t-accent) 50%, transparent) !important; }
+html[data-skin] [class*="border-[#D4AF37]/60"] { border-color: color-mix(in srgb, var(--t-accent) 60%, transparent) !important; }
 
 html[data-skin] [class*="from-[#8B0000"] { --tw-gradient-from: var(--t-primary) var(--tw-gradient-from-position) !important; }
 html[data-skin] [class*="from-[#700000"] { --tw-gradient-from: var(--t-primary-dark) var(--tw-gradient-from-position) !important; }
@@ -120,39 +135,69 @@ html[data-skin] [class*="to-[#5B0202"] { --tw-gradient-to: var(--t-primary-deep)
 html[data-skin] [class*="to-[#200E01"] { --tw-gradient-to: var(--t-ink) var(--tw-gradient-to-position) !important; }
 
 /* Shape, density and elevation are part of a skin too—not just its palette. */
-.skin-content-highstar {
+.skin-content-highstar,
+html[data-skin="highstar"] {
   max-width: 76rem;
 }
 .skin-content-highstar [class*="rounded-3xl"],
 .skin-content-highstar [class*="rounded-[32px]"],
-.skin-content-highstar [class*="rounded-[28px]"] {
+.skin-content-highstar [class*="rounded-[28px]"],
+html[data-skin="highstar"] [class*="rounded-3xl"],
+html[data-skin="highstar"] [class*="rounded-[32px]"],
+html[data-skin="highstar"] [class*="rounded-[28px]"] {
   border-radius: 0.75rem !important;
 }
 .skin-content-highstar [class*="shadow-lg"],
-.skin-content-highstar [class*="shadow-xl"] {
+.skin-content-highstar [class*="shadow-xl"],
+html[data-skin="highstar"] [class*="shadow-lg"],
+html[data-skin="highstar"] [class*="shadow-xl"] {
   box-shadow: 0 8px 20px color-mix(in srgb, var(--t-ink) 14%, transparent) !important;
 }
 
+.skin-content-highstar [class*="font-['Cormorant_Garamond'"],
+.skin-content-highstar [class*="font-['Cinzel'"],
+html[data-skin="highstar"] [class*="font-['Cormorant_Garamond'"],
+html[data-skin="highstar"] [class*="font-['Cinzel'"] {
+  font-family: var(--t-font-display, 'Inter', sans-serif) !important;
+  font-style: normal !important;
+  letter-spacing: normal !important;
+}
+
 .skin-content-ideas [class*="rounded-[32px]"],
-.skin-content-ideas [class*="rounded-[28px]"] {
+.skin-content-ideas [class*="rounded-[28px]"],
+html[data-skin="ideas"] [class*="rounded-[32px]"],
+html[data-skin="ideas"] [class*="rounded-[28px]"] {
   border-radius: 1.5rem !important;
 }
-.skin-content-ideas [class*="font-['Cormorant_Garamond'"] {
-  font-family: var(--t-font-display) !important;
+.skin-content-ideas [class*="font-['Cormorant_Garamond'"],
+.skin-content-ideas [class*="font-['Cinzel'"],
+html[data-skin="ideas"] [class*="font-['Cormorant_Garamond'"],
+html[data-skin="ideas"] [class*="font-['Cinzel'"] {
+  font-family: var(--t-font-display, 'Plus Jakarta Sans', sans-serif) !important;
   font-style: normal !important;
+  letter-spacing: normal !important;
 }
 
 .skin-content-leading [class*="rounded-3xl"],
 .skin-content-leading [class*="rounded-[32px]"],
-.skin-content-leading [class*="rounded-[28px]"] {
+.skin-content-leading [class*="rounded-[28px]"],
+html[data-skin="leading"] [class*="rounded-3xl"],
+html[data-skin="leading"] [class*="rounded-[32px]"],
+html[data-skin="leading"] [class*="rounded-[28px]"] {
   border-radius: 1rem !important;
 }
-.skin-content-leading [class*="font-['Cormorant_Garamond'"] {
-  font-family: var(--t-font-display) !important;
+.skin-content-leading [class*="font-['Cormorant_Garamond'"],
+.skin-content-leading [class*="font-['Cinzel'"],
+html[data-skin="leading"] [class*="font-['Cormorant_Garamond'"],
+html[data-skin="leading"] [class*="font-['Cinzel'"] {
+  font-family: var(--t-font-display, 'Inter', sans-serif) !important;
   font-style: normal !important;
+  letter-spacing: normal !important;
 }
 .skin-content-leading [class*="shadow-lg"],
-.skin-content-leading [class*="shadow-xl"] {
+.skin-content-leading [class*="shadow-xl"],
+html[data-skin="leading"] [class*="shadow-lg"],
+html[data-skin="leading"] [class*="shadow-xl"] {
   box-shadow: 0 14px 30px color-mix(in srgb, var(--t-primary) 14%, transparent) !important;
 }
 
@@ -167,7 +212,7 @@ html {
   .school-app {
     background: var(--t-bg);
     color: var(--t-ink);
-    font-family: system-ui, sans-serif;
+    font-family: var(--t-font-sans, system-ui, sans-serif);
     font-variant-numeric: tabular-nums;
   }
 
