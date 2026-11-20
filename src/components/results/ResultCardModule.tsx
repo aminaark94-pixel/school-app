@@ -135,7 +135,7 @@ export const ResultCardModule: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]">
                 Select Scholar
               </label>
               <select data-tour="results-student"
@@ -157,7 +157,7 @@ export const ResultCardModule: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]">
                 Examination Term
               </label>
               <div className="flex items-center bg-[#FAF8F2] p-1 rounded-xl border border-[#EDE7C7]">
@@ -303,7 +303,7 @@ export const ResultCardModule: React.FC = () => {
                 </button>
               </div>
 
-              <p className="mt-3 text-[11px] text-[#5B0202]/70">
+              <p className="mt-3 text-xs text-[#5B0202]/70">
                 Authorized Bursar Clearance. Changes reflect instantaneously.
               </p>
             </div>

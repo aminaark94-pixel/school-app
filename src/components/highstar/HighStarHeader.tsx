@@ -102,7 +102,7 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
                 {currentSchool?.name || getActiveSkin().name}
               </span>
               <span
-                className="mt-0.5 text-[10px] sm:text-xs font-bold tracking-wide flex items-center gap-1.5"
+                className="mt-0.5 text-xs sm:text-xs font-bold tracking-wide flex items-center gap-1.5"
                 style={{ color: 'var(--t-accent)' }}
               >
                 <Star className="w-2.5 h-2.5 fill-current" />
@@ -129,7 +129,7 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
               style={{ borderColor: 'color-mix(in srgb, var(--t-accent) 50%, transparent)' }}
             >
               <span
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full font-black text-[10px] sm:text-xs flex items-center justify-center border-2 border-white shrink-0"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full font-black text-xs sm:text-xs flex items-center justify-center border-2 border-white shrink-0"
                 style={{ backgroundColor: 'var(--t-accent)', color: 'var(--t-primary)' }}
               >
                 {initials}
@@ -138,7 +138,7 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
                 <span className="block font-bold text-white leading-none truncate">
                   {currentUser?.full_name || 'Guest'}
                 </span>
-                <span className="block text-[10px] leading-tight mt-0.5 capitalize" style={{ color: 'var(--t-accent)' }}>
+                <span className="block text-xs leading-tight mt-0.5 capitalize" style={{ color: 'var(--t-accent)' }}>
                   {currentUser?.role || 'visitor'}
                 </span>
               </span>
@@ -180,7 +180,7 @@ export const HighStarHeader: React.FC<Props> = ({ activeModule, setActiveModule 
             <button
               key={m.id}
               onClick={() => setActiveModule(m.id)}
-              className="min-w-[76px] flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wide"
+              className="min-w-[76px] flex-1 py-2.5 text-xs font-bold uppercase tracking-wide"
               style={{ color: active ? 'var(--t-accent)' : 'rgba(255,255,255,0.6)' }}
             >
               {m.label}

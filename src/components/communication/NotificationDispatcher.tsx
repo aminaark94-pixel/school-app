@@ -469,7 +469,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                 <h2 className="text-xl font-bold text-[#200E01] font-['Cinzel',serif]">
                   WhatsApp &amp; SMS Broadcast Desk
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300">
                   Zero Cost
                 </span>
               </div>
@@ -518,7 +518,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1">
+                <label className="block text-xs font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1">
                   Node.js Server URL
                 </label>
                 <input
@@ -530,7 +530,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1">
+                <label className="block text-xs font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1">
                   Android HTTP Gateway URL (Optional)
                 </label>
                 <input
@@ -542,7 +542,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1">
+                <label className="block text-xs font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1">
                   TextBee Device ID / Key (Optional)
                 </label>
                 <input
@@ -606,7 +606,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                   <p className="text-xs text-slate-500 font-medium">
                     Waiting for QR code from Gateway server...
                   </p>
-                  <p className="text-[11px] font-mono bg-slate-100 p-2 rounded-lg text-slate-700">
+                  <p className="text-xs font-mono bg-slate-100 p-2 rounded-lg text-slate-700">
                     Make sure to run: <b>cd server &amp;&amp; npm start</b>
                   </p>
                 </div>
@@ -688,7 +688,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
 
             {/* Recipient Quick Checklist */}
             <div className="max-h-48 overflow-y-auto divide-y divide-[#EDE7C7]/60 border border-[#EDE7C7] rounded-2xl bg-[#FAF8F2]/60">
-              <div className="p-2.5 bg-[#FAF8F2] flex items-center justify-between text-[11px] font-bold text-[#5B0202]">
+              <div className="p-2.5 bg-[#FAF8F2] flex items-center justify-between text-xs font-bold text-[#5B0202]">
                 <button onClick={toggleSelectAll} className="hover:underline flex items-center gap-1">
                   <span>Toggle Select All ({filteredRecipients.length})</span>
                 </button>
@@ -711,18 +711,18 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                       />
                       <div className="truncate">
                         <span className="font-bold text-[#200E01]">{item.student.name}</span>
-                        <span className="text-[11px] text-[#5B0202]/60 ml-1.5">
+                        <span className="text-xs text-[#5B0202]/60 ml-1.5">
                           ({item.student.parent_name || 'Guardian'})
                         </span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {item.isDefaulter && (
-                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-100 text-rose-700">
+                        <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-rose-100 text-rose-700">
                           Fee Due: PKR {item.fee?.amount.toLocaleString()}
                         </span>
                       )}
-                      <span className="font-mono text-[11px] text-slate-500">{item.phone}</span>
+                      <span className="font-mono text-xs text-slate-500">{item.phone}</span>
                     </div>
                   </div>
                 );
@@ -774,7 +774,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                 <button
                   key={tmpl.id}
                   onClick={() => setMessageTemplate(tmpl.text)}
-                  className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-[#FAF8F2] border border-[#EDE7C7] text-[#5B0202] hover:bg-[#8B0000]/10 transition"
+                  className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FAF8F2] border border-[#EDE7C7] text-[#5B0202] hover:bg-[#8B0000]/10 transition"
                 >
                   {tmpl.name}
                 </button>
@@ -783,7 +783,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
 
             {/* Variable Pills */}
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#5B0202]/70 mb-1.5">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#5B0202]/70 mb-1.5">
                 Insert Dynamic Tags (Click to inject):
               </div>
               <div className="flex flex-wrap gap-1">
@@ -798,7 +798,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                   <button
                     key={v.tag}
                     onClick={() => insertVariable(v.tag)}
-                    className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100"
+                    className="px-2 py-0.5 rounded-md text-xs font-mono font-bold bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100"
                   >
                     {v.label}
                   </button>
@@ -855,7 +855,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                 <Smartphone className="w-4 h-4 text-[#8B0000]" />
                 Live Parent View Preview
               </h3>
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 Target: {previewRecipient?.phone || 'No recipient'}
               </span>
             </div>
@@ -863,18 +863,18 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
             {/* Mock WhatsApp Bubble */}
             <div className="p-4 rounded-2xl bg-[#EFEAE2] border border-[#D1D7DB] min-h-[160px] flex flex-col justify-between shadow-inner">
               <div className="bg-white p-3 rounded-2xl rounded-tl-xs shadow-xs max-w-[95%] space-y-1">
-                <div className="text-[10px] font-black uppercase tracking-wider text-emerald-800">
+                <div className="text-xs font-black uppercase tracking-wider text-emerald-800">
                   {currentSchool?.name || 'School Office'}
                 </div>
                 <div className="text-xs text-slate-800 whitespace-pre-wrap font-sans leading-relaxed">
                   {previewRecipient?.renderedText || 'Select a student to preview message.'}
                 </div>
-                <div className="text-[9px] text-right text-slate-400 font-mono flex items-center justify-end gap-1">
+                <div className="text-xs text-right text-slate-400 font-mono flex items-center justify-end gap-1">
                   <span>10:45 AM</span>
                   <Check className="w-3 h-3 text-emerald-600" />
                 </div>
               </div>
-              <div className="text-[10px] text-slate-500 text-center italic mt-2">
+              <div className="text-xs text-slate-500 text-center italic mt-2">
                 Simulated {channel === 'whatsapp' ? 'WhatsApp' : channel === 'sms' ? 'SMS' : 'Dual'} message
               </div>
             </div>
@@ -972,7 +972,7 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
         ) : (
           <div className="overflow-x-auto border border-[#EDE7C7] rounded-2xl">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#FAF8F2] text-[#5B0202] text-[10px] font-bold uppercase tracking-wider border-b border-[#EDE7C7]">
+              <thead className="bg-[#FAF8F2] text-[#5B0202] text-xs font-bold uppercase tracking-wider border-b border-[#EDE7C7]">
                 <tr>
                   <th className="p-3">Recipient &amp; Student</th>
                   <th className="p-3">Phone Number</th>
@@ -987,38 +987,38 @@ export const NotificationDispatcher: React.FC<NotificationDispatcherProps> = ({ 
                   <tr key={log.id} className="hover:bg-slate-50 transition">
                     <td className="p-3 font-medium text-slate-900">
                       <div>{log.recipient_name}</div>
-                      <div className="text-[11px] text-slate-500">Student: {log.student_name}</div>
+                      <div className="text-xs text-slate-500">Student: {log.student_name}</div>
                     </td>
                     <td className="p-3 font-mono text-slate-600">{log.phone_number}</td>
                     <td className="p-3">
-                      <span className="capitalize px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-700">
+                      <span className="capitalize px-2 py-0.5 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
                         {log.channel}
                       </span>
                     </td>
                     <td className="p-3">
                       {log.status === 'sent' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
                           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                           Delivered
                         </span>
                       )}
                       {log.status === 'sending' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 animate-pulse">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 animate-pulse">
                           <Clock className="w-3 h-3 text-amber-600" />
                           Sending…
                         </span>
                       )}
                       {log.status === 'failed' && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
                           <AlertCircle className="w-3 h-3 text-rose-600" />
                           Failed
                         </span>
                       )}
                     </td>
-                    <td className="p-3 text-slate-500 font-mono text-[11px]">
+                    <td className="p-3 text-slate-500 font-mono text-xs">
                       {log.sent_at ? new Date(log.sent_at).toLocaleTimeString() : '—'}
                     </td>
-                    <td className="p-3 text-[11px] text-slate-600 max-w-xs truncate">
+                    <td className="p-3 text-xs text-slate-600 max-w-xs truncate">
                       {log.error || 'Transmission completed'}
                     </td>
                   </tr>

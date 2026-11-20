@@ -164,7 +164,7 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
       <div className="bg-gradient-to-r from-[#200E01] via-[#5B0202] to-[#8B0000] text-[#EDE7C7] p-6 sm:p-7 rounded-3xl border border-[#D4AF37]/40 shadow-lg">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="space-y-1.5 max-w-xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 border border-[#D4AF37]/50 text-[10px] font-black uppercase tracking-wider text-[#D4AF37] font-['Cinzel',serif]">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 border border-[#D4AF37]/50 text-xs font-black uppercase tracking-wider text-[#D4AF37] font-['Cinzel',serif]">
               <Database className="w-3.5 h-3.5" />
               <span>Owner &amp; Admin Demonstration Center</span>
             </div>
@@ -214,32 +214,32 @@ export const DemoDataManager: React.FC<DemoDataManagerProps> = ({ onNavigateToRo
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="bg-white p-4 rounded-2xl border border-[#EDE7C7] shadow-2xs text-center">
           <Users className="w-5 h-5 text-[#8B0000] mx-auto mb-1" />
-          <p className="text-[10px] uppercase font-bold text-slate-500">Students</p>
+          <p className="text-xs uppercase font-bold text-slate-500">Students</p>
           <p className="text-lg font-black text-slate-900">{students.length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EDE7C7] shadow-2xs text-center">
           <BookOpen className="w-5 h-5 text-[#8B0000] mx-auto mb-1" />
-          <p className="text-[10px] uppercase font-bold text-slate-500">Diary Lessons</p>
+          <p className="text-xs uppercase font-bold text-slate-500">Diary Lessons</p>
           <p className="text-lg font-black text-slate-900">{diary.length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EDE7C7] shadow-2xs text-center">
           <CreditCard className="w-5 h-5 text-[#8B0000] mx-auto mb-1" />
-          <p className="text-[10px] uppercase font-bold text-slate-500">Fee Vouchers</p>
+          <p className="text-xs uppercase font-bold text-slate-500">Fee Vouchers</p>
           <p className="text-lg font-black text-slate-900">{fees.length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EDE7C7] shadow-2xs text-center">
           <Award className="w-5 h-5 text-[#8B0000] mx-auto mb-1" />
-          <p className="text-[10px] uppercase font-bold text-slate-500">Result Cards</p>
+          <p className="text-xs uppercase font-bold text-slate-500">Result Cards</p>
           <p className="text-lg font-black text-slate-900">{results.length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EDE7C7] shadow-2xs text-center">
           <CheckCircle2 className="w-5 h-5 text-[#8B0000] mx-auto mb-1" />
-          <p className="text-[10px] uppercase font-bold text-slate-500">Attendance</p>
+          <p className="text-xs uppercase font-bold text-slate-500">Attendance</p>
           <p className="text-lg font-black text-slate-900">{attendance.length}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-[#EDE7C7] shadow-2xs text-center">
           <FileJson className="w-5 h-5 text-[#8B0000] mx-auto mb-1" />
-          <p className="text-[10px] uppercase font-bold text-slate-500">Datesheets &amp; Alerts</p>
+          <p className="text-xs uppercase font-bold text-slate-500">Datesheets &amp; Alerts</p>
           <p className="text-lg font-black text-slate-900">{datesheets.length + alerts.length}</p>
         </div>
       </div>

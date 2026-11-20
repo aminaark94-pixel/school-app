@@ -163,7 +163,7 @@ export const DribbbleChatView: React.FC<DribbbleChatViewProps> = ({ onBack }) =>
               </button>
 
               <div className="text-center">
-                <span className="font-['Cinzel',serif] text-[10px] uppercase tracking-widest text-[#D4AF37] block">
+                <span className="font-['Cinzel',serif] text-xs uppercase tracking-widest text-[#D4AF37] block">
                   Official Communication Desk
                 </span>
                 <h2 className="text-lg font-bold tracking-tight text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
@@ -241,7 +241,7 @@ export const DribbbleChatView: React.FC<DribbbleChatViewProps> = ({ onBack }) =>
                       <h4 className="font-bold text-sm sm:text-base text-[#200E01] truncate font-['Outfit',sans-serif] group-hover:text-[#8B0000] transition">
                         {contact.name}
                       </h4>
-                      <span className="text-[11px] font-semibold text-[#5B0202]/70 font-mono">
+                      <span className="text-xs font-semibold text-[#5B0202]/70 font-mono">
                         {contact.time}
                       </span>
                     </div>
@@ -256,7 +256,7 @@ export const DribbbleChatView: React.FC<DribbbleChatViewProps> = ({ onBack }) =>
                   </div>
 
                   {contact.unreadCount ? (
-                    <div className="w-6 h-6 rounded-full bg-[#8B0000] text-[#EDE7C7] font-black text-[11px] flex items-center justify-center shadow-xs border border-[#D4AF37]">
+                    <div className="w-6 h-6 rounded-full bg-[#8B0000] text-[#EDE7C7] font-black text-xs flex items-center justify-center shadow-xs border border-[#D4AF37]">
                       {contact.unreadCount}
                     </div>
                   ) : null}
@@ -288,14 +288,14 @@ export const DribbbleChatView: React.FC<DribbbleChatViewProps> = ({ onBack }) =>
                 <h3 className="text-sm sm:text-base font-bold text-[#EDE7C7] font-['Outfit',sans-serif]">
                   {selectedContact.name}
                 </h3>
-                <p className="text-[10px] text-[#EDE7C7]/80 font-medium">
+                <p className="text-xs text-[#EDE7C7]/80 font-medium">
                   {selectedContact.role}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-[#01411C] text-[#EDE7C7] text-[10px] font-bold border border-emerald-500/40">
+              <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-[#01411C] text-[#EDE7C7] text-xs font-bold border border-emerald-500/40">
                 Official Campus Portal
               </span>
             </div>
@@ -319,7 +319,7 @@ export const DribbbleChatView: React.FC<DribbbleChatViewProps> = ({ onBack }) =>
                   >
                     {m.text}
                   </div>
-                  <span className="text-[10px] text-[#5B0202]/70 font-semibold mt-1 px-1">
+                  <span className="text-xs text-[#5B0202]/70 font-semibold mt-1 px-1">
                     {m.time}
                   </span>
                 </div>

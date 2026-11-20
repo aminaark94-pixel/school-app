@@ -174,7 +174,7 @@ export const ParentsReportModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Parent Accounts</p>
             <p className="text-2xl font-black text-slate-900">{kpiStats.totalParents}</p>
-            <p className="text-[11px] text-slate-500 font-medium">Covering {kpiStats.totalChildren} Students</p>
+            <p className="text-xs text-slate-500 font-medium">Covering {kpiStats.totalChildren} Students</p>
           </div>
         </div>
 
@@ -185,7 +185,7 @@ export const ParentsReportModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-rose-700 uppercase tracking-wider">Attention Needed</p>
             <p className="text-2xl font-black text-rose-700">{kpiStats.attentionNeededCount}</p>
-            <p className="text-[11px] text-rose-600 font-bold">Inactive Parents ➔ Extra Focus</p>
+            <p className="text-xs text-rose-600 font-bold">Inactive Parents ➔ Extra Focus</p>
           </div>
         </div>
 
@@ -196,7 +196,7 @@ export const ParentsReportModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Proactive Parents</p>
             <p className="text-2xl font-black text-emerald-700">{kpiStats.proactiveCount}</p>
-            <p className="text-[11px] text-emerald-600 font-medium">Daily App Users &amp; Checkers</p>
+            <p className="text-xs text-emerald-600 font-medium">Daily App Users &amp; Checkers</p>
           </div>
         </div>
 
@@ -207,7 +207,7 @@ export const ParentsReportModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Diary Reads</p>
             <p className="text-2xl font-black text-teal-700">{kpiStats.avgDiaryReadRate}%</p>
-            <p className="text-[11px] text-teal-600 font-medium">Homework Receipt Ratio</p>
+            <p className="text-xs text-teal-600 font-medium">Homework Receipt Ratio</p>
           </div>
         </div>
       </div>
@@ -324,31 +324,31 @@ export const ParentsReportModule: React.FC = () => {
                         <h3 className="text-lg font-bold text-slate-900 font-['Cinzel',serif]">
                           {card.parent_name}
                         </h3>
-                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-black bg-indigo-100 text-indigo-900 border border-indigo-200 inline-flex items-center gap-1 shadow-2xs">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-black bg-indigo-100 text-indigo-900 border border-indigo-200 inline-flex items-center gap-1 shadow-2xs">
                           <ShieldCheck className="w-3.5 h-3.5 text-indigo-700" />
                           <span>Single Parent ID: {card.parent_code || card.parent_id}</span>
                         </span>
 
                         {card.vigilance_level === 'proactive' && (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
                             <Sparkles className="w-3 h-3 text-emerald-600" />
                             <span>Proactive &amp; Highly Vigilant</span>
                           </span>
                         )}
                         {card.vigilance_level === 'cooperative' && (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-blue-100 text-blue-800 border border-blue-300 inline-flex items-center gap-1">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-100 text-blue-800 border border-blue-300 inline-flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3 text-blue-600" />
                             <span>Regular &amp; Cooperative</span>
                           </span>
                         )}
                         {card.vigilance_level === 'passive' && (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-100 text-amber-800 border border-amber-300 inline-flex items-center gap-1">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-300 inline-flex items-center gap-1">
                             <Clock className="w-3 h-3 text-amber-600" />
                             <span>Passive / Needs Reminders</span>
                           </span>
                         )}
                         {card.vigilance_level === 'neglectful' && (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
                             <AlertTriangle className="w-3 h-3 text-rose-600" />
                             <span>Dormant / Neglectful</span>
                           </span>
@@ -373,7 +373,7 @@ export const ParentsReportModule: React.FC = () => {
                       <div className="text-2xl font-black text-slate-900 leading-none">
                         {card.engagement_score}%
                       </div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                         Vigilance Index
                       </span>
                     </div>
@@ -423,17 +423,17 @@ export const ParentsReportModule: React.FC = () => {
                           className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white border border-indigo-200 text-xs font-bold text-slate-800 shadow-2xs"
                         >
                           <span>{child.student_name}</span>
-                          <span className="px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800 text-[10px] font-extrabold">
+                          <span className="px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-800 text-xs font-extrabold">
                             {child.class_id}
                           </span>
-                          <span className="text-[10px] text-slate-400 font-mono">
+                          <span className="text-xs text-slate-400 font-mono">
                             ({child.roll_number})
                           </span>
                         </span>
                       ))}
                     </div>
                   </div>
-                  <span className="text-[11px] font-bold text-indigo-800 bg-white px-2.5 py-1 rounded-lg border border-indigo-200/80 shadow-2xs">
+                  <span className="text-xs font-bold text-indigo-800 bg-white px-2.5 py-1 rounded-lg border border-indigo-200/80 shadow-2xs">
                     Unified under 1 Parent ID: <strong>{card.parent_code || card.parent_id}</strong>
                   </span>
                 </div>
@@ -481,7 +481,7 @@ export const ParentsReportModule: React.FC = () => {
                         ? `🟡 Inactive ${card.metrics.days_since_last_active}d`
                         : `🔴 Dormant (${card.metrics.days_since_last_active}d ago)`}
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                    <p className="text-xs text-slate-500 mt-0.5 font-medium">
                       Usage Interval: <span className="capitalize font-bold text-indigo-900">{card.metrics.usage_frequency.replace(/_/g, ' ')}</span>
                     </p>
                   </div>
@@ -507,7 +507,7 @@ export const ParentsReportModule: React.FC = () => {
                         style={{ width: `${card.metrics.diary_read_rate}%` }}
                       />
                     </div>
-                    <p className="text-[11px] text-slate-500 mt-1 font-medium">
+                    <p className="text-xs text-slate-500 mt-1 font-medium">
                       Daily homework &amp; planners signed
                     </p>
                   </div>
@@ -528,7 +528,7 @@ export const ParentsReportModule: React.FC = () => {
                         ? 'Regular Updates Asked'
                         : 'Rarely Contacts Faculty'}
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                    <p className="text-xs text-slate-500 mt-0.5 font-medium">
                       Questions on child's study progress
                     </p>
                   </div>
@@ -553,7 +553,7 @@ export const ParentsReportModule: React.FC = () => {
                         <span className="text-rose-700 font-bold">🔴 Chronic Defaulter</span>
                       )}
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
+                    <p className="text-xs text-slate-500 mt-0.5 font-medium">
                       Attendance notices signed: {card.metrics.alerts_acknowledged_count}
                     </p>
                   </div>
@@ -566,7 +566,7 @@ export const ParentsReportModule: React.FC = () => {
                     <p className="text-slate-600 italic">"{card.teacher_notes}"</p>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto text-[11px] text-slate-500">
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto text-xs text-slate-500">
                     <span>Last Faculty Contact:</span>
                     <span className="font-mono font-bold text-slate-700">
                       {card.last_contacted_date
@@ -590,7 +590,7 @@ export const ParentsReportModule: React.FC = () => {
                 <h3 className="text-base font-bold text-slate-900 font-['Cinzel',serif]">
                   Update Parent Vigilance Case Notes
                 </h3>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-xs text-slate-500">
                   {editingCard.parent_name} (ID: {editingCard.parent_id})
                 </p>
               </div>
@@ -643,7 +643,7 @@ export const ParentsReportModule: React.FC = () => {
                 </label>
                 {formData.extense_attention_needed && (
                   <div>
-                    <label className="block text-[11px] font-bold text-rose-900 mb-1">
+                    <label className="block text-xs font-bold text-rose-900 mb-1">
                       Reason for Extra Attention:
                     </label>
                     <textarea

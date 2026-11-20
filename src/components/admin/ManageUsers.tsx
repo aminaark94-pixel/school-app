@@ -92,7 +92,7 @@ export const ManageUsers: React.FC = () => {
 
   const inputClass =
     'w-full min-h-[42px] rounded-xl border border-[#EDE7C7] bg-white px-3.5 py-2 text-sm text-[#200E01] focus:outline-hidden focus:ring-2 focus:ring-[#8B0000]';
-  const labelClass = 'block text-[11px] font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1.5';
+  const labelClass = 'block text-xs font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1.5';
 
   return (
     <div className="space-y-6">
@@ -174,12 +174,12 @@ export const ManageUsers: React.FC = () => {
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <div className="text-sm font-bold text-[#200E01] truncate">{u.full_name}</div>
-                    <div className="text-[11px] text-[#5B0202]/70 truncate">
+                    <div className="text-xs text-[#5B0202]/70 truncate">
                       {u.email} · <span className="capitalize">{u.role}</span>
                     </div>
                   </div>
                   {resetSuccessId === u.id ? (
-                    <span className="shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700">
+                    <span className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-emerald-700">
                       <CheckCircle2 className="w-3.5 h-3.5" /> Password updated
                     </span>
                   ) : (
@@ -190,7 +190,7 @@ export const ManageUsers: React.FC = () => {
                           setResetError(null);
                           setNewPassword('');
                         }}
-                        className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#8B0000] border border-[#8B0000]/30 hover:bg-[#FAF8F2] transition"
+                        className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-[#8B0000] border border-[#8B0000]/30 hover:bg-[#FAF8F2] transition"
                       >
                         <KeyRound className="w-3 h-3" />
                         <span>Reset password</span>
@@ -207,25 +207,25 @@ export const ManageUsers: React.FC = () => {
                       placeholder="New password (min 6 chars)"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="min-w-0 flex-1 px-2.5 py-1.5 text-[11px] border border-[#EDE7C7] rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:outline-hidden"
+                      className="min-w-0 flex-1 px-2.5 py-1.5 text-xs border border-[#EDE7C7] rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:outline-hidden"
                     />
                     <button
                       onClick={() => handleResetPassword(u.id)}
                       disabled={resetBusy}
-                      className="shrink-0 px-3 py-1.5 text-[11px] font-bold rounded-lg bg-[#8B0000] text-white disabled:opacity-60"
+                      className="shrink-0 px-3 py-1.5 text-xs font-bold rounded-lg bg-[#8B0000] text-white disabled:opacity-60"
                     >
                       {resetBusy ? 'Saving…' : 'Save'}
                     </button>
                     <button
                       onClick={() => setResettingId(null)}
-                      className="shrink-0 px-2 py-1.5 text-[11px] font-semibold text-[#5B0202]"
+                      className="shrink-0 px-2 py-1.5 text-xs font-semibold text-[#5B0202]"
                     >
                       Cancel
                     </button>
                   </div>
                 )}
                 {resettingId === u.id && resetError && (
-                  <p className="text-[11px] font-semibold text-rose-700">{resetError}</p>
+                  <p className="text-xs font-semibold text-rose-700">{resetError}</p>
                 )}
               </div>
             ))}

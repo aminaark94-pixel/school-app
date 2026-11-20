@@ -104,7 +104,7 @@ export const RoleSwitcherBar: React.FC = () => {
                 {currentUser?.full_name}
               </span>
               <span
-                className={`shrink-0 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${roleBadgeClass(
+                className={`shrink-0 px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${roleBadgeClass(
                   currentUser?.role
                 )}`}
               >
@@ -125,7 +125,7 @@ export const RoleSwitcherBar: React.FC = () => {
         </div>
 
         {remoteError && (
-          <div className="max-w-7xl mx-auto mt-2 rounded-xl bg-rose-950/60 border border-rose-700 px-3 py-1.5 text-[11px] font-semibold text-rose-100">
+          <div className="max-w-7xl mx-auto mt-2 rounded-xl bg-rose-950/60 border border-rose-700 px-3 py-1.5 text-xs font-semibold text-rose-100">
             School records could not load. Refresh the page to try again.
           </div>
         )}
@@ -143,7 +143,7 @@ export const RoleSwitcherBar: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-1.5 text-[#EDE7C7]/90 font-medium">
             <Building2 className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="font-['Cinzel',serif] tracking-wider text-[11px] uppercase text-[#D4AF37]">Institution:</span>
+            <span className="font-['Cinzel',serif] tracking-wider text-xs uppercase text-[#D4AF37]">Institution:</span>
             <select
               value={currentSchool?.id || ''}
               onChange={(e) => setCurrentSchoolId(e.target.value)}
@@ -165,7 +165,7 @@ export const RoleSwitcherBar: React.FC = () => {
               {currentUser?.full_name}
             </span>
             <span
-              className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${roleBadgeClass(
+              className={`px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${roleBadgeClass(
                 currentUser?.role
               )}`}
             >
@@ -176,7 +176,7 @@ export const RoleSwitcherBar: React.FC = () => {
 
         {/* Right: Quick Role Switcher Buttons & Reset */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <span className="text-[#EDE7C7]/60 font-semibold hidden lg:inline font-['Cinzel',serif] text-[11px]">Role:</span>
+          <span className="text-[#EDE7C7]/60 font-semibold hidden lg:inline font-['Cinzel',serif] text-xs">Role:</span>
           {(['owner', 'admin', 'teacher', 'parent'] as UserRole[]).map((role) => {
             const isCurrent = currentUser?.role === role;
             const config = roleConfigs[role];
@@ -246,7 +246,7 @@ export const RoleSwitcherBar: React.FC = () => {
           >
             <Clock className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
             <span className="hidden sm:inline">Updates (PKT)</span>
-            <span className="bg-indigo-900 px-1.5 py-0.2 rounded text-[10px] text-amber-300 font-mono">
+            <span className="bg-indigo-900 px-1.5 py-0.2 rounded text-xs text-amber-300 font-mono">
               {khiTime || 'PKT'}
             </span>
           </a>

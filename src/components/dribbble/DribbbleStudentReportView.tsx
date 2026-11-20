@@ -152,7 +152,7 @@ export const DribbbleStudentReportView: React.FC<DribbbleStudentReportViewProps>
           </button>
 
           <div className="text-center">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] font-['Cinzel',serif] block">
+            <span className="text-xs uppercase font-bold tracking-widest text-[#D4AF37] font-['Cinzel',serif] block">
               Academic Standing
             </span>
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
@@ -330,9 +330,9 @@ export const DribbbleStudentReportView: React.FC<DribbbleStudentReportViewProps>
                     <span className="font-bold text-[#200E01]">{m.subject}</span>
                     <div className="flex items-center gap-3">
                       <span className="font-bold text-[#5B0202]">
-                        {m.obtained} <span className="text-[#5B0202]/50 text-[10px]">/ {m.max}</span>
+                        {m.obtained} <span className="text-[#5B0202]/50 text-xs">/ {m.max}</span>
                       </span>
-                      <span className="w-8 text-center font-black px-2 py-0.5 rounded-md bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37]/50 text-[11px]">
+                      <span className="w-8 text-center font-black px-2 py-0.5 rounded-md bg-[#8B0000] text-[#EDE7C7] border border-[#D4AF37]/50 text-xs">
                         {m.grade}
                       </span>
                     </div>

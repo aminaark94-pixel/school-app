@@ -78,7 +78,7 @@ export const DribbbleCalendarView: React.FC<DribbbleCalendarViewProps> = ({ onBa
           </button>
 
           <div className="text-center">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] font-['Cinzel',serif] block">
+            <span className="text-xs uppercase font-bold tracking-widest text-[#D4AF37] font-['Cinzel',serif] block">
               Official Calendar
             </span>
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
@@ -109,7 +109,7 @@ export const DribbbleCalendarView: React.FC<DribbbleCalendarViewProps> = ({ onBa
         </div>
 
         {/* Days of Week Header */}
-        <div className="mt-4 grid grid-cols-7 text-center text-[10px] font-extrabold text-[#D4AF37] tracking-wider max-w-lg mx-auto">
+        <div className="mt-4 grid grid-cols-7 text-center text-xs font-extrabold text-[#D4AF37] tracking-wider max-w-lg mx-auto">
           {daysOfWeek.map((dow) => (
             <div key={dow}>{dow}</div>
           ))}
@@ -200,7 +200,7 @@ export const DribbbleCalendarView: React.FC<DribbbleCalendarViewProps> = ({ onBa
                   <span className="text-xs font-bold text-[#8B0000] font-['Cinzel',serif]">
                     Date: {ev.date}
                   </span>
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#EBF5F0] text-[#01411C] border border-[#01411C]/30">
+                  <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#EBF5F0] text-[#01411C] border border-[#01411C]/30">
                     Official Holiday / Event
                   </span>
                 </div>
@@ -250,7 +250,7 @@ export const DribbbleCalendarView: React.FC<DribbbleCalendarViewProps> = ({ onBa
               className="space-y-3"
             >
               <div>
-                <label className="block text-[11px] font-bold text-[#5B0202] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[#5B0202] uppercase tracking-wider mb-1">
                   Event Title
                 </label>
                 <input
@@ -262,7 +262,7 @@ export const DribbbleCalendarView: React.FC<DribbbleCalendarViewProps> = ({ onBa
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-[#5B0202] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[#5B0202] uppercase tracking-wider mb-1">
                   Date
                 </label>
                 <input
@@ -274,7 +274,7 @@ export const DribbbleCalendarView: React.FC<DribbbleCalendarViewProps> = ({ onBa
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-[#5B0202] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[#5B0202] uppercase tracking-wider mb-1">
                   Description
                 </label>
                 <textarea

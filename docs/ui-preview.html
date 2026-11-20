@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0C1F38">
+<title>Ideas Schooling System · UI Preview</title>
+<style>
+  :root{font-family:system-ui,sans-serif;color:#0C1F38;background:#EDF2F7;--navy:#0C1F38;--muted:#415166;--line:#DCE5EF;--cream:#FFFFFF}
+  *{box-sizing:border-box}body{margin:0}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #1758a1;outline-offset:3px}
+  .preview{display:flex;justify-content:space-between;align-items:center;gap:.75rem;padding:.65rem max(1rem,calc((100vw - 960px)/2));background:#E1EAF4;color:#0C1F38;font-size:.875rem;font-weight:680}
+  select{border:1px solid #A7B8CC;border-radius:.55rem;background:white;padding:.45rem .6rem;color:inherit}
+  header{background:var(--navy);color:white;border-bottom:3px solid #F02434}
+  .brand{max-width:960px;margin:auto;padding:1rem;display:flex;align-items:center;gap:.8rem}
+  .crest{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#B91C2B;color:#FFFFFF;font-weight:850}
+  .brand strong{display:block}.brand small{color:#DCE5EF}
+  main{max-width:960px;margin:auto;padding:1.5rem 1rem calc(6.5rem + env(safe-area-inset-bottom))}
+  h1,h2,p{margin:0}h1{line-height:1.1;font-size:clamp(1.8rem,5vw,2.8rem);letter-spacing:-.035em}h2{font-size:1.18rem}.muted{color:var(--muted)}.intro{display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:1rem;margin-bottom:1.3rem}.intro p{margin-top:.5rem}
+  .section{margin-top:1.5rem}.section h2{margin-bottom:.65rem}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+  .card,.row,.context{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:1rem}
+  .card{width:100%;display:flex;gap:.7rem;text-align:left;color:inherit;align-items:flex-start;min-height:90px}.card strong{display:block;margin-bottom:.25rem}.card small{display:block;color:var(--muted);line-height:1.4;font-size:.88rem}
+  .card:hover,.chip:hover,.tab:hover{border-color:var(--navy);background:#F0F5FC}.card.primary{background:var(--navy);color:white}.card.primary small{color:#DAE7F8}
+  .icon{display:grid;place-items:center;flex:0 0 34px;height:34px;background:#E8EFF8;border-radius:9px;font-size:1rem}
+  .context{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;margin-bottom:.8rem}
+  .chips{display:flex;gap:.45rem;overflow:auto;padding:4px 4px 10px;margin-inline:-4px}.chip{white-space:nowrap;border:1px solid #AFBFD0;border-radius:999px;padding:.6rem .85rem;background:white;color:var(--navy);font-weight:650}.chip[aria-pressed=true]{background:var(--navy);color:white;border-color:var(--navy)}
+  .list{display:grid;gap:.65rem}.row h2{margin:.32rem 0}.tag{font-size:.8rem;font-weight:780;color:var(--navy)}.action{background:var(--navy);color:white;border:0;border-radius:9px;min-height:44px;padding:.55rem .8rem;font-weight:700}
+  nav{position:fixed;bottom:0;left:0;right:0;background:#FFFFFF;border-top:1px solid #DCE5EF;padding:.35rem .35rem calc(.35rem + env(safe-area-inset-bottom));z-index:2}.tabs{max-width:850px;margin:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.2rem}
+  .tab{min-height:53px;color:#415166;background:transparent;border:1px solid transparent;border-radius:10px;font-size:.76rem;font-weight:720;padding:.3rem .1rem}.tab span{display:block;font-size:1.05rem;margin-bottom:.18rem}.tab[aria-current=page]{color:var(--navy);background:#E5EDF7;border-color:#B8CAE0}
+  .brand-tools{margin-left:auto;display:flex;gap:.4rem}.brand-button{display:grid;place-items:center;min-width:44px;height:44px;border:1px solid #7890ad;border-radius:10px;background:#17355c;color:white;font-weight:750}.brand-button:hover{background:#24466d}.marking{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem}.marking button{min-height:44px}.stats{display:flex;gap:.4rem;flex-wrap:wrap;margin:1rem 0}.stat{padding:.45rem .65rem;border:1px solid var(--line);border-radius:999px;background:white;font-size:.875rem;font-weight:650}.entry-work{display:grid;gap:.55rem;margin:.6rem 0}.entry-work strong{display:block}.attach{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:.7rem;padding-top:.65rem}.due{color:#941c2b}
+  dialog{width:min(440px,calc(100% - 2rem));border:1px solid var(--line);border-radius:16px;padding:1.2rem;color:inherit}dialog::backdrop{background:#0c1f3866}dialog p{margin:.7rem 0 1rem}
+  @media(max-width:380px){.card{padding:.7rem;gap:.45rem}.icon{flex-basis:28px;height:28px}.tab{font-size:.75rem}}
+</style>
+</head>
+<body>
+<div class="preview"><span>UI Preview · Example data</span><label>View as <select id="role"><option>Parent</option><option>Teacher</option><option>Admin</option><option>Owner</option></select></label></div>
+<header><div class="brand"><span class="crest" aria-hidden="true">IS</span><div><strong>Ideas Schooling System</strong><small id="account">Parent view</small></div><div class="brand-tools"><button class="brand-button" data-page="Messages" aria-label="School notifications">🔔</button><button class="brand-button" data-page="Account" aria-label="Account menu" id="avatar">P</button></div></div></header>
+<main id="screen"></main>
+<nav aria-label="Main menu"><div class="tabs" id="tabs"></div></nav>
+<dialog id="popup" aria-labelledby="popup-title"><h2 id="popup-title"></h2><p id="popup-detail"></p><form method="dialog"><button class="action">Close</button></form></dialog>
+<script>
+  const screen = document.getElementById('screen');
+  const tabs = document.getElementById('tabs');
+  const roleControl = document.getElementById('role');
+  const popup = document.getElementById('popup');
+  const marks = {};
+  let saved = false;
+  let role = 'Parent', page = 'Home', subject = 'All Subjects', child = 'Ayesha', className = 'Class 6 · A';
+  const subjects = ['All Subjects', 'Maths', 'English', 'Urdu', 'Science', 'Social Studies', 'Computer'];
+  const examples = {
+    Maths: ['Fractions practice', 'Complete questions 1 to 5 on page 42.'],
+    English: ['Reading homework', 'Read the next chapter and write three key points.'],
+    Urdu: ['Reading practice', 'Read the lesson aloud at home.'],
+    Science: ['Plants and their needs', 'Draw and label the parts of a plant.']
+  };
+  const menu = [['Home','⌂'],['Diary','📖'],['Attendance','✓'],['Messages','💬'],['More','⋯']];
+  const card = (icon,title,detail,destination,primary=false) =>
+    '<button type="button" class="card'+(primary?' primary':'')+'" data-page="'+destination+'"><span class="icon" aria-hidden="true">'+icon+'</span><span><strong>'+title+'</strong><small>'+detail+'</small></span></button>';
+  const intro = (title, detail) => '<div class="intro"><div><h1>'+title+'</h1><p class="muted">'+detail+'</p></div></div>';
+  const section = (title,content) => '<section class="section"><h2>'+title+'</h2><div class="cards">'+content+'</div></section>';
+  function home() {
+    if (role === 'Parent') return intro(child+'’s school day','See homework and updates from school.')+
+      '<div class="context"><strong>Your child</strong><label><span class="muted">Switch child </span><select id="child"><option>Ayesha</option><option>Hamza</option></select></label></div>'+
+      '<div class="stats"><span class="stat">Present today</span><span class="stat">2 homework tasks due</span></div>'+section('Today',card('📖','Today’s homework','Open the latest diary entries','Diary',true)+card('💬','School notices','1 new message from school','Messages'))+
+      section('Quick links',card('✓','Attendance','See daily attendance','Attendance')+card('📄','Report cards','View exam results','Report cards'));
+    if (role === 'Teacher') return intro('Teacher Home','Your classroom tasks for today.')+
+      '<div class="stats"><span class="stat">2 classes left to mark</span><span class="stat">1 new message</span></div>'+section('Start here',card('✓','Mark attendance','Choose a class and mark attendance','Attendance',true)+card('✎','Post homework','Choose a class and subject','Post homework'))+
+      section('Keep in touch',card('📖','Class diary','See homework already posted','Diary')+card('💬','Messages','Read and reply','Messages'));
+    if (role === 'Admin') return intro('Admin Home','See what needs attention at school today.')+
+      '<div class="stats"><span class="stat">2 classes pending</span><span class="stat">3 unread messages</span></div>'+section('School tools',card('👥','Students','Find and manage student records','Students',true)+card('✓','Pending attendance','2 classes to review','Attendance')+card('📣','School notices','Review school messages','Messages')+card('📖','Class diary','Review homework by class','Diary'));
+    return intro('Owner Home','Open a campus or review school tools.')+
+      section('School management',card('🏫','Schools','View registered campuses','Schools',true)+card('▣','Sample tools','Preview sample data and PDF options','Sample tools'));
+  }
+  function diary() {
+    const childNote = role === 'Parent' ? '<strong>'+child+' · '+(child==='Ayesha'?'Class 6 · A':'Class 4 · B')+'</strong>' :
+      '<label>Class <select id="class"><option>Class 6 · A</option><option>Class 4 · B</option></select></label>';
+    const posting = role === 'Teacher' || role === 'Admin' ? '<button class="action" data-page="Post homework">Post homework</button>' : '';
+    const entries = Object.entries(examples).filter(([name]) => subject === 'All Subjects' || name === subject);
+    return intro('Diary','Classwork and homework by subject.')+
+      '<div class="context">'+childNote+posting+'</div><h2>Subjects</h2>'+
+      '<div class="chips" aria-label="Filter by subject">'+subjects.map(name => '<button class="chip" data-subject="'+name+'" aria-pressed="'+(name===subject)+'">'+name+'</button>').join('')+'</div>'+
+      '<div class="list">'+(entries.length?entries.map(([name,[title,description]]) => '<article class="row"><span class="tag">'+name+'</span><h2>'+title+'</h2><div class="entry-work"><p><strong>Classwork</strong> '+title+'</p><p><strong>Homework</strong> '+description+'</p></div>'+(name==='Maths'?'<span class="tag due">Due tomorrow</span><div class="attach"><span>📄 Fractions worksheet.pdf</span><button class="chip" data-page="Example PDF">Open PDF</button></div><p class="muted">Seen by 1 parent</p>':'')+'</article>').join(''):'<p class="row">No example homework for this subject.</p>')+'</div>';
+  }
+  function attendance() {
+    if (role === 'Parent') return intro('Attendance', 'See attendance recorded by the school.')+
+      '<div class="context"><strong>'+child+'</strong><span>Today</span></div><p class="row">Present</p>';
+    const names = ['Ayesha Tariq','Hamza Ahmed','Zainab Ali'];
+    const statuses = ['Present','Absent','Late'];
+    const summary = statuses.map(name => Object.values(marks).filter(mark => mark === name).length+' '+name.toLowerCase())
+      .concat((names.length-Object.keys(marks).length)+' unmarked').join(' · ');
+    return intro('Attendance','Choose a class and mark the students below.')+
+      '<div class="context"><label>Class <select id="class"><option>Class 6 · A</option><option>Class 4 · B</option></select></label><span class="muted">Today</span></div>'+
+      '<p class="stats" role="status">'+summary+'</p><div class="list">'+names.map((name,index) =>
+        '<article class="row"><strong>'+name+'</strong><div class="marking" aria-label="Attendance for '+name+'">'+statuses.map(status =>
+          '<button class="chip" data-student="'+index+'" data-mark="'+status+'" aria-pressed="'+(marks[index]===status)+'">'+status+'</button>').join('')+'</div></article>').join('')+
+      '<button class="action" data-page="Save example" '+(!Object.keys(marks).length || saved ? 'disabled' : '')+'>'+(saved?'Sample saved':'Save attendance')+'</button></div>';
+  }
+  function more() {
+    const sample = ['Admin','Owner'].includes(role) ? card('▣','Sample tools','Load Sample Data and Sample PDF','Sample tools') : '';
+    return intro('More','Find other school tools.')+section('Tools',card('📄','Report cards','View exam results','Report cards')+card('📅','Exam schedule','Check dates and times','Exam schedule')+sample);
+  }
+  const pageDetails = {
+    Attendance: ['Choose a date and class', 'This preview shows where daily attendance opens.'],
+    Messages: ['School notices', 'Reminder: Please bring your library book tomorrow.'],
+    Students: ['Find a student', 'Search and manage the school roster here.'],
+    Schools: ['Registered schools', 'Select a campus to see its dashboard.'],
+    'Report cards': ['Exam results', 'Select a student and term to view a report card.'],
+    'Exam schedule': ['Upcoming exams', 'Choose a class to view its schedule.']
+  };
+  function render() {
+    document.getElementById('account').textContent = role+' view';
+    document.getElementById('avatar').textContent = role[0];
+    tabs.innerHTML = menu.map(([name,icon]) => '<button type="button" class="tab" data-page="'+name+'" '+(page===name?'aria-current="page"':'')+'><span aria-hidden="true">'+icon+'</span>'+name+'</button>').join('');
+    if (page === 'Home') screen.innerHTML = home();
+    else if (page === 'Diary') screen.innerHTML = diary();
+    else if (page === 'Attendance') screen.innerHTML = attendance();
+    else if (page === 'More') screen.innerHTML = more();
+    else if (page === 'Sample tools' && ['Admin','Owner'].includes(role)) {
+      screen.innerHTML = intro('Sample tools','Example resources for Admin and Owner.')+section('Resources',card('▣','Load Sample Data','Preview placement for the demo data action','demo-data')+card('📄','Sample PDF','Preview placement for the example file','demo-pdf'));
+    } else {
+      const [title,detail] = pageDetails[page] ?? [page,'This screen is a layout preview.'];
+      screen.innerHTML = intro(page,'')+'<div class="row"><h2>'+title+'</h2><p class="muted">'+detail+'</p></div>';
+    }
+    if (document.getElementById('child')) document.getElementById('child').value = child;
+    if (document.getElementById('class')) document.getElementById('class').value = className;
+  }
+  roleControl.addEventListener('change', () => { role = roleControl.value; page = 'Home'; subject = 'All Subjects'; render(); window.scrollTo(0,0); });
+  screen.addEventListener('change', event => {
+    if(event.target.id==='child') child=event.target.value;
+    else if(event.target.id==='class') { className=event.target.value; return; }
+    else return;
+    render();
+    document.getElementById('child')?.focus();
+  });
+  document.addEventListener('click', event => {
+    const control = event.target.closest('button[data-page], button[data-subject], button[data-mark]');
+    if (!control) return;
+    if (control.dataset.mark) {
+      marks[control.dataset.student] = control.dataset.mark; saved = false; render(); return;
+    }
+    if (control.dataset.subject) {
+      const offset = document.querySelector('.chips').scrollLeft;
+      subject = control.dataset.subject; render();
+      document.querySelector('.chips').scrollLeft = offset;
+      document.querySelector('.chip[aria-pressed=true]').focus({preventScroll:true});
+      return;
+    }
+    const next = control.dataset.page;
+    if (next === 'Save example') { saved = true; render(); return; }
+    if (next === 'Example PDF') {
+      document.getElementById('popup-title').textContent = 'Fractions worksheet.pdf';
+      document.getElementById('popup-detail').textContent = 'Attachment preview for the Diary layout.';
+      popup.showModal(); return;
+    }
+    if (next === 'Account') {
+      document.getElementById('popup-title').textContent = role+' account';
+      document.getElementById('popup-detail').textContent = 'Language, Help and Sign out would be available here.';
+      popup.showModal(); return;
+    }
+    if (['Post homework','demo-data','demo-pdf'].includes(next)) {
+      document.getElementById('popup-title').textContent = {'Post homework':'Post homework','demo-data':'Load Sample Data','demo-pdf':'Sample PDF'}[next];
+      document.getElementById('popup-detail').textContent = next==='Post homework' ? 'Class, section, subject, homework and attachment controls would open here.' : 'This layout preview does not load or download sample files.';
+      popup.showModal(); return;
+    }
+    page=next; render(); window.scrollTo(0,0);
+  });
+  render();
+</script>
+</body>
+</html>

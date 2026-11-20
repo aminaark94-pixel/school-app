@@ -32,7 +32,7 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
 
         <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-5">
           <div className="space-y-2 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/25 border border-[#D4AF37]/50 text-[10px] font-black uppercase tracking-widest text-[#D4AF37] font-['Cinzel',serif]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/25 border border-[#D4AF37]/50 text-xs font-black uppercase tracking-widest text-[#D4AF37] font-['Cinzel',serif]">
               <span className="relative flex w-2 h-2">
                 <span className="absolute inline-flex w-full h-full rounded-full bg-[#D4AF37] opacity-75 animate-ping" />
                 <span className="relative inline-flex w-2 h-2 rounded-full bg-[#D4AF37]" />
@@ -49,11 +49,11 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
             </p>
 
             <div className="flex flex-wrap items-center gap-2 pt-1">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/25 border border-[#D4AF37]/30 text-[11px] font-bold">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/25 border border-[#D4AF37]/30 text-xs font-bold">
                 <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
                 {todays.length} aaj bheje gaye
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/25 border border-[#D4AF37]/30 text-[11px] font-bold">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/25 border border-[#D4AF37]/30 text-xs font-bold">
                 <CheckCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
                 {signed} parent signatures
               </span>
@@ -103,7 +103,7 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
           </span>
         </div>
         {child && (
-          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-black/25 border border-[#D4AF37]/40 whitespace-nowrap">
+          <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-black/25 border border-[#D4AF37]/40 whitespace-nowrap">
             {child.name}
           </span>
         )}
@@ -123,14 +123,14 @@ export const HomeworkHero: React.FC<HomeworkHeroProps> = ({ onSend, onOpenDiary 
                 onClick={onOpenDiary}
                 className="w-full text-left flex items-start gap-3 p-3 rounded-2xl bg-[#FAF8F2] border border-[#EDE7C7] hover:bg-[#EDE7C7]/60 transition"
               >
-                <span className="mt-0.5 px-2.5 py-1 rounded-lg bg-[#8B0000] text-[#EDE7C7] text-[11px] font-black whitespace-nowrap">
+                <span className="mt-0.5 px-2.5 py-1 rounded-lg bg-[#8B0000] text-[#EDE7C7] text-xs font-black whitespace-nowrap">
                   {entry.subject}
                 </span>
                 <span className="flex-1 min-w-0">
                   <span className="block text-xs sm:text-sm font-bold text-[#200E01] line-clamp-2 whitespace-pre-line">
                     {entry.homework}
                   </span>
-                  <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-semibold text-[#5B0202]/80">
+                  <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-[#5B0202]/80">
                     {entry.due_date && (
                       <span className="inline-flex items-center gap-1">
                         <Clock className="w-3 h-3" /> Due: {entry.due_date}

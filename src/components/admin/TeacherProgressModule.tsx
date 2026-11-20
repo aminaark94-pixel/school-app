@@ -343,7 +343,7 @@ export const TeacherProgressModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Faculty Assessed</p>
             <p className="text-2xl font-black text-slate-900">{kpiStats.total}</p>
-            <p className="text-[11px] text-slate-500">{selectedMonth} {selectedYear}</p>
+            <p className="text-xs text-slate-500">{selectedMonth} {selectedYear}</p>
           </div>
         </div>
 
@@ -354,7 +354,7 @@ export const TeacherProgressModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Avg Campus Index</p>
             <p className="text-2xl font-black text-emerald-700">{kpiStats.avgScore}%</p>
-            <p className="text-[11px] text-emerald-600 font-medium">Composite 4-Pillar Score</p>
+            <p className="text-xs text-emerald-600 font-medium">Composite 4-Pillar Score</p>
           </div>
         </div>
 
@@ -365,7 +365,7 @@ export const TeacherProgressModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Regular &amp; Punctual</p>
             <p className="text-2xl font-black text-teal-700">{kpiStats.regularCount}</p>
-            <p className="text-[11px] text-teal-600 font-medium">100% On-time Attendance</p>
+            <p className="text-xs text-teal-600 font-medium">100% On-time Attendance</p>
           </div>
         </div>
 
@@ -376,7 +376,7 @@ export const TeacherProgressModule: React.FC = () => {
           <div>
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Punctuality Flags</p>
             <p className="text-2xl font-black text-rose-700">{kpiStats.irregularCount}</p>
-            <p className="text-[11px] text-rose-600 font-medium">Late or Irregular Attendance</p>
+            <p className="text-xs text-rose-600 font-medium">Late or Irregular Attendance</p>
           </div>
         </div>
       </div>
@@ -488,17 +488,17 @@ export const TeacherProgressModule: React.FC = () => {
                         {ev.teacher_name}
                       </h3>
                       {ev.regularity.status === 'regular' ? (
-                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                           <span>Regular &amp; Punctual</span>
                         </span>
                       ) : ev.regularity.status === 'occasional_late' ? (
-                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-100 text-amber-800 border border-amber-300 inline-flex items-center gap-1">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-300 inline-flex items-center gap-1">
                           <Clock className="w-3 h-3 text-amber-600" />
                           <span>Occasional Late</span>
                         </span>
                       ) : (
-                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300 inline-flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3 text-rose-600" />
                           <span>Irregular / Chronic Leaves</span>
                         </span>
@@ -516,7 +516,7 @@ export const TeacherProgressModule: React.FC = () => {
                     <div className="text-2xl font-black text-slate-900 leading-none">
                       {ev.overall_score}%
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700">
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-700">
                       Grade {ev.overall_grade}
                     </span>
                   </div>
@@ -565,7 +565,7 @@ export const TeacherProgressModule: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-xs font-bold text-slate-800">{ev.language.rating}</p>
-                    <p className="text-[11px] text-slate-600 mt-1 leading-snug">{ev.language.notes}</p>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug">{ev.language.notes}</p>
                   </div>
                 </div>
 
@@ -589,7 +589,7 @@ export const TeacherProgressModule: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-xs font-bold text-slate-800">{ev.dressing.rating}</p>
-                    <p className="text-[11px] text-slate-600 mt-1 leading-snug">{ev.dressing.notes}</p>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug">{ev.dressing.notes}</p>
                   </div>
                 </div>
 
@@ -613,7 +613,7 @@ export const TeacherProgressModule: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-xs font-bold text-slate-800">{ev.working.rating}</p>
-                    <p className="text-[11px] text-slate-600 mt-1 leading-snug">{ev.working.notes}</p>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug">{ev.working.notes}</p>
                   </div>
                 </div>
 
@@ -642,12 +642,12 @@ export const TeacherProgressModule: React.FC = () => {
                         ))}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 text-[11px] font-bold text-slate-700">
+                    <div className="flex items-center gap-3 text-xs font-bold text-slate-700">
                       <span>Pres: <strong className="text-emerald-700">{ev.regularity.days_present}d</strong></span>
                       <span>Abs: <strong className="text-rose-700">{ev.regularity.days_absent}d</strong></span>
                       <span>Late: <strong className="text-amber-700">{ev.regularity.late_arrivals}x</strong></span>
                     </div>
-                    <p className="text-[11px] text-slate-600 mt-1 leading-snug">{ev.regularity.notes}</p>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug">{ev.regularity.notes}</p>
                   </div>
                 </div>
               </div>
@@ -660,24 +660,24 @@ export const TeacherProgressModule: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-                  <span className="text-[11px] text-slate-500">Decision:</span>
+                  <span className="text-xs text-slate-500">Decision:</span>
                   {ev.incharge_recommendation === 'increment' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
                       🌟 Increment / Bonus Recommended
                     </span>
                   )}
                   {ev.incharge_recommendation === 'satisfactory' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-blue-100 text-blue-800 border border-blue-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-100 text-blue-800 border border-blue-300">
                       ✅ Satisfactory Performance
                     </span>
                   )}
                   {ev.incharge_recommendation === 'guidance_required' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-100 text-amber-800 border border-amber-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-300">
                       ⚠️ Counseling / Guidance Required
                     </span>
                   )}
                   {ev.incharge_recommendation === 'warning_issued' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-rose-100 text-rose-800 border border-rose-300">
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-100 text-rose-800 border border-rose-300">
                       🚫 Formal Warning Issued
                     </span>
                   )}
@@ -701,7 +701,7 @@ export const TeacherProgressModule: React.FC = () => {
                   <h3 className="text-base font-bold text-slate-900 font-['Cinzel',serif]">
                     {editingEval ? 'Edit Teacher Appraisal' : 'New Teacher Performance Evaluation'}
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-xs text-slate-500">
                     Confidential School Incharge &amp; Management Assessment
                   </p>
                 </div>
@@ -752,7 +752,7 @@ export const TeacherProgressModule: React.FC = () => {
                   </div>
                   {teachersInSchool.length > 0 && (
                     <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                      <span className="text-[10px] text-slate-400 font-bold">Quick Select:</span>
+                      <span className="text-xs text-slate-400 font-bold">Quick Select:</span>
                       {teachersInSchool.map((t) => (
                         <button
                           key={t.id}
@@ -765,7 +765,7 @@ export const TeacherProgressModule: React.FC = () => {
                               teacher_email: t.email,
                             }))
                           }
-                          className={`text-[10px] px-2 py-0.5 rounded-md font-semibold border transition cursor-pointer ${
+                          className={`text-xs px-2 py-0.5 rounded-md font-semibold border transition cursor-pointer ${
                             formData.teacher_name === t.full_name
                               ? 'bg-amber-100 text-amber-900 border-amber-400 font-bold'
                               : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
@@ -988,7 +988,7 @@ export const TeacherProgressModule: React.FC = () => {
 
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <span className="text-[10px] text-slate-500 font-bold">Days Present:</span>
+                    <span className="text-xs text-slate-500 font-bold">Days Present:</span>
                     <input
                       type="number"
                       value={formData.daysPresent}
@@ -999,7 +999,7 @@ export const TeacherProgressModule: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-500 font-bold">Days Absent:</span>
+                    <span className="text-xs text-slate-500 font-bold">Days Absent:</span>
                     <input
                       type="number"
                       value={formData.daysAbsent}
@@ -1010,7 +1010,7 @@ export const TeacherProgressModule: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-500 font-bold">Late Arrivals:</span>
+                    <span className="text-xs text-slate-500 font-bold">Late Arrivals:</span>
                     <input
                       type="number"
                       value={formData.lateArrivals}
@@ -1057,7 +1057,7 @@ export const TeacherProgressModule: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="block font-bold text-slate-700">Confidential Incharge Verdict:</label>
-                    <span className="text-[10px] text-slate-400 italic">User can write custom verdict freely</span>
+                    <span className="text-xs text-slate-400 italic">User can write custom verdict freely</span>
                   </div>
                   <textarea
                     rows={2}

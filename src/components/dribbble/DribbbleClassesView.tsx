@@ -52,7 +52,7 @@ export const DribbbleClassesView: React.FC<DribbbleClassesViewProps> = ({
           </button>
 
           <div className="text-center">
-            <span className="font-['Cinzel',serif] text-[10px] uppercase tracking-widest text-[#D4AF37] block">
+            <span className="font-['Cinzel',serif] text-xs uppercase tracking-widest text-[#D4AF37] block">
               Academic House Roster
             </span>
             <h2 className="text-lg font-bold tracking-tight text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
@@ -145,7 +145,7 @@ export const DribbbleClassesView: React.FC<DribbbleClassesViewProps> = ({
         {/* Table / List */}
         <div className="bg-white rounded-[28px] border border-[#EDE7C7] shadow-sm overflow-hidden">
           {/* Header row */}
-          <div className="grid grid-cols-12 px-5 py-3.5 border-b border-[#EDE7C7] text-[10px] font-bold uppercase tracking-wider text-[#5B0202] bg-[#FAF8F2] font-['Cinzel',serif]">
+          <div className="grid grid-cols-12 px-5 py-3.5 border-b border-[#EDE7C7] text-xs font-bold uppercase tracking-wider text-[#5B0202] bg-[#FAF8F2] font-['Cinzel',serif]">
             <div className="col-span-1">No.</div>
             <div className="col-span-4 sm:col-span-4">Scholar Name</div>
             <div className="col-span-3 sm:col-span-2">Roll No.</div>
@@ -166,15 +166,15 @@ export const DribbbleClassesView: React.FC<DribbbleClassesViewProps> = ({
                 <div className="col-span-4 sm:col-span-4 font-bold text-[#200E01] font-['Outfit',sans-serif] flex items-center gap-1.5">
                   <span>{st.name}</span>
                 </div>
-                <div className="col-span-3 sm:col-span-2 text-[#5B0202] font-mono text-[11px]">{st.roll}</div>
+                <div className="col-span-3 sm:col-span-2 text-[#5B0202] font-mono text-xs">{st.roll}</div>
                 <div className="hidden sm:block sm:col-span-2 text-xs font-medium text-[#200E01]/70">{st.house}</div>
                 <div className="col-span-2 sm:col-span-2 text-center">
-                  <span className="inline-block px-2 py-0.5 rounded-full bg-[#EDE7C7] text-[#5B0202] text-[10px] font-bold border border-[#D4AF37]/40">
+                  <span className="inline-block px-2 py-0.5 rounded-full bg-[#EDE7C7] text-[#5B0202] text-xs font-bold border border-[#D4AF37]/40">
                     {st.status}
                   </span>
                 </div>
                 <div className="col-span-2 sm:col-span-1 text-right">
-                  <span className="inline-block font-black px-2 py-0.5 rounded-md bg-[#8B0000]/10 text-[#8B0000] text-[10px]">
+                  <span className="inline-block font-black px-2 py-0.5 rounded-md bg-[#8B0000]/10 text-[#8B0000] text-xs">
                     {st.blood}
                   </span>
                 </div>

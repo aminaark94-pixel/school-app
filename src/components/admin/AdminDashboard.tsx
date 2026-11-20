@@ -80,7 +80,7 @@ export const AdminDashboard: React.FC = () => {
             setLinkEmailInput(student.parent_email || '');
             setLinkError(null);
           }}
-          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#8B0000] hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-bold text-[#8B0000] hover:underline"
         >
           <Link2 className="w-3 h-3" />
           <span>No parent linked — Link Parent</span>
@@ -96,12 +96,12 @@ export const AdminDashboard: React.FC = () => {
             placeholder="parent@example.com"
             value={linkEmailInput}
             onChange={(e) => setLinkEmailInput(e.target.value)}
-            className="min-w-0 flex-1 px-2 py-1.5 text-[11px] border border-[#EDE7C7] rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:outline-hidden"
+            className="min-w-0 flex-1 px-2 py-1.5 text-xs border border-[#EDE7C7] rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:outline-hidden"
           />
           <button
             onClick={() => handleLinkParent(student.id)}
             disabled={isLinking}
-            className="shrink-0 px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-[#8B0000] text-[#EDE7C7] disabled:opacity-60"
+            className="shrink-0 px-2.5 py-1.5 text-xs font-bold rounded-lg bg-[#8B0000] text-[#EDE7C7] disabled:opacity-60"
           >
             {isLinking ? 'Linking…' : 'Link'}
           </button>
@@ -110,13 +110,13 @@ export const AdminDashboard: React.FC = () => {
               setLinkingStudentId(null);
               setLinkError(null);
             }}
-            className="shrink-0 px-2 py-1.5 text-[11px] font-semibold text-[#5B0202]"
+            className="shrink-0 px-2 py-1.5 text-xs font-semibold text-[#5B0202]"
           >
             Cancel
           </button>
         </div>
         {linkError && (
-          <div className="flex items-start gap-1 text-[11px] text-rose-700">
+          <div className="flex items-start gap-1 text-xs text-rose-700">
             <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
             <span>{linkError}</span>
           </div>
@@ -311,13 +311,13 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="font-bold text-sm text-[#200E01] break-words">{student.name}</div>
-                      <div className="text-[11px] text-[#5B0202] mt-0.5">
+                      <div className="text-xs text-[#5B0202] mt-0.5">
                         <span className="font-mono font-bold text-[#8B0000]">{student.roll_number}</span>
                         {' · '}
                         {student.class_id} – Sec {student.section}
                       </div>
                       {(student.parent_name || student.parent_email) && (
-                        <div className="text-[11px] text-[#5B0202]/70 mt-0.5 break-all">
+                        <div className="text-xs text-[#5B0202]/70 mt-0.5 break-all">
                           {student.parent_name || 'Guardian'}
                           {student.parent_email ? ` · ${student.parent_email}` : ''}
                         </div>
@@ -325,7 +325,7 @@ export const AdminDashboard: React.FC = () => {
                       {renderLinkParent(student)}
                     </div>
                     {student.is_deleted && (
-                      <span className="shrink-0 text-[10px] text-rose-600 font-bold uppercase tracking-wider">
+                      <span className="shrink-0 text-xs text-rose-600 font-bold uppercase tracking-wider">
                         Archived
                       </span>
                     )}
@@ -343,7 +343,7 @@ export const AdminDashboard: React.FC = () => {
           {/* md+: full table */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#FAF8F2] text-[#200E01] border-b border-[#EDE7C7] uppercase font-bold text-[11px] font-['Cinzel',serif]">
+              <thead className="bg-[#FAF8F2] text-[#200E01] border-b border-[#EDE7C7] uppercase font-bold text-xs font-['Cinzel',serif]">
                 <tr>
                   <th className="py-3.5 px-4">Roll No</th>
                   <th className="py-3.5 px-4">Scholar Name</th>
@@ -386,7 +386,7 @@ export const AdminDashboard: React.FC = () => {
                       <td className="py-3 px-4">
                         <div className="font-bold text-[#200E01]">{student.name}</div>
                         {student.is_deleted && (
-                          <span className="text-[10px] text-rose-600 font-bold uppercase tracking-wider">
+                          <span className="text-xs text-rose-600 font-bold uppercase tracking-wider">
                             (Archived)
                           </span>
                         )}
@@ -396,7 +396,7 @@ export const AdminDashboard: React.FC = () => {
                       </td>
                       <td className="py-3 px-4 text-[#200E01]/80">
                         <div className="font-medium">{student.parent_name || 'Guardian'}</div>
-                        <div className="text-[11px] text-[#5B0202]/60 font-mono">
+                        <div className="text-xs text-[#5B0202]/60 font-mono">
                           {student.parent_email || '—'}
                         </div>
                         {renderLinkParent(student)}

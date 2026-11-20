@@ -47,7 +47,7 @@ export const HighStarPortal: React.FC<Props> = ({ setActiveModule }) => {
         }}
       >
         <p
-          className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest px-2.5 py-1 rounded w-fit"
+          className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest px-2.5 py-1 rounded w-fit"
           style={{
             backgroundColor: 'color-mix(in srgb, var(--t-accent) 25%, transparent)',
             color: 'var(--t-accent)',
@@ -88,7 +88,7 @@ export const HighStarPortal: React.FC<Props> = ({ setActiveModule }) => {
               </span>
               <span className="block text-xs text-slate-500 mt-0.5">{sub}</span>
               <span
-                className="mt-3 inline-flex items-center gap-1 text-[11px] font-bold opacity-0 group-hover:opacity-100 transition"
+                className="mt-3 inline-flex items-center gap-1 text-xs font-bold opacity-0 group-hover:opacity-100 transition"
                 style={{ color: 'var(--t-primary)' }}
               >
                 Open <ArrowRight className="w-3 h-3" />

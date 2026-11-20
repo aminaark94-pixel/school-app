@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { applySkinTokens, getSkin, isSkinId, readActiveCustomSkin, readPreviewedSkinId } from '../lib/skins';
 import type { SkinDefinition, SkinId } from '../lib/skins';
-import { THEME_KEYS, hasOwnerPreview, normalizeHex } from '../lib/theme';
+import { THEME_KEYS, contrastRatio, hasOwnerPreview, normalizeHex } from '../lib/theme';
 import type { ThemeColors } from '../lib/theme';
 import { getSupabase } from '../lib/supabase';
 import { useSchoolData } from './useSchoolData';
@@ -39,11 +39,13 @@ function setColorVars(colors: ThemeColors) {
   for (const k of THEME_KEYS) {
     root.style.setProperty(`--t-${k}`, colors[k]);
   }
+  root.style.setProperty('--t-on-primary', contrastRatio(colors.primary, '#FFFFFF') >= 4.5 ? '#FFFFFF' : '#000000');
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', colors.primary);
 }
 
 function useSkinState() {
-  const { currentSchool, schools } = useSchoolData();
+  const { currentSchool, schools, currentUser, isDemoMode } = useSchoolData();
+  const canPreview = isDemoMode || currentUser?.role === 'owner';
   const [previewId, setPreviewId] = useState<SkinId | null>(() => readPreviewedSkinId());
   const [, setVersion] = useState(0);
 
@@ -68,10 +70,11 @@ function useSkinState() {
   const rawSkin: unknown = override?.skin ?? fresh?.skin;
   const explicit: SkinId | undefined = isSkinId(rawSkin) ? rawSkin : undefined;
   const baked = bakedSkinId();
-  const publishedId: SkinId = explicit ?? (isSkinId(baked) ? baked : 'imperial');
+  const publishedId: SkinId = explicit ?? (isSkinId(baked) ? baked : 'ideas');
 
   return {
-    previewId,
+    previewId: canPreview ? previewId : null,
+    canPreview,
     explicit,
     publishedId,
     primary: override?.primary ?? fresh?.primary_color,
@@ -93,9 +96,9 @@ export function usePublishedSkinId(): SkinId {
  * It also applies that skin's fonts, shape and (for a database-published skin) colours.
  */
 export function useSkin(): SkinDefinition {
-  const { previewId, explicit, publishedId, primary, accent } = useSkinState();
+  const { previewId, canPreview, explicit, publishedId, primary, accent } = useSkinState();
   const baseSkin = getSkin(previewId ?? publishedId);
-  const custom = readActiveCustomSkin();
+  const custom = canPreview ? readActiveCustomSkin() : null;
   const skin = custom && custom.baseSkin === baseSkin.id
     ? { ...baseSkin, name: custom.name, colors: custom.colors }
     : baseSkin;
@@ -103,16 +106,16 @@ export function useSkin(): SkinDefinition {
   useEffect(() => {
     applySkinTokens(skin);
     // While the owner is previewing, Owner Studio already set the colours.
-    if (!previewId && !hasOwnerPreview() && explicit) {
-      const p = primary ? normalizeHex(primary) : null;
-      const a = accent ? normalizeHex(accent) : null;
+    if (!previewId && !(canPreview && hasOwnerPreview())) {
+      const p = explicit && primary ? normalizeHex(primary) : null;
+      const a = explicit && accent ? normalizeHex(accent) : null;
       setColorVars({
         ...skin.colors,
         ...(p ? { primary: p } : {}),
         ...(a ? { accent: a } : {}),
       });
     }
-  }, [skin.id, previewId, explicit, primary, accent]);
+  }, [skin.id, skin.colors, previewId, canPreview, explicit, primary, accent]);
 
   return skin;
 }

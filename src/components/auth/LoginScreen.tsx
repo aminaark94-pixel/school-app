@@ -28,7 +28,7 @@ export function LoginScreen() {
 
   const inputClass =
     'w-full min-h-[48px] rounded-2xl border border-[#EDE7C7] bg-white px-4 py-3 text-base sm:text-sm text-[#200E01] outline-none focus:border-[#8B0000] focus:ring-2 focus:ring-[#8B0000]/15';
-  const labelClass = 'block text-[11px] font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1.5';
+  const labelClass = 'block text-xs font-bold uppercase tracking-wide text-[#5B0202]/80 mb-1.5';
 
   return (
     <div className="min-h-dvh bg-[#FAF8F2] text-[#200E01] flex items-start sm:items-center justify-center px-4 py-8 sm:p-4 font-['Plus_Jakarta_Sans',sans-serif] top-safe bottom-nav-safe">
@@ -106,14 +106,14 @@ export function LoginScreen() {
               )}
             </button>
 
-            <p className="text-center text-[11px] text-[#5B0202]/70 pt-1">
+            <p className="text-center text-xs text-[#5B0202]/70 pt-1">
               Don't have login details? Ask your school admin — accounts are created and
               managed by the school, not through public signup.
             </p>
           </div>
         </div>
 
-        <p className="mt-4 text-center text-[11px] text-[#5B0202]/70">
+        <p className="mt-4 text-center text-xs text-[#5B0202]/70">
           Accounts and permissions are enforced by Supabase Row Level Security.
         </p>
       </div>

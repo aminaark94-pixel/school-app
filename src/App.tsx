@@ -97,9 +97,9 @@ export default function App() {
 
   if (role === 'owner' && !isOwnerCampusView) {
     return (
-      <div className="min-h-dvh bg-[var(--t-bg)] text-slate-900">
+      <div className="school-app min-h-dvh">
         <RoleSwitcherBar />
-        <main className="school-workspace mx-auto max-w-5xl p-4 pb-24 sm:p-8">
+        <main className="school-workspace mx-auto space-y-5 px-4 pb-24 pt-6">
           <h1 data-tour="page-heading" className="mb-5 text-3xl font-bold">Manage schools</h1>
           <OwnerDashboard />
         </main>
@@ -116,12 +116,12 @@ export default function App() {
       : true;
 
   return (
-    <div className="min-h-dvh bg-slate-50 text-slate-900" style={{ fontFamily: 'var(--t-font-sans)' }}>
+    <div className="school-app min-h-dvh">
       <RoleSwitcherBar />
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <button type="button" onClick={() => openPage('portal')} className="flex items-center gap-3 text-left text-lg font-bold">
-            {currentSchool?.logo_url && <img src={currentSchool.logo_url} alt="" className="h-10 w-10 rounded-lg object-contain" />}
+      <header className="school-header">
+        <div className="school-workspace mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-4">
+          <button type="button" onClick={() => openPage('portal')} className="flex min-h-11 min-w-0 items-center gap-3 text-left text-lg font-bold">
+            {currentSchool?.logo_url && <img src={currentSchool.logo_url} alt="" className="size-11 shrink-0 rounded-lg bg-white object-contain" />}
             {currentSchool?.name || skin.name}
           </button>
           <PWAInstallButton />
@@ -135,7 +135,7 @@ export default function App() {
         </div>
       )}
 
-      <main id="school-content" className="school-workspace mx-auto max-w-6xl space-y-6 px-4 pb-28 pt-6 sm:px-6 sm:pt-9">
+      <main id="school-content" className="school-workspace mx-auto space-y-6 px-4 pb-28 pt-6">
         {activeModule !== 'portal' && (
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1 data-tour="page-heading" className="text-2xl font-bold sm:text-3xl">{pageNames[activeModule]}</h1>

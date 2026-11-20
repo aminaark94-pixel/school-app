@@ -126,8 +126,8 @@ function bakedThemePlugin(): Plugin {
         .map((k) => `--t-${k}:${colors[k]}`)
         .join(';');
       const skinDecls = [
-        `--t-font-sans:${preset.sans}`,
-        `--t-font-display:${preset.display}`,
+        '--t-font-sans:system-ui,sans-serif',
+        '--t-font-display:system-ui,sans-serif',
         `--t-radius-card:${preset.radius === 'soft' ? '1.5rem' : '0.75rem'}`,
         `--t-radius-pill:${preset.radius === 'soft' ? '9999px' : '0.5rem'}`,
       ].join(';');
@@ -166,7 +166,7 @@ export default defineConfig(() => {
           name: 'Multi-Tenant School Management',
           short_name: 'EduPortal',
           description: 'Multi-Tenant School Management System with Attendance, Fee Tracking & Report Cards',
-          theme_color: '#1e3a8a',
+          theme_color: '#0C1F38',
           background_color: '#f8fafc',
           display: 'standalone',
           start_url: '/',

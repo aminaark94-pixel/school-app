@@ -127,24 +127,24 @@ export const UpdatesPage: React.FC = () => {
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-200">
+                    <span className="px-2 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-200">
                       {acc.badge}
                     </span>
                     {isCurrent && (
-                      <span className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-red-100 text-[#8B0000]">
+                      <span className="px-2 py-0.5 rounded-md text-xs font-black uppercase tracking-wider bg-red-100 text-[#8B0000]">
                         Active Now
                       </span>
                     )}
                   </div>
                   <h3 className="text-sm font-bold text-[#200E01]">{acc.name}</h3>
-                  <p className="text-[11px] font-mono text-[#5B0202]/80">{acc.email}</p>
-                  <p className="text-[11px] text-slate-600 line-clamp-2 leading-relaxed">{acc.desc}</p>
+                  <p className="text-xs font-mono text-[#5B0202]/80">{acc.email}</p>
+                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{acc.desc}</p>
                 </div>
 
                 <div className="pt-3 mt-2 border-t border-[#EDE7C7]/60 flex items-center justify-between gap-2">
                   <button
                     onClick={() => copyCreds(acc.email)}
-                    className="text-[11px] font-bold text-slate-500 hover:text-slate-800 inline-flex items-center gap-1"
+                    className="text-xs font-bold text-slate-500 hover:text-slate-800 inline-flex items-center gap-1"
                   >
                     {copiedText === acc.email ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
                     <span>{copiedText === acc.email ? 'Copied' : 'Copy Email'}</span>
@@ -191,7 +191,7 @@ export const UpdatesPage: React.FC = () => {
                     {update.version}
                   </span>
                   <span
-                    className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                    className={`px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider ${
                       update.badge === 'Latest'
                         ? 'bg-emerald-100 text-emerald-900 border border-emerald-300'
                         : update.badge === 'Major Feature'
@@ -222,7 +222,7 @@ export const UpdatesPage: React.FC = () => {
 
               {/* Feature Checklist */}
               <div className="bg-[#FAF8F2] p-4 rounded-2xl border border-[#EDE7C7] space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5B0202]/70 block">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#5B0202]/70 block">
                   Delivered Capabilities:
                 </span>
                 <ul className="space-y-1.5 text-xs text-slate-700">

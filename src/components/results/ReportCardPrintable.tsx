@@ -56,7 +56,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
             <Building2 className="w-10 h-10 text-[#D4AF37]" />
           </div>
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#8B0000] font-['Cinzel',serif] block">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#8B0000] font-['Cinzel',serif] block">
               Registered Cambridge International & Federal Board
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-[#200E01] font-['Cormorant_Garamond',serif] italic">
@@ -74,8 +74,8 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
         {/* Official Gold Seal Badge */}
         <div className="hidden sm:flex flex-col items-center justify-center px-4 py-2.5 rounded-2xl border-2 border-[#D4AF37]/60 bg-[#FAF8F2] text-center shadow-xs">
           <Award className="w-6 h-6 mb-1 text-[#D4AF37]" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B0000] font-['Cinzel',serif]">{brand.name} Seal</span>
-          <span className="text-[9px] text-[#5B0202]/70">Verified & Certified</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-[#8B0000] font-['Cinzel',serif]">{brand.name} Seal</span>
+          <span className="text-xs text-[#5B0202]/70">Verified & Certified</span>
         </div>
       </div>
 
@@ -101,19 +101,19 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
       {/* Student Profile Metadata Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-2xl bg-[#FAF8F2] border border-[#EDE7C7] text-xs mb-6">
         <div>
-          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-[10px]">Scholar Name</span>
+          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-xs">Scholar Name</span>
           <span className="font-bold text-[#200E01] text-sm">{student.name}</span>
         </div>
         <div>
-          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-[10px]">Roll Number</span>
+          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-xs">Roll Number</span>
           <span className="font-mono font-bold text-[#8B0000]">{student.roll_number}</span>
         </div>
         <div>
-          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-[10px]">Academic Stream</span>
+          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-xs">Academic Stream</span>
           <span className="font-bold text-[#200E01]">{student.class_id} – Sec {student.section}</span>
         </div>
         <div>
-          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-[10px]">Date Certified</span>
+          <span className="text-[#5B0202]/70 block font-bold font-['Cinzel',serif] text-xs">Date Certified</span>
           <span className="font-bold text-[#200E01]">{formatDate(result.created_at)}</span>
         </div>
       </div>
@@ -147,7 +147,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
                       {item.grade}
                     </span>
                   </td>
-                  <td className="py-2.5 px-3.5 text-[#5B0202]/80 italic text-[11px]">{item.remarks || 'Satisfactory'}</td>
+                  <td className="py-2.5 px-3.5 text-[#5B0202]/80 italic text-xs">{item.remarks || 'Satisfactory'}</td>
                 </tr>
               );
             })}
@@ -158,29 +158,29 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
       {/* Aggregate Performance Summary Box */}
       <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 p-3.5 rounded-2xl border border-[#EDE7C7] bg-[#FAF8F2] text-center text-xs mb-8">
         <div className="p-2 bg-white rounded-xl border border-[#EDE7C7]">
-          <span className="text-[10px] text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Total Marks</span>
+          <span className="text-xs text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Total Marks</span>
           <span className="text-base font-bold text-[#200E01] font-['Cormorant_Garamond',serif] italic">
             {totalObtained} <span className="text-xs font-normal text-[#5B0202]/60">/ {totalMaxMarks}</span>
           </span>
         </div>
         <div className="p-2 bg-white rounded-xl border border-[#EDE7C7]">
-          <span className="text-[10px] text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Percentage</span>
+          <span className="text-xs text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Percentage</span>
           <span className="text-base font-bold text-[#8B0000] font-['Cormorant_Garamond',serif] italic">{calculatedPercentage.toFixed(1)}%</span>
         </div>
         <div className="p-2 bg-white rounded-xl border border-[#EDE7C7]">
-          <span className="text-[10px] text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Overall Grade</span>
+          <span className="text-xs text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Overall Grade</span>
           <span className="text-base font-bold text-emerald-700 font-['Cormorant_Garamond',serif] italic">{result.grade}</span>
         </div>
         <div className="p-2 bg-white rounded-xl border border-[#EDE7C7]">
-          <span className="text-[10px] text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">House Rank</span>
+          <span className="text-xs text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">House Rank</span>
           <span className="text-base font-bold text-[#8B0000] font-['Cormorant_Garamond',serif] italic">#{result.class_rank || 1}</span>
         </div>
         <div className="p-2 bg-white rounded-xl border border-[#EDE7C7]">
-          <span className="text-[10px] text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Attendance</span>
+          <span className="text-xs text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Attendance</span>
           <span className="text-base font-bold text-[#200E01] font-['Cormorant_Garamond',serif] italic">{result.attendance_percentage || 96.5}%</span>
         </div>
         <div className="p-2 bg-white rounded-xl border border-[#EDE7C7]">
-          <span className="text-[10px] text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Conduct</span>
+          <span className="text-xs text-[#5B0202]/70 uppercase font-bold font-['Cinzel',serif] block">Conduct</span>
           <span className="text-xs font-bold text-[#200E01] mt-1 block truncate">
             {result.conduct || 'Exemplary'}
           </span>
@@ -188,7 +188,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
       </div>
 
       {/* Grading Key Guide */}
-      <div className="text-[10px] text-[#5B0202]/70 border-t border-[#EDE7C7] pt-3 mb-8 flex flex-wrap justify-between gap-2 font-medium">
+      <div className="text-xs text-[#5B0202]/70 border-t border-[#EDE7C7] pt-3 mb-8 flex flex-wrap justify-between gap-2 font-medium">
         <span><strong>Cambridge Scale:</strong> A* (90-100% Distinction)</span>
         <span>A (80-89% High Merit)</span>
         <span>B (70-79% Merit)</span>
@@ -203,25 +203,25 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
           <div className="h-10 border-b border-[#5B0202]/40 mb-1 flex items-end justify-center">
             <span className="font-['Cormorant_Garamond',serif] italic font-bold text-[#8B0000] text-base">Prof. Tariq Mahmood</span>
           </div>
-          <span className="text-[#5B0202]/70 font-semibold block font-['Cinzel',serif] text-[10px]">Housemaster & Class Master</span>
+          <span className="text-[#5B0202]/70 font-semibold block font-['Cinzel',serif] text-xs">Housemaster & Class Master</span>
         </div>
 
         <div className="hidden sm:flex flex-col items-center justify-center">
           <div
             className="w-14 h-14 rounded-full border-2 border-double flex items-center justify-center p-1 text-center bg-[#FAF8F2] border-[#D4AF37]"
           >
-            <span className="text-[8px] font-bold uppercase tracking-widest text-[#8B0000] font-['Cinzel',serif]">
+            <span className="text-xs font-bold uppercase tracking-widest text-[#8B0000] font-['Cinzel',serif]">
               SEAL
             </span>
           </div>
-          <span className="text-[9px] text-[#5B0202]/60 mt-1 font-['Cinzel',serif]">Provost Office Seal</span>
+          <span className="text-xs text-[#5B0202]/60 mt-1 font-['Cinzel',serif]">Provost Office Seal</span>
         </div>
 
         <div>
           <div className="h-10 border-b border-[#5B0202]/40 mb-1 flex items-end justify-center">
             <span className="font-['Cormorant_Garamond',serif] italic font-bold text-[#8B0000] text-base">Dr. Imran Qureshi, Ph.D.</span>
           </div>
-          <span className="text-[#5B0202]/70 font-semibold block font-['Cinzel',serif] text-[10px]">Dean of Academics & Principal</span>
+          <span className="text-[#5B0202]/70 font-semibold block font-['Cinzel',serif] text-xs">Dean of Academics & Principal</span>
         </div>
       </div>
     </div>

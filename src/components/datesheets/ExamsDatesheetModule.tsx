@@ -45,7 +45,7 @@ export const ExamsDatesheetModule: React.FC = () => {
           <div>
             <h3 className="text-lg font-bold text-[#200E01] flex items-center gap-2 font-['Cormorant_Garamond',serif] italic text-xl">
               Examination Roster & Schedules
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]/40 font-['Cinzel',serif]">
+              <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]/40 font-['Cinzel',serif]">
                 Official Decree
               </span>
             </h3>
@@ -99,8 +99,8 @@ export const ExamsDatesheetModule: React.FC = () => {
               </div>
 
               <div className="text-right text-xs bg-[#5B0202]/80 px-4 py-2 rounded-2xl border border-[#D4AF37]/40">
-                <span className="block font-bold text-[#EDE7C7] font-['Cinzel',serif] text-[10px]">Cambridge Board Certified</span>
-                <span className="text-[10px] text-[#EDE7C7]/70">Controller of Examinations</span>
+                <span className="block font-bold text-[#EDE7C7] font-['Cinzel',serif] text-xs">Cambridge Board Certified</span>
+                <span className="text-xs text-[#EDE7C7]/70">Controller of Examinations</span>
               </div>
             </div>
 
@@ -108,7 +108,7 @@ export const ExamsDatesheetModule: React.FC = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-[#FAF8F2] border-b border-[#EDE7C7] text-[#200E01] uppercase font-bold tracking-wider text-[11px] font-['Cinzel',serif]">
+                  <tr className="bg-[#FAF8F2] border-b border-[#EDE7C7] text-[#200E01] uppercase font-bold tracking-wider text-xs font-['Cinzel',serif]">
                     <th className="py-3.5 px-5">Date & Day</th>
                     <th className="py-3.5 px-4">Exam Time</th>
                     <th className="py-3.5 px-4">Discipline</th>
@@ -123,7 +123,7 @@ export const ExamsDatesheetModule: React.FC = () => {
                         <span className="font-bold text-[#200E01] block text-xs">
                           {formatDate(item.date)}
                         </span>
-                        <span className="text-[11px] text-[#8B0000] font-bold">{item.day}</span>
+                        <span className="text-xs text-[#8B0000] font-bold">{item.day}</span>
                       </td>
 
                       <td className="py-4 px-4 whitespace-nowrap">

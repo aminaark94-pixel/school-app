@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-school-page: var(--t-bg);
+  --color-school-ink: var(--t-ink);
+  --color-school-primary: var(--t-primary);
+  --color-school-accent: var(--t-accent);
+  --color-school-line: var(--t-sand);
+  --color-school-surface: var(--school-surface);
+}
+
 @theme {
   --color-luxe-crimson: #8B0000;
   --color-luxe-burgundy: #5B0202;
@@ -27,6 +36,20 @@
 :root {
   /* Height of the fixed bottom tab bar on phones (excludes the device safe-area inset). */
   --bottom-nav-h: 4rem;
+  --t-on-primary: #fff;
+  --school-surface: #fff;
+  --school-muted: #415166;
+  --school-focus: #1758a1;
+  --school-success: #14532d;
+  --school-success-bg: #dcfce7;
+  --school-warning: #78350f;
+  --school-warning-bg: #fef3c7;
+  --school-danger: #991b1b;
+  --school-danger-bg: #fee2e2;
+  --school-card-radius: 14px;
+  --school-control-radius: 9px;
+  --school-dialog-radius: 16px;
+  --school-width: 960px;
 }
 
 /*
@@ -140,14 +163,77 @@ html {
 }
 
 @media screen {
+  body,
+  .school-app {
+    background: var(--t-bg);
+    color: var(--t-ink);
+    font-family: system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .school-header {
+    background: var(--t-primary);
+    color: var(--t-on-primary);
+    border-block-end: 3px solid var(--t-accent);
+  }
+
+  .school-card {
+    background: var(--school-surface);
+    border: 1px solid var(--t-sand);
+    border-radius: var(--school-card-radius);
+    padding: 1rem;
+  }
+
+  .school-field,
+  .school-nav-item,
+  .school-button {
+    min-block-size: 44px;
+    border: 1px solid transparent;
+    border-radius: var(--school-control-radius);
+    padding: .5rem .75rem;
+    font-weight: 650;
+  }
+
+  .school-button:disabled {
+    background: #DCE5EF;
+    color: #415166;
+    cursor: not-allowed;
+  }
+
+  .school-field {
+    color: var(--t-ink);
+    background: var(--school-surface);
+    border-color: var(--t-sand);
+  }
+
+  .school-nav-item {
+    color: inherit;
+  }
+
+  .school-nav-item:hover,
+  .school-nav-active {
+    background: var(--t-sand);
+    color: var(--t-ink);
+  }
+
+  .school-button {
+    background: var(--t-primary);
+    color: var(--t-on-primary);
+  }
+
   .school-workspace {
-    font-family: Inter, system-ui, sans-serif;
+    max-inline-size: var(--school-width);
+    font-family: system-ui, sans-serif;
     font-size: 1rem;
     line-height: 1.55;
   }
 
-  .school-workspace :is(h1, h2, h3, h4, label, button, input, select, textarea) {
+  .school-workspace :is(h1, h2, h3, h4, label, button, input, select, textarea),
+  .school-workspace [class*="Cormorant_Garamond"],
+  .school-workspace [class*="Cinzel"],
+  .school-workspace [class*="Outfit"] {
     font-family: inherit;
+    font-style: normal;
   }
 
   .school-workspace :is(h2, h3, h4) {
@@ -163,14 +249,25 @@ html {
     font-size: 1rem;
   }
 
-  .school-workspace :is(p, small, span)[class*="text-[10px]"],
-  .school-workspace :is(p, small, span)[class*="text-[11px]"] {
-    font-size: 0.8125rem;
+  .school-workspace :is(h1) {
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
   }
 
-  .school-workspace :is(button, a, input, select, textarea, summary):focus-visible {
-    outline: 2px solid #1d4ed8;
+  :is(button, a[href], input, select, textarea, summary, [tabindex="0"]):focus-visible {
+    outline: 3px solid var(--school-focus);
     outline-offset: 3px;
+  }
+
+  .school-header :focus-visible {
+    outline-color: currentColor;
+  }
+
+  :is(.school-app, .school-workspace) :is(button, select, summary) {
+    min-block-size: 44px;
+  }
+
+  :is(.school-app, .school-workspace) button {
+    min-inline-size: 44px;
   }
 }
 

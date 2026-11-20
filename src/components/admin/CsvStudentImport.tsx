@@ -185,7 +185,7 @@ export const CsvStudentImport: React.FC = () => {
               without being linked to a parent — no parent account exists yet for:
             </span>
           </div>
-          <div className="pl-6 font-mono text-[11px] text-amber-700 break-all">
+          <div className="pl-6 font-mono text-xs text-amber-700 break-all">
             {unmatchedParentEmails.join(', ')}
           </div>
           <p className="pl-6 font-normal text-amber-700">
@@ -238,7 +238,7 @@ export const CsvStudentImport: React.FC = () => {
                       {row.class_id || 'Grade 10'} – {row.section || 'A'}
                     </td>
                     <td className="py-2.5 px-4 text-[#200E01]/80">{row.parent_name || 'Guardian'}</td>
-                    <td className="py-2.5 px-4 text-[#5B0202]/60 font-mono text-[11px]">{row.parent_email || '—'}</td>
+                    <td className="py-2.5 px-4 text-[#5B0202]/60 font-mono text-xs">{row.parent_email || '—'}</td>
                   </tr>
                 ))}
               </tbody>

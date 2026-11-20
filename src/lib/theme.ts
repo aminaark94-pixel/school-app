@@ -16,11 +16,11 @@ export const THEME_KEYS: ThemeKey[] = ['primary', 'accent', 'ink', 'bg', 'sand']
 export const STORAGE_KEY = 'owner_theme_v1';
 
 export const DEFAULT_COLORS: ThemeColors = {
-  primary: '#8B0000',
-  accent: '#D4AF37',
-  ink: '#200E01',
-  bg: '#FAF8F2',
-  sand: '#EDE7C7',
+  primary: '#0C1F38',
+  accent: '#F02434',
+  ink: '#0C1F38',
+  bg: '#EDF2F7',
+  sand: '#DCE5EF',
 };
 
 export const COLOR_LABELS: Record<ThemeKey, { label: string; hint: string }> = {
@@ -40,7 +40,7 @@ export const PRESETS: Array<{ id: string; name: string; colors: ThemeColors }> =
   {
     id: 'ideas',
     name: 'Ideas Schooling System',
-    colors: { primary: '#0C1F38', accent: '#F02434', ink: '#0C1F38', bg: '#EDF2F7', sand: '#DCE5EF' },
+    colors: DEFAULT_COLORS,
   },
   {
     id: 'highstar',

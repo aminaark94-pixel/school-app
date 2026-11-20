@@ -323,7 +323,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               <h3 className="text-lg sm:text-xl font-bold text-[#200E01] tracking-tight font-['Cormorant_Garamond',serif] italic">
                 Active Curriculum &amp; Planner Feed
               </h3>
-              <span className="hidden sm:inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]/40 font-['Cinzel',serif]">
+              <span className="hidden sm:inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]/40 font-['Cinzel',serif]">
                 Digital Roster
               </span>
             </div>
@@ -346,7 +346,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               <span>Post homework</span>
             </button>
           ) : (
-            <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-[11px] font-bold text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/40">
+            <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-bold text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/40">
               <span>Parent View (Switch to Teacher/Admin above to post)</span>
             </div>
           )}
@@ -386,7 +386,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               {currentStudentObj?.name.charAt(0) || 'S'}
             </div>
             <div>
-              <p className="text-[11px] text-[#8B0000] font-extrabold uppercase tracking-wider">
+              <p className="text-xs text-[#8B0000] font-extrabold uppercase tracking-wider">
                 Viewing Diary As Guardian of:
               </p>
               <div className="flex items-center gap-2 mt-0.5">
@@ -407,7 +407,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                   )}
                 </select>
                 {isCurrentStudentAbsentToday && (
-                  <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 text-[11px] font-black animate-pulse flex items-center gap-1">
+                  <span className="px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-black animate-pulse flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" /> Absent Today
                   </span>
                 )}
@@ -487,15 +487,15 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="bg-white/90 p-3.5 rounded-2xl border border-amber-200 shadow-2xs">
-              <p className="text-[10px] uppercase tracking-wider text-amber-700 font-extrabold">Active Class</p>
+              <p className="text-xs uppercase tracking-wider text-amber-700 font-extrabold">Active Class</p>
               <p className="text-base font-black text-slate-900 mt-0.5">{selectedClass}</p>
             </div>
             <div className="bg-white/90 p-3.5 rounded-2xl border border-amber-200 shadow-2xs">
-              <p className="text-[10px] uppercase tracking-wider text-amber-700 font-extrabold">Lessons Today</p>
+              <p className="text-xs uppercase tracking-wider text-amber-700 font-extrabold">Lessons Today</p>
               <p className="text-base font-black text-slate-900 mt-0.5">{filteredDiary.length} Recorded</p>
             </div>
             <div className="bg-white/90 p-3.5 rounded-2xl border border-amber-200 shadow-2xs">
-              <p className="text-[10px] uppercase tracking-wider text-amber-700 font-extrabold">Planner &amp; Class Work Scans</p>
+              <p className="text-xs uppercase tracking-wider text-amber-700 font-extrabold">Planner &amp; Class Work Scans</p>
               <p className="text-base font-black text-emerald-600 mt-0.5">
                 {filteredDiary.filter((d) => d.attachments && d.attachments.length > 0).length} Scans / Docs Available
               </p>
@@ -553,7 +553,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                           {entry.class_id} (Sec {entry.section})
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                      <p className="text-xs text-slate-500 font-medium mt-0.5">
                         Recorded by {entry.teacher_name} • {formatDate(entry.date)}
                       </p>
                     </div>
@@ -597,7 +597,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                           <FileText className="w-4 h-4 text-[#8B0000]" />
                           Work Planner PDFs &amp; Class Work Notes ({entry.attachments.length})
                         </span>
-                        <span className="text-[10px] text-slate-500 font-semibold">
+                        <span className="text-xs text-slate-500 font-semibold">
                           Tap PDF to read multi-page planner or view notes
                         </span>
                       </div>
@@ -614,18 +614,18 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                               >
                                 <div>
                                   <div className="flex items-center justify-between mb-3">
-                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-rose-100 text-rose-800 text-[10px] font-black uppercase tracking-wider">
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-rose-100 text-rose-800 text-xs font-black uppercase tracking-wider">
                                       <FileText className="w-3 h-3 text-rose-700" />
                                       PDF Document
                                     </span>
-                                    <span className="text-[10px] font-bold text-slate-400">
+                                    <span className="text-xs font-bold text-slate-400">
                                       {att.fileSize || 'CamScanner Scan'}
                                     </span>
                                   </div>
                                   <h5 className="font-extrabold text-slate-900 text-xs line-clamp-2 leading-tight">
                                     {att.caption}
                                   </h5>
-                                  <p className="text-[10px] text-slate-500 truncate mt-1">
+                                  <p className="text-xs text-slate-500 truncate mt-1">
                                     {att.fileName || 'Daily_Work_Planner.pdf'}
                                   </p>
                                 </div>
@@ -640,7 +640,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                                         fileName: att.fileName,
                                       })
                                     }
-                                    className="flex-1 py-1.5 px-2.5 rounded-xl bg-[#8B0000] hover:bg-[#700000] text-white text-[11px] font-extrabold flex items-center justify-center gap-1.5 shadow-xs transition"
+                                    className="flex-1 py-1.5 px-2.5 rounded-xl bg-[#8B0000] hover:bg-[#700000] text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-xs transition"
                                   >
                                     <Maximize2 className="w-3 h-3" />
                                     <span>Read Full PDF</span>
@@ -675,7 +675,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent flex flex-col justify-end p-3 text-white">
                                 <span className="text-xs font-bold line-clamp-1">{att.caption}</span>
-                                <div className="mt-1 flex items-center justify-between text-[10px] text-purple-200 font-semibold">
+                                <div className="mt-1 flex items-center justify-between text-xs text-purple-200 font-semibold">
                                   <span>Class Work Note</span>
                                   <span className="flex items-center gap-1 text-white underline">
                                     <Maximize2 className="w-3 h-3" /> Zoom
@@ -694,7 +694,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                     {/* Classwork Block */}
                     <div className="bg-[#F8F9FE] rounded-2xl p-4 border border-slate-200/80">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 font-['Outfit',sans-serif]">
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 font-['Outfit',sans-serif]">
                           <span className="w-2.5 h-2.5 rounded-full bg-[#8B0000]" />
                           Classwork (Aaj Class Ka Kaam)
                         </span>
@@ -707,12 +707,12 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                     {/* Homework Block */}
                     <div className="bg-amber-50/60 rounded-2xl p-4 border border-amber-200/80">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-900 flex items-center gap-1.5 font-['Outfit',sans-serif]">
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-amber-900 flex items-center gap-1.5 font-['Outfit',sans-serif]">
                           <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                           Homework (Ghar Ka Kaam)
                         </span>
                         {entry.due_date && (
-                          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-amber-200/80 text-amber-950 flex items-center gap-1">
+                          <span className="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-amber-200/80 text-amber-950 flex items-center gap-1">
                             <Clock className="w-3 h-3" /> Due: {formatDate(entry.due_date)}
                           </span>
                         )}
@@ -801,7 +801,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               >
                 <FileText className="w-4 h-4" />
                 <span>PRIMARY: Upload Work Planner PDF / Snap Notes</span>
-                <span className="px-1.5 py-0.2 rounded-md bg-white/20 text-[10px]">Instant</span>
+                <span className="px-1.5 py-0.2 rounded-md bg-white/20 text-xs">Instant</span>
               </button>
               <button
                 type="button"
@@ -875,7 +875,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                         <FileText className="w-4 h-4 text-[#8B0000]" />
                         Upload Daily Work Planner PDF or Class Work Photo
                       </h4>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-xs text-slate-500">
                         Scan your daily work planner using CamScanner and upload the PDF directly, or snap a class work
                         photo.
                       </p>
@@ -919,7 +919,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                   {isCameraActive && (
                     <div className="relative rounded-2xl overflow-hidden bg-black border-2 border-[#8B0000] p-1 flex flex-col items-center">
                       <video ref={videoRef} autoPlay playsInline className="w-full max-h-64 object-cover rounded-xl" />
-                      <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs px-3 py-1 rounded-full text-white text-[10px] font-bold flex items-center gap-1.5">
+                      <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-xs px-3 py-1 rounded-full text-white text-xs font-bold flex items-center gap-1.5">
                         <Camera className="w-3 h-3 text-red-400" />
                         <span>Live Viewfinder</span>
                       </div>
@@ -928,7 +928,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                       <button
                         type="button"
                         onClick={() => setEnableMagicFilter(!enableMagicFilter)}
-                        className={`absolute top-3 right-3 px-3 py-1 rounded-full text-[10px] font-extrabold flex items-center gap-1 shadow-md transition ${
+                        className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-extrabold flex items-center gap-1 shadow-md transition ${
                           enableMagicFilter
                             ? 'bg-emerald-600 text-white'
                             : 'bg-slate-800/80 text-slate-300 border border-slate-600'
@@ -954,7 +954,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                   {/* Category Picker & Caption */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Doc / File Type:</label>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Doc / File Type:</label>
                       <select
                         value={attachmentCategory}
                         onChange={(e) => setAttachmentCategory(e.target.value as any)}
@@ -968,7 +968,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                     </div>
 
                     <div className="sm:col-span-2">
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Document Caption:</label>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Document Caption:</label>
                       <input
                         type="text"
                         value={attachmentCaption}
@@ -999,7 +999,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                               </div>
                               <div className="min-w-0">
                                 <p className="text-xs font-bold text-slate-800 truncate">{att.caption}</p>
-                                <p className="text-[10px] text-slate-400 truncate">{att.fileName || (att.isPdf ? 'Planner.pdf' : 'Image.jpg')}</p>
+                                <p className="text-xs text-slate-400 truncate">{att.fileName || (att.isPdf ? 'Planner.pdf' : 'Image.jpg')}</p>
                               </div>
                             </div>
 
@@ -1026,7 +1026,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                     <label className="font-bold text-slate-700">
                       Classwork Summary (Aaj Class Mein Kya Parhaya / Karwaya)
                     </label>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-xs text-slate-400">
                       {primaryInputMode === 'photo' ? 'Optional if PDF / photo attached' : 'Required'}
                     </span>
                   </div>
@@ -1047,7 +1047,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="font-bold text-slate-700">Homework Assignment (Ghar Ka Kaam)</label>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-xs text-slate-400">
                       {primaryInputMode === 'photo' ? 'Optional if PDF / photo attached' : 'Required'}
                     </span>
                   </div>
@@ -1117,7 +1117,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                   <h4 className="font-extrabold text-slate-900 text-sm truncate font-['Outfit',sans-serif]">
                     {activePdfModal.title}
                   </h4>
-                  <p className="text-[11px] text-slate-500 truncate">
+                  <p className="text-xs text-slate-500 truncate">
                     {activePdfModal.fileName || 'Daily_Work_Planner.pdf'} • CamScanner Scanned Work Planner
                   </p>
                 </div>
@@ -1241,13 +1241,13 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                     >
                       <div>
                         <p className="font-bold text-slate-900">{r.parent_name}</p>
-                        <p className="text-[11px] text-[#8B0000] font-medium">Child: {r.student_name}</p>
+                        <p className="text-xs text-[#8B0000] font-medium">Child: {r.student_name}</p>
                       </div>
                       <div className="text-right">
-                        <span className="text-[10px] text-slate-600 font-semibold block">
+                        <span className="text-xs text-slate-600 font-semibold block">
                           {formatDate(r.read_at)}
                         </span>
-                        <span className="text-[10px] text-[#8B0000] font-bold block">
+                        <span className="text-xs text-[#8B0000] font-bold block">
                           {new Date(r.read_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>

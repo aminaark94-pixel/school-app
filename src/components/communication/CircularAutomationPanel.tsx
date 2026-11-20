@@ -157,7 +157,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
                 <h2 className="text-xl font-bold text-[#200E01] font-['Cinzel',serif]">
                   Automated Circulars &amp; Holiday Engine
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
                   Govt &amp; Academic Gazette
                 </span>
               </div>
@@ -188,7 +188,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
               <CalendarDays className="w-4 h-4 text-[#8B0000]" />
               <div>
                 <span className="font-bold text-[#200E01] block">Auto-Publish Circulars</span>
-                <span className="text-[11px] text-[#5B0202]/70">Publish to portal 3 days prior to holiday/due date</span>
+                <span className="text-xs text-[#5B0202]/70">Publish to portal 3 days prior to holiday/due date</span>
               </div>
             </div>
             <input
@@ -204,7 +204,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
               <Smartphone className="w-4 h-4 text-emerald-700" />
               <div>
                 <span className="font-bold text-[#200E01] block">WhatsApp / SMS Auto-Prompt</span>
-                <span className="text-[11px] text-[#5B0202]/70">Pre-queue WhatsApp broadcast to parents</span>
+                <span className="text-xs text-[#5B0202]/70">Pre-queue WhatsApp broadcast to parents</span>
               </div>
             </div>
             <input
@@ -238,7 +238,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
                 <Clock className="w-5 h-5" />
               </span>
               <div>
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-900">
+                <span className="text-xs font-black uppercase tracking-wider text-amber-900">
                   Next Scheduled Milestone
                 </span>
                 <h3 className="text-base font-bold text-[#200E01]">{nextMilestone.rule.title}</h3>
@@ -326,26 +326,26 @@ export const CircularAutomationPanel: React.FC<Props> = ({
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#FAF8F2] border border-[#EDE7C7] text-[#5B0202]">
+                        <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-[#FAF8F2] border border-[#EDE7C7] text-[#5B0202]">
                           {rule.refNumber}
                         </span>
                         {rule.priority === 'urgent' && (
-                          <span className="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider bg-rose-100 text-rose-700">
+                          <span className="px-2 py-0.5 rounded-md text-xs font-black uppercase tracking-wider bg-rose-100 text-rose-700">
                             Urgent Priority
                           </span>
                         )}
                         {isPublished && (
-                          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold bg-emerald-100 text-emerald-800 flex items-center gap-0.5">
+                          <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 flex items-center gap-0.5">
                             <Check className="w-2.5 h-2.5" /> Published
                           </span>
                         )}
                       </div>
                       <h4 className="text-sm font-bold text-[#200E01] mt-1 line-clamp-1">{rule.title}</h4>
-                      <p className="text-[11px] text-[#5B0202]/70 mt-0.5 line-clamp-2">{rule.description}</p>
+                      <p className="text-xs text-[#5B0202]/70 mt-0.5 line-clamp-2">{rule.description}</p>
                     </div>
 
                     <span
-                      className={`px-2.5 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wider shrink-0 ${
+                      className={`px-2.5 py-1 rounded-xl text-xs font-bold uppercase tracking-wider shrink-0 ${
                         rule.type === 'holiday'
                           ? 'bg-blue-50 text-blue-800 border border-blue-200'
                           : rule.type === 'fee_reminder'
@@ -360,7 +360,7 @@ export const CircularAutomationPanel: React.FC<Props> = ({
                   {/* Expand / Preview Button */}
                   <button
                     onClick={() => setExpandedRuleId(isExpanded ? null : rule.id)}
-                    className="text-[11px] font-bold text-[#8B0000] hover:underline inline-flex items-center gap-1 pt-1"
+                    className="text-xs font-bold text-[#8B0000] hover:underline inline-flex items-center gap-1 pt-1"
                   >
                     <span>{isExpanded ? 'Hide Draft Text' : 'Preview Circular & WhatsApp Template'}</span>
                     {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -370,19 +370,19 @@ export const CircularAutomationPanel: React.FC<Props> = ({
                   {isExpanded && (
                     <div className="mt-2 p-3.5 rounded-2xl bg-[#FAF8F2] border border-[#EDE7C7] space-y-2 text-xs animate-in fade-in">
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#5B0202]/70 block mb-1">
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#5B0202]/70 block mb-1">
                           Official School Seal Circular Draft:
                         </span>
-                        <p className="text-[11px] text-slate-800 whitespace-pre-wrap font-sans leading-relaxed bg-white p-2.5 rounded-xl border border-[#EDE7C7]">
+                        <p className="text-xs text-slate-800 whitespace-pre-wrap font-sans leading-relaxed bg-white p-2.5 rounded-xl border border-[#EDE7C7]">
                           {sampleContent}
                         </p>
                       </div>
 
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 block mb-1">
+                        <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 block mb-1">
                           WhatsApp / SMS Alert Template:
                         </span>
-                        <p className="text-[11px] text-emerald-950 font-mono bg-emerald-50/70 p-2 rounded-xl border border-emerald-200">
+                        <p className="text-xs text-emerald-950 font-mono bg-emerald-50/70 p-2 rounded-xl border border-emerald-200">
                           {sampleWhatsapp}
                         </p>
                       </div>

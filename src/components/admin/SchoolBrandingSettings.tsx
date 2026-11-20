@@ -171,7 +171,7 @@ export const SchoolBrandingSettings: React.FC = () => {
             </label>
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <span className="text-[11px] text-slate-500 block mb-1">Primary Color</span>
+                <span className="text-xs text-slate-500 block mb-1">Primary Color</span>
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
@@ -189,7 +189,7 @@ export const SchoolBrandingSettings: React.FC = () => {
               </div>
 
               <div>
-                <span className="text-[11px] text-slate-500 block mb-1">Secondary Color</span>
+                <span className="text-xs text-slate-500 block mb-1">Secondary Color</span>
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
@@ -217,7 +217,7 @@ export const SchoolBrandingSettings: React.FC = () => {
                     setPrimaryColor(preset.primary);
                     setSecondaryColor(preset.secondary);
                   }}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 bg-white text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 transition"
                 >
                   <span
                     className="w-3 h-3 rounded-full border"
@@ -256,11 +256,11 @@ export const SchoolBrandingSettings: React.FC = () => {
                 )}
                 <div>
                   <h4 className="font-bold text-sm tracking-tight">{name || 'School Name'}</h4>
-                  <p className="text-[11px] opacity-80 italic">{motto || 'Motto'}</p>
+                  <p className="text-xs opacity-80 italic">{motto || 'Motto'}</p>
                 </div>
               </div>
               <span
-                className="px-2.5 py-1 rounded-full text-[10px] font-bold text-white shadow-xs"
+                className="px-2.5 py-1 rounded-full text-xs font-bold text-white shadow-xs"
                 style={{ backgroundColor: secondaryColor }}
               >
                 Tenant Active
@@ -273,9 +273,9 @@ export const SchoolBrandingSettings: React.FC = () => {
                 <span className="font-bold" style={{ color: primaryColor }}>
                   {name || 'School Name'}
                 </span>
-                <span className="text-[10px] text-slate-400">Official Report Card</span>
+                <span className="text-xs text-slate-400">Official Report Card</span>
               </div>
-              <div className="flex justify-between text-slate-600 text-[11px]">
+              <div className="flex justify-between text-slate-600 text-xs">
                 <span>Sample Student</span>
                 <span className="font-bold" style={{ color: secondaryColor }}>
                   Grade: A+ (Distinction)

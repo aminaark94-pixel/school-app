@@ -423,7 +423,7 @@ export const CommunicationModule: React.FC = () => {
                 <span className="font-extrabold block text-amber-900 text-xs uppercase tracking-wide">
                   Dual Teacher &amp; Admin Notification Active
                 </span>
-                <p className="text-[11px] text-amber-800 leading-relaxed font-medium mt-0.5">
+                <p className="text-xs text-amber-800 leading-relaxed font-medium mt-0.5">
                   Whenever a parent raises a complaint or a teacher reports a student, <strong className="font-bold">both the assigned faculty teacher and School Administration receive instant notification</strong>. Both parties are authorized to investigate and reply collaboratively in the thread below.
                 </p>
               </div>
@@ -431,12 +431,12 @@ export const CommunicationModule: React.FC = () => {
 
             <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
               {ticketKpis.urgent > 0 && (
-                <span className="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-black text-[11px] flex items-center gap-1 animate-pulse">
+                <span className="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-black text-xs flex items-center gap-1 animate-pulse">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>{ticketKpis.urgent} Urgent Action Needed</span>
                 </span>
               )}
-              <span className="px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-900 font-bold text-[11px]">
+              <span className="px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-900 font-bold text-xs">
                 {ticketKpis.open} Open • {ticketKpis.total} Total Tickets
               </span>
             </div>
@@ -445,7 +445,7 @@ export const CommunicationModule: React.FC = () => {
           {/* Ticket Filter Pills & Search */}
           <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-[11px] text-slate-500 font-bold flex items-center gap-1 mr-1">
+              <span className="text-xs text-slate-500 font-bold flex items-center gap-1 mr-1">
                 <Filter className="w-3.5 h-3.5" /> Filter:
               </span>
 
@@ -570,14 +570,14 @@ export const CommunicationModule: React.FC = () => {
                         }`}
                       >
                         <div className="flex items-center justify-between gap-1">
-                          <span className="text-[10px] font-mono font-bold text-slate-500">
+                          <span className="text-xs font-mono font-bold text-slate-500">
                             {t.ticket_number || `TKT-${t.id.slice(-4)}`}
                           </span>
 
                           <div className="flex items-center gap-1">
                             {isUrgent && (
                               <span
-                                className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${
+                                className={`text-xs font-black uppercase px-2 py-0.5 rounded-full ${
                                   t.priority === 'critical'
                                     ? 'bg-rose-600 text-white animate-pulse'
                                     : 'bg-amber-500 text-slate-950 font-black'
@@ -588,7 +588,7 @@ export const CommunicationModule: React.FC = () => {
                             )}
 
                             <span
-                              className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${
+                              className={`text-xs font-black uppercase px-2 py-0.5 rounded-full ${
                                 t.status === 'resolved'
                                   ? 'bg-emerald-100 text-emerald-800'
                                   : t.status === 'in_progress'
@@ -607,12 +607,12 @@ export const CommunicationModule: React.FC = () => {
                           {t.subject}
                         </h5>
 
-                        <div className="flex items-center justify-between text-[11px] text-slate-600 font-medium">
+                        <div className="flex items-center justify-between text-xs text-slate-600 font-medium">
                           <span>
                             Scholar: <strong className="font-bold text-slate-900">{t.student_name}</strong>
                           </span>
                           <span
-                            className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                            className={`text-xs px-1.5 py-0.2 rounded font-bold ${
                               t.raised_by_role === 'teacher'
                                 ? 'bg-amber-100 text-amber-900'
                                 : 'bg-emerald-100 text-emerald-900'
@@ -622,7 +622,7 @@ export const CommunicationModule: React.FC = () => {
                           </span>
                         </div>
 
-                        <p className="text-[10px] text-slate-400 line-clamp-1 italic mt-0.5">
+                        <p className="text-xs text-slate-400 line-clamp-1 italic mt-0.5">
                           "{lastMsg?.text || 'No replies yet'}"
                         </p>
                       </button>
@@ -649,7 +649,7 @@ export const CommunicationModule: React.FC = () => {
                       {/* Status Selector for Teachers & Management */}
                       {isTeacherOrAdmin && (
                         <div className="flex items-center gap-1.5 self-end sm:self-auto">
-                          <label className="text-[11px] font-bold text-slate-500">Status:</label>
+                          <label className="text-xs font-bold text-slate-500">Status:</label>
                           <select
                             value={selectedQuery.status}
                             onChange={(e) =>
@@ -667,7 +667,7 @@ export const CommunicationModule: React.FC = () => {
                     </div>
 
                     {/* Metadata Strip */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-600 bg-white p-3 rounded-xl border border-slate-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200">
                       <div>
                         <span className="text-slate-400 font-bold">Student:</span>{' '}
                         <strong className="text-slate-900 font-bold">{selectedQuery.student_name}</strong>{' '}
@@ -685,7 +685,7 @@ export const CommunicationModule: React.FC = () => {
                       </div>
                       <div>
                         <span className="text-slate-400 font-bold">Category:</span>{' '}
-                        <span className="font-bold uppercase text-[10px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded">
+                        <span className="font-bold uppercase text-xs text-amber-800 bg-amber-50 px-2 py-0.5 rounded">
                           {selectedQuery.category}
                         </span>
                       </div>
@@ -693,7 +693,7 @@ export const CommunicationModule: React.FC = () => {
 
                     {/* Dual Notification Seal & WhatsApp Quick Connect */}
                     <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                      <div className="inline-flex items-center gap-2 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                      <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                         <span>Teacher Notified • School Administration Oversight Active</span>
                       </div>
@@ -705,7 +705,7 @@ export const CommunicationModule: React.FC = () => {
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition shadow-2xs"
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-2xs"
                         >
                           <Phone className="w-3 h-3" />
                           <span>WhatsApp Parent</span>
@@ -728,19 +728,19 @@ export const CommunicationModule: React.FC = () => {
                           className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
                         >
                           {/* Role Badge and Sender Header */}
-                          <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 mb-1 px-1">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 mb-1 px-1">
                             {isMsgAdmin ? (
-                              <span className="px-2 py-0.5 rounded-md bg-[#8B0000] text-[#EDE7C7] font-black uppercase text-[9px] border border-[#D4AF37]/50 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-[#8B0000] text-[#EDE7C7] font-black uppercase text-xs border border-[#D4AF37]/50 flex items-center gap-1">
                                 <ShieldCheck className="w-3 h-3 text-[#D4AF37]" />
                                 <span>School Management</span>
                               </span>
                             ) : isMsgTeacher ? (
-                              <span className="px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 font-bold uppercase text-[9px] border border-blue-200 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-blue-100 text-blue-900 font-bold uppercase text-xs border border-blue-200 flex items-center gap-1">
                                 <UserCheck className="w-3 h-3 text-blue-700" />
                                 <span>Faculty Teacher</span>
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 font-bold uppercase text-[9px] border border-emerald-200 flex items-center gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 font-bold uppercase text-xs border border-emerald-200 flex items-center gap-1">
                                 <Users className="w-3 h-3 text-emerald-700" />
                                 <span>Parent</span>
                               </span>
@@ -777,7 +777,7 @@ export const CommunicationModule: React.FC = () => {
                     {/* Quick Response Chips for Teachers/Admins */}
                     {isTeacherOrAdmin && (
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[10px] text-slate-400 font-bold">Quick Reply:</span>
+                        <span className="text-xs text-slate-400 font-bold">Quick Reply:</span>
                         {[
                           'Diary & homework verified in 1st period.',
                           'Parent-teacher meeting scheduled tomorrow at 10 AM.',
@@ -788,7 +788,7 @@ export const CommunicationModule: React.FC = () => {
                             key={chip}
                             type="button"
                             onClick={() => setReplyText(chip)}
-                            className="text-[10px] bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-semibold px-2 py-0.5 rounded-md transition cursor-pointer"
+                            className="text-xs bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-semibold px-2 py-0.5 rounded-md transition cursor-pointer"
                           >
                             {chip}
                           </button>
@@ -850,7 +850,7 @@ export const CommunicationModule: React.FC = () => {
                   <span className="font-bold text-[#200E01] block">
                     Automated Gazette Circulars Active
                   </span>
-                  <span className="text-[11px] text-[#5B0202]/70">
+                  <span className="text-xs text-[#5B0202]/70">
                     Kashmir Day, Pakistan Day, Eid breaks, Summer/Winter vacations &amp; Monthly 1st/7th/10th/15th Fee Cycles.
                   </span>
                 </div>
@@ -905,7 +905,7 @@ export const CommunicationModule: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <span
-                        className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
+                        className={`text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
                           categoryColors[notice.category] || categoryColors.general
                         }`}
                       >
@@ -914,7 +914,7 @@ export const CommunicationModule: React.FC = () => {
 
                       <div className="flex items-center gap-1">
                         {isUrgent && (
-                          <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-rose-500 text-white">
+                          <span className="flex items-center gap-1 text-xs font-black uppercase px-2 py-0.5 rounded-full bg-rose-500 text-white">
                             <AlertTriangle className="w-3 h-3" /> Priority
                           </span>
                         )}
@@ -939,7 +939,7 @@ export const CommunicationModule: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-semibold">
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-semibold">
                     <span>By: {notice.author_name}</span>
                     <span>{formatDate(notice.publish_date)}</span>
                   </div>
@@ -1001,7 +1001,7 @@ export const CommunicationModule: React.FC = () => {
                         }`}
                       >
                         <div className="font-bold text-slate-900">{child.name}</div>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="text-xs text-slate-500">
                           {child.class_id} • Sec {child.section}
                         </div>
                       </button>

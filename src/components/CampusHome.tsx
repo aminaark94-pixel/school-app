@@ -34,16 +34,16 @@ interface NavigationProps {
 export function CampusNavigation({ role, activeModule, onNavigate }: NavigationProps & { activeModule: AppModule }) {
   const otherPages = services.filter(({ id, roles }) => id !== 'attendance' && id !== 'results' && (!roles || (role && roles.includes(role))));
   return (
-    <nav data-tour="primary-navigation" aria-label="School pages" className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-4 pb-3 sm:px-6">
+    <nav data-tour="primary-navigation" aria-label="School pages" className="school-workspace mx-auto flex flex-wrap items-center gap-2 px-4 pb-3">
       {primary.map((id) => (
         <button key={id} type="button" aria-current={id === activeModule ? 'page' : undefined}
           onClick={() => onNavigate(id)}
-          className={`min-h-11 rounded-lg px-2.5 text-sm font-semibold sm:px-4 ${id === activeModule ? 'bg-[var(--t-primary)] text-white' : 'text-slate-700 hover:bg-slate-100'}`}>
+          className={`school-nav-item ${id === activeModule ? 'school-nav-active' : ''}`}>
           {pageNames[id]}
         </button>
       ))}
       <label className="sr-only" htmlFor="other-school-pages">More pages</label>
-      <select id="other-school-pages" className="min-h-11 max-w-full rounded-lg border border-slate-200 bg-white px-2 text-sm font-semibold"
+      <select id="other-school-pages" className="school-field max-w-full"
         value={primary.some((id) => id === activeModule) ? '' : activeModule}
         onChange={(e) => { if (e.target.value) onNavigate(e.target.value as AppModule); }}>
         <option value="">More pages</option>
@@ -57,7 +57,7 @@ export function CampusNavigation({ role, activeModule, onNavigate }: NavigationP
 export function CampusHome({ role, onNavigate, onSubject }: NavigationProps & { onSubject: (subject: string) => void }) {
   return (
     <>
-      <section aria-labelledby="subjects" className="rounded-2xl border border-slate-300 bg-white p-4 sm:p-7">
+      <section aria-labelledby="subjects" className="school-card">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 id="subjects" data-tour="page-heading" className="text-3xl font-bold">Subjects</h1>
@@ -81,7 +81,7 @@ export function CampusHome({ role, onNavigate, onSubject }: NavigationProps & { 
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {services.filter(({ roles }) => !roles || (role && roles.includes(role))).map(({ id, icon: Icon, description }) => (
             <button key={id} type="button" onClick={() => onNavigate(id)}
-              className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 text-left hover:border-[var(--t-primary)]">
+              className="school-card flex items-center gap-3 text-left hover:border-[var(--t-primary)]">
               <Icon aria-hidden="true" className="size-5 shrink-0 text-[var(--t-primary)]" />
               <span><span className="block font-semibold">{pageNames[id]}</span><span className="block text-sm text-slate-600">{description}</span></span>
             </button>

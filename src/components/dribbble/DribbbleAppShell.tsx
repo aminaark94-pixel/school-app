@@ -59,7 +59,7 @@ export const DribbbleAppShell: React.FC<DribbbleAppShellProps> = () => {
       <div className="w-full max-w-7xl px-3 sm:px-4 py-2 sm:py-2.5 mb-3 sm:mb-4 flex items-center justify-between gap-3 bg-[var(--t-ink)] text-[var(--t-sand)] rounded-2xl border border-[var(--t-primary)]/40 shadow-md">
         <div className="flex flex-1 min-w-0 items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
           <span
-            className="hidden lg:flex shrink-0 text-[11px] font-black uppercase tracking-wider text-[var(--t-accent)] mr-1 items-center gap-1"
+            className="hidden lg:flex shrink-0 text-xs font-black uppercase tracking-wider text-[var(--t-accent)] mr-1 items-center gap-1"
             style={{ fontFamily: 'var(--t-font-display, "Cinzel", serif)' }}
           >
             <Layers className="w-3.5 h-3.5 text-[var(--t-accent)]" />
@@ -121,7 +121,7 @@ export const DribbbleAppShell: React.FC<DribbbleAppShellProps> = () => {
       >
         {/* Fake status bar (9:30, WiFi, Battery): desktop preview only. A real phone has its own. */}
         <div className="hidden md:flex bg-[var(--t-primary)] text-[var(--t-sand)] pt-2.5 px-7 pb-1 items-center justify-between text-xs font-bold select-none border-b border-[var(--t-primary)]/60">
-          <span className="tracking-tight text-[11px] font-black font-['Outfit',sans-serif]">9:30 AM</span>
+          <span className="tracking-tight text-xs font-black font-['Outfit',sans-serif]">9:30 AM</span>
 
           {viewMode === 'mobile' && (
             <div className="w-16 h-3.5 bg-black/40 rounded-full flex items-center justify-center">

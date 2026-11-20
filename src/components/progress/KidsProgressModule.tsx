@@ -265,10 +265,10 @@ export const KidsProgressModule: React.FC = () => {
           {parentChildren.length > 1 && (
             <div data-tour="progress-child" className="bg-[#FAF8F2] p-3 rounded-3xl border border-[#EDE7C7] space-y-2">
               <div className="flex items-center justify-between px-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#5B0202]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#5B0202]">
                   Enrolled Children of {currentUser?.full_name} ({parentChildren.length} Kids)
                 </span>
-                <span className="text-[10px] text-slate-500 font-medium">Select child to view report</span>
+                <span className="text-xs text-slate-500 font-medium">Select child to view report</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {parentChildren.map((child) => {
@@ -284,14 +284,14 @@ export const KidsProgressModule: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-[#FAF8F2] text-[#8B0000] border border-[#EDE7C7]">
+                        <span className="text-xs font-bold uppercase px-2 py-0.5 rounded-md bg-[#FAF8F2] text-[#8B0000] border border-[#EDE7C7]">
                           {child.class_id}
                         </span>
                         {isSelected && <Sparkles className="w-3.5 h-3.5 text-amber-500" />}
                       </div>
                       <div className="mt-2">
                         <h4 className="text-xs font-bold text-[#200E01] truncate">{child.name}</h4>
-                        <p className="text-[10px] text-slate-500 font-mono">Roll: {child.roll_number}</p>
+                        <p className="text-xs text-slate-500 font-mono">Roll: {child.roll_number}</p>
                       </div>
                     </button>
                   );
@@ -312,7 +312,7 @@ export const KidsProgressModule: React.FC = () => {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-lg font-bold text-[#200E01]">{activeChild.name}</h3>
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300">
                         Grade {activeChildReport.overall_grade}
                       </span>
                     </div>
@@ -320,7 +320,7 @@ export const KidsProgressModule: React.FC = () => {
                       Class: <b>{activeChild.class_id}</b> (Section {activeChild.section}) • Roll No:{' '}
                       <span className="font-mono">{activeChild.roll_number}</span>
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
+                    <p className="text-xs text-slate-500 mt-0.5">
                       Report Month: <b>{activeChildReport.month}</b> • Evaluated by:{' '}
                       <b>{activeChildReport.teacher_name}</b>
                     </p>
@@ -362,7 +362,7 @@ export const KidsProgressModule: React.FC = () => {
                             </span>
                             <span className="text-xs font-bold text-[#200E01]">{pillar.label}</span>
                           </div>
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-white border border-[#EDE7C7] text-[#8B0000]">
+                          <span className="px-2 py-0.5 rounded-md text-xs font-black uppercase bg-white border border-[#EDE7C7] text-[#8B0000]">
                             {evalData.grade}
                           </span>
                         </div>
@@ -390,7 +390,7 @@ export const KidsProgressModule: React.FC = () => {
                           />
                         </div>
 
-                        <p className="text-[11px] text-slate-600 italic">
+                        <p className="text-xs text-slate-600 italic">
                           Status: <b>{evalData.status}</b>
                         </p>
                       </div>
@@ -420,13 +420,13 @@ export const KidsProgressModule: React.FC = () => {
 
               {/* Teacher Remarks & Encouragement */}
               <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-300 space-y-1.5">
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-900 block">
+                <span className="text-xs font-black uppercase tracking-wider text-amber-900 block">
                   Class Teacher Commendation &amp; Advice:
                 </span>
                 <p className="text-xs text-[#200E01] leading-relaxed font-medium">
                   "{activeChildReport.teacher_remarks}"
                 </p>
-                <p className="text-[10px] text-[#5B0202]/70 text-right font-bold mt-1">
+                <p className="text-xs text-[#5B0202]/70 text-right font-bold mt-1">
                   — {activeChildReport.teacher_name} ({currentSchool?.name})
                 </p>
               </div>
@@ -484,19 +484,19 @@ export const KidsProgressModule: React.FC = () => {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold bg-[#FAF8F2] border border-[#EDE7C7] text-[#8B0000]">
+                          <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-[#FAF8F2] border border-[#EDE7C7] text-[#8B0000]">
                             {std.class_id}
                           </span>
-                          <span className="text-[10px] font-mono text-slate-400">{std.roll_number}</span>
+                          <span className="text-xs font-mono text-slate-400">{std.roll_number}</span>
                         </div>
                         <h4 className="text-sm font-bold text-[#200E01] mt-1 truncate">{std.name}</h4>
-                        <p className="text-[11px] text-slate-500 truncate">
+                        <p className="text-xs text-slate-500 truncate">
                           Guardian: {std.parent_name || 'Guardian'}
                         </p>
                       </div>
 
                       {report && (
-                        <span className="px-2.5 py-1 rounded-xl text-[10px] font-black uppercase bg-emerald-100 text-emerald-900 border border-emerald-300 shrink-0">
+                        <span className="px-2.5 py-1 rounded-xl text-xs font-black uppercase bg-emerald-100 text-emerald-900 border border-emerald-300 shrink-0">
                           {report.overall_grade} ({report.overall_score}%)
                         </span>
                       )}
@@ -504,25 +504,25 @@ export const KidsProgressModule: React.FC = () => {
 
                     {/* 5 Skills Summary Pill Strip */}
                     {report && (
-                      <div className="grid grid-cols-5 gap-1 pt-1 text-center text-[10px] font-bold">
+                      <div className="grid grid-cols-5 gap-1 pt-1 text-center text-xs font-bold">
                         <div className="p-1 rounded-lg bg-blue-50 text-blue-900">
-                          <span className="block text-[8px] text-slate-400">LANG</span>
+                          <span className="block text-xs text-slate-400">LANG</span>
                           {report.language.score}★
                         </div>
                         <div className="p-1 rounded-lg bg-amber-50 text-amber-900">
-                          <span className="block text-[8px] text-slate-400">DISC</span>
+                          <span className="block text-xs text-slate-400">DISC</span>
                           {report.discipline.score}★
                         </div>
                         <div className="p-1 rounded-lg bg-purple-50 text-purple-900">
-                          <span className="block text-[8px] text-slate-400">WRIT</span>
+                          <span className="block text-xs text-slate-400">WRIT</span>
                           {report.writing.score}★
                         </div>
                         <div className="p-1 rounded-lg bg-emerald-50 text-emerald-900">
-                          <span className="block text-[8px] text-slate-400">READ</span>
+                          <span className="block text-xs text-slate-400">READ</span>
                           {report.reading.score}★
                         </div>
                         <div className="p-1 rounded-lg bg-teal-50 text-teal-900">
-                          <span className="block text-[8px] text-slate-400">CLEAN</span>
+                          <span className="block text-xs text-slate-400">CLEAN</span>
                           {report.cleaning.score}★
                         </div>
                       </div>
@@ -530,7 +530,7 @@ export const KidsProgressModule: React.FC = () => {
                   </div>
 
                   <div className="pt-3 border-t border-[#EDE7C7]/60 flex items-center justify-between">
-                    <span className="text-[10px] text-slate-500 font-medium">Month: {selectedMonth}</span>
+                    <span className="text-xs text-slate-500 font-medium">Month: {selectedMonth}</span>
                     <button
                       onClick={() => openEvaluationModal(std)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#8B0000] text-white hover:bg-[#700000] transition shadow-2xs"
@@ -570,7 +570,7 @@ export const KidsProgressModule: React.FC = () => {
             <form onSubmit={handleSaveEvaluation} className="space-y-4 text-xs">
               {/* 5 Core Pillars Ratings */}
               <div className="space-y-3">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#5B0202] block">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#5B0202] block">
                   Evaluate Core Pillars (1 to 5 Stars):
                 </span>
 
@@ -679,7 +679,7 @@ export const KidsProgressModule: React.FC = () => {
                       key={b}
                       type="button"
                       onClick={() => toggleBadge(b)}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition border ${
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition border ${
                         formBadges.includes(b)
                           ? 'bg-amber-100 border-amber-300 text-amber-950 font-black'
                           : 'bg-slate-50 border-slate-200 text-slate-600'

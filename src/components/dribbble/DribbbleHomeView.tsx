@@ -103,11 +103,11 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
         <div className="relative z-10 mt-5 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-[#D4AF37] font-['Cinzel',serif]">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] font-['Cinzel',serif]">
                 Scholar Profile • {student.roll_number}
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-              <span className="text-[11px] font-semibold text-[#EDE7C7]/80">Fee Status: Cleared</span>
+              <span className="text-xs font-semibold text-[#EDE7C7]/80">Fee Status: Cleared</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic mt-0.5">
               {student.name}
@@ -148,7 +148,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
 
           <div className="relative p-6 sm:p-8 z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="max-w-xl space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-[11px] font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8B0000]/80 border border-[#D4AF37]/60 text-xs font-black uppercase tracking-wider text-[#EDE7C7] font-['Cinzel',serif]">
                 <Building2 className="w-3.5 h-3.5 text-[#D4AF37]" />
                 <span>Historic Canal Campus • Est. 1928</span>
               </div>
@@ -169,7 +169,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                  <span className="text-[10px] font-bold text-[#EDE7C7] leading-tight">Science Lab</span>
+                  <span className="text-xs font-bold text-[#EDE7C7] leading-tight">Science Lab</span>
                 </div>
               </div>
 
@@ -180,7 +180,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                  <span className="text-[10px] font-bold text-[#EDE7C7] leading-tight">Library Hall</span>
+                  <span className="text-xs font-bold text-[#EDE7C7] leading-tight">Library Hall</span>
                 </div>
               </div>
 
@@ -191,7 +191,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-end p-1.5">
-                  <span className="text-[10px] font-bold text-[#EDE7C7] leading-tight">Athletic Oval</span>
+                  <span className="text-xs font-bold text-[#EDE7C7] leading-tight">Athletic Oval</span>
                 </div>
               </div>
             </div>
@@ -211,7 +211,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
           {/* Center Details */}
           <div className="flex-1 text-center md:text-left min-w-0">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[#8B0000]/10 text-[#8B0000] border border-[#8B0000]/20 text-[10px] font-bold uppercase tracking-wider font-['Cinzel',serif]">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#8B0000]/10 text-[#8B0000] border border-[#8B0000]/20 text-xs font-bold uppercase tracking-wider font-['Cinzel',serif]">
                 Core Cambridge Sciences
               </span>
               <span className="text-xs text-[#5B0202]/70 font-semibold">Prof. Asim Munir</span>
@@ -270,7 +270,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
             <span className="font-bold text-base text-[#5B0202] font-['Cormorant_Garamond',serif] italic text-lg">
               Daily Timetable
             </span>
-            <p className="text-[11px] text-[#200E01]/70 mt-0.5">8 Periods • Mon to Fri</p>
+            <p className="text-xs text-[#200E01]/70 mt-0.5">8 Periods • Mon to Fri</p>
           </div>
 
           {/* Bento 2: My Calender */}
@@ -284,7 +284,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
             <span className="font-bold text-base text-[#8B0000] font-['Cormorant_Garamond',serif] italic text-lg">
               Academic Calender
             </span>
-            <p className="text-[11px] text-[#200E01]/70 mt-0.5">National Holidays & Exams</p>
+            <p className="text-xs text-[#200E01]/70 mt-0.5">National Holidays & Exams</p>
           </div>
 
           {/* Bento 3: My Attendance */}
@@ -298,7 +298,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
             <span className="font-bold text-base text-[#01411C] font-['Cormorant_Garamond',serif] italic text-lg">
               Attendance Record
             </span>
-            <p className="text-[11px] text-[#01411C] font-semibold mt-0.5">98.2% (Present Today)</p>
+            <p className="text-xs text-[#01411C] font-semibold mt-0.5">98.2% (Present Today)</p>
           </div>
 
           {/* Bento 4: Progress Report */}
@@ -312,7 +312,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
             <span className="font-bold text-base text-[#8B0000] font-['Cormorant_Garamond',serif] italic text-lg">
               Certified Report Card
             </span>
-            <p className="text-[11px] text-[#5B0202] font-semibold mt-0.5">Grade A+ (Rank 1st)</p>
+            <p className="text-xs text-[#5B0202] font-semibold mt-0.5">Grade A+ (Rank 1st)</p>
           </div>
         </div>
 
@@ -321,7 +321,7 @@ export const DribbbleHomeView: React.FC<DribbbleHomeViewProps> = ({
           <div className="space-y-1 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#D4AF37] animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#D4AF37] font-['Cinzel',serif]">
+              <span className="text-xs font-black uppercase tracking-widest text-[#D4AF37] font-['Cinzel',serif]">
                 Digital Class Work & Planner Diary Feed
               </span>
             </div>

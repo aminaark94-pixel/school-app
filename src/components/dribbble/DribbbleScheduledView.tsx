@@ -139,7 +139,7 @@ export const DribbbleScheduledView: React.FC<DribbbleScheduledViewProps> = ({ on
           </button>
 
           <div className="text-center">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-[#D4AF37] font-['Cinzel',serif] block">
+            <span className="text-xs uppercase font-bold tracking-widest text-[#D4AF37] font-['Cinzel',serif] block">
               Academic Timetable
             </span>
             <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#EDE7C7] font-['Cormorant_Garamond',serif] italic">
@@ -187,7 +187,7 @@ export const DribbbleScheduledView: React.FC<DribbbleScheduledViewProps> = ({ on
                 }`}
               >
                 <span className="text-sm font-black">{num}</span>
-                <span className="text-[10px] uppercase tracking-wider mt-0.5">{dayName}</span>
+                <span className="text-xs uppercase tracking-wider mt-0.5">{dayName}</span>
               </button>
             );
           })}
@@ -216,7 +216,7 @@ export const DribbbleScheduledView: React.FC<DribbbleScheduledViewProps> = ({ on
           {schedule.map((item, idx) => (
             <div key={idx} className="relative group">
               {/* Time Label on left */}
-              <div className="absolute -left-14 sm:-left-16 top-3 text-[11px] font-extrabold text-slate-400 w-10 text-right font-['Outfit',sans-serif]">
+              <div className="absolute -left-14 sm:-left-16 top-3 text-xs font-extrabold text-slate-400 w-10 text-right font-['Outfit',sans-serif]">
                 {item.time}
               </div>
 
@@ -241,7 +241,7 @@ export const DribbbleScheduledView: React.FC<DribbbleScheduledViewProps> = ({ on
                       {item.title}
                     </span>
                     <span
-                      className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${item.badgeBg} ${item.badgeText}`}
+                      className={`text-xs font-black px-2 py-0.5 rounded-full border ${item.badgeBg} ${item.badgeText}`}
                     >
                       {item.sectionBadge}
                     </span>
@@ -254,7 +254,7 @@ export const DribbbleScheduledView: React.FC<DribbbleScheduledViewProps> = ({ on
                 </div>
 
                 {!item.isFreeOrBreak && (
-                  <div className="mt-2 flex items-center gap-4 text-[11px] text-[#200E01]/60 font-medium">
+                  <div className="mt-2 flex items-center gap-4 text-xs text-[#200E01]/60 font-medium">
                     <span className="flex items-center gap-1">
                       <User className="w-3 h-3 text-[#D4AF37]" />
                       {item.teacher}

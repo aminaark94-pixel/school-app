@@ -82,7 +82,7 @@ const ReferenceHeader: React.FC<Props> = ({ activeModule = 'portal', setActiveMo
             </span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-black tracking-tight sm:text-lg">{currentSchool?.name || getActiveSkin().name}</span>
-              <span className={ideas ? 'block truncate text-[10px] font-bold uppercase tracking-[.16em] text-slate-300' : 'block truncate text-[10px] font-black uppercase tracking-[.16em] text-amber-300'}>
+              <span className={ideas ? 'block truncate text-xs font-bold uppercase tracking-[.16em] text-slate-300' : 'block truncate text-xs font-black uppercase tracking-[.16em] text-amber-300'}>
                 {ideas ? 'Parent & Student System' : 'Learning starts here'}
               </span>
             </span>
@@ -97,7 +97,7 @@ const ReferenceHeader: React.FC<Props> = ({ activeModule = 'portal', setActiveMo
           </button>
           <div className="hidden shrink-0 text-right md:block">
             <p className="text-xs font-bold">{currentUser?.full_name || 'Welcome'}</p>
-            <p className="text-[10px] capitalize text-white/60">{currentUser?.role || 'visitor'} portal</p>
+            <p className="text-xs capitalize text-white/60">{currentUser?.role || 'visitor'} portal</p>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@ const ReferencePortal: React.FC<Pick<Props, 'setActiveModule' | 'style'>> = ({ s
         style={{ backgroundColor: ideas ? '#0c1f38' : '#fef3c7' }}
       >
         <div className="max-w-2xl">
-          <span className={ideas ? 'inline-flex items-center gap-1.5 rounded-full bg-[#f02434] px-3 py-1 text-[10px] font-black uppercase tracking-[.16em]' : 'inline-flex -rotate-1 items-center gap-1.5 rounded-md bg-[#b91c1c] px-3 py-1 text-[10px] font-black uppercase tracking-[.16em] text-white'}>
+          <span className={ideas ? 'inline-flex items-center gap-1.5 rounded-full bg-[#f02434] px-3 py-1 text-xs font-black uppercase tracking-[.16em]' : 'inline-flex -rotate-1 items-center gap-1.5 rounded-md bg-[#b91c1c] px-3 py-1 text-xs font-black uppercase tracking-[.16em] text-white'}>
             <Sparkles className="h-3.5 w-3.5" /> Digital school life
           </span>
           <h1 className="mt-4 text-2xl font-black leading-tight sm:text-4xl">Hello, {currentUser?.full_name?.split(' ')[0] || 'there'}!</h1>
@@ -152,7 +152,7 @@ const ReferencePortal: React.FC<Pick<Props, 'setActiveModule' | 'style'>> = ({ s
 
       <section data-tour="portal-services">
         <div className="mb-3 flex items-end justify-between gap-3">
-          <div><p className="text-[10px] font-black uppercase tracking-[.18em] text-[var(--t-primary)]">Your dashboard</p><h2 className="text-lg font-black text-[var(--t-ink)]">School services</h2></div>
+          <div><p className="text-xs font-black uppercase tracking-[.18em] text-[var(--t-primary)]">Your dashboard</p><h2 className="text-lg font-black text-[var(--t-ink)]">School services</h2></div>
           <span className="text-xs font-semibold text-slate-500">Tap to open</span>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

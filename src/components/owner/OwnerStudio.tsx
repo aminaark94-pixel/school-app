@@ -397,7 +397,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </div>
           <div>
             <h2 className="font-extrabold text-sm">Owner Studio</h2>
-            <p className="text-[11px] text-slate-500">Skin &amp; colours • sirf aap ke liye</p>
+            <p className="text-xs text-slate-500">Skin &amp; colours • sirf aap ke liye</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
@@ -421,7 +421,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       <div className="overflow-y-auto px-5 py-4 space-y-5">
         {/* Where changes live */}
         <div
-          className={`rounded-2xl px-3.5 py-2.5 text-[11px] leading-relaxed font-medium border ${
+          className={`rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed font-medium border ${
             preview
               ? 'bg-amber-50 border-amber-200 text-amber-900'
               : 'bg-emerald-50 border-emerald-200 text-emerald-900'
@@ -435,19 +435,19 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         {/* Skin picker — the whole UI look, not just colours */}
         <section className="space-y-2">
           <div className="flex items-center justify-between gap-2">
-            <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">
+            <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">
               App skin (poora look)
             </h3>
             {(readPreviewedSkinId() || preview) && (
               <button
                 onClick={resetSkin}
-                className="text-[10px] font-bold text-slate-500 hover:text-slate-800 underline"
+                className="text-xs font-bold text-slate-500 hover:text-slate-800 underline"
               >
                 Reset to published
               </button>
             )}
           </div>
-          <p className="text-[11px] text-slate-500 leading-relaxed">
+          <p className="text-xs text-slate-500 leading-relaxed">
             Skin header, navigation, fonts aur shape — sab badalti hai. School khud ise nahi badal
             sakta. Neeche dabao karke aap dekh sakte hain, phir "Publish" se turant sabke liye live
             ho jayega — koi file edit nahi.
@@ -480,12 +480,12 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       <span className="text-xs font-black text-slate-800">{s.name}</span>
                       {active && <Check className="w-3.5 h-3.5 text-slate-900" />}
                       {publishedSkinId === s.id && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
+                        <span className="text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
                           Published
                         </span>
                       )}
                     </span>
-                    <span className="block text-[11px] text-slate-500 leading-snug mt-0.5">
+                    <span className="block text-xs text-slate-500 leading-snug mt-0.5">
                       {s.description}
                     </span>
                   </span>
@@ -497,14 +497,14 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <button
             onClick={publishSkin}
             disabled={publishing || !currentSchool}
-            className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-[11px] font-bold transition"
+            className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold transition"
           >
             {published ? <Check className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
             {published ? 'Published — live for everyone now' : publishing ? 'Publishing...' : 'Publish this skin now'}
           </button>
 
           {publishError && (
-            <p className="rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-[11px] font-semibold text-rose-700 leading-snug">
+            <p className="rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-700 leading-snug">
               Publish nahi hua: {publishError}
             </p>
           )}
@@ -512,8 +512,8 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         {/* Custom skin creator */}
         <section className="space-y-2 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Create custom school skin</h3>
-          <p className="text-[11px] leading-relaxed text-slate-500">
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Create custom school skin</h3>
+          <p className="text-xs leading-relaxed text-slate-500">
             Current layout base aur neeche selected colours use hongay. Naam poore portal mein school skin name ke taur par dikhega.
           </p>
           <input
@@ -522,7 +522,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             placeholder="e.g. Beaconhouse North Campus"
             className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-semibold focus:outline-hidden focus:ring-2 focus:ring-slate-400"
           />
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
             Base layout
             <select
               value={customBaseSkin}
@@ -532,7 +532,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               {Object.values(SKINS).map((skin) => <option key={skin.id} value={skin.id}>{skin.name}</option>)}
             </select>
           </label>
-          {customError && <p className="text-[11px] font-semibold text-rose-600">{customError}</p>}
+          {customError && <p className="text-xs font-semibold text-rose-600">{customError}</p>}
           <button
             onClick={createCustomSkin}
             className="w-full rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold text-white transition hover:bg-slate-800"
@@ -541,12 +541,12 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </button>
           {customSkins.length > 0 && (
             <div className="space-y-1.5 pt-1">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Saved custom skins</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Saved custom skins</p>
               {customSkins.map((custom) => (
                 <button
                   key={custom.id}
                   onClick={() => activateCustomSkin(custom)}
-                  className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-left text-[11px] font-bold text-slate-700 hover:border-slate-400"
+                  className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-left text-xs font-bold text-slate-700 hover:border-slate-400"
                 >
                   <span className="flex -space-x-1">{[custom.colors.primary, custom.colors.accent, custom.colors.bg].map((color) => <span key={color} className="h-3.5 w-3.5 rounded-full border border-white" style={{ backgroundColor: color }} />)}</span>
                   <span className="truncate">{custom.name}</span>
@@ -558,7 +558,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         {/* Presets */}
         <section className="space-y-2">
-          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Ready-made palettes</h3>
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Ready-made palettes</h3>
           <div className="grid grid-cols-2 gap-2">
             {PRESETS.map((p) => (
               <button
@@ -575,7 +575,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     />
                   ))}
                 </span>
-                <span className="text-[11px] font-bold leading-tight">{p.name}</span>
+                <span className="text-xs font-bold leading-tight">{p.name}</span>
               </button>
             ))}
           </div>
@@ -583,7 +583,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         {/* Individual colours */}
         <section className="space-y-3">
-          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Fine-tune colours</h3>
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Fine-tune colours</h3>
           {THEME_KEYS.map((k) => (
             <div key={k} className="flex items-center gap-3">
               <input
@@ -595,7 +595,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               />
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-slate-800">{COLOR_LABELS[k].label}</p>
-                <p className="text-[11px] text-slate-500 leading-tight">{COLOR_LABELS[k].hint}</p>
+                <p className="text-xs text-slate-500 leading-tight">{COLOR_LABELS[k].hint}</p>
               </div>
               <input
                 type="text"
@@ -610,13 +610,13 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         {/* Readability */}
         <section className="space-y-1.5">
-          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Readability check</h3>
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Readability check</h3>
           {checks.map((c) => {
             const ratio = contrastRatio(c.a, c.b);
             const good = ratio >= 4.5;
             const okBig = ratio >= 3;
             return (
-              <div key={c.label} className="flex items-center justify-between text-[11px]">
+              <div key={c.label} className="flex items-center justify-between text-xs">
                 <span className="text-slate-600 font-medium">{c.label}</span>
                 <span
                   className={`font-bold px-2 py-0.5 rounded-md ${
@@ -636,7 +636,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
         {/* Copy / import / reset (advanced) */}
         <section className="space-y-2">
-          <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-500">Advanced (optional)</h3>
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Advanced (optional)</h3>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={copyJson}
@@ -670,7 +670,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 placeholder='{ "colors": { "primary": "#1E3A8A", ... } }'
                 className="w-full rounded-xl border border-slate-300 p-2.5 text-xs font-mono focus:outline-hidden focus:ring-2 focus:ring-slate-400"
               />
-              {importError && <p className="text-[11px] font-semibold text-rose-600">{importError}</p>}
+              {importError && <p className="text-xs font-semibold text-rose-600">{importError}</p>}
               <button
                 onClick={applyImport}
                 className="px-3.5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition"
@@ -680,7 +680,7 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             </div>
           )}
 
-          <p className="text-[11px] text-slate-500 leading-relaxed flex gap-1.5">
+          <p className="text-xs text-slate-500 leading-relaxed flex gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-0.5 text-slate-400" />
             <span>
               Ye PIN sirf ek halki lock hai (browser ke andar). Preview sirf aapke browser mein hota hai;

@@ -57,7 +57,7 @@ export const PWAUpdateNotification: React.FC = () => {
           </div>
           <div>
             <h4 className="text-xs font-bold text-white">Application Update Ready</h4>
-            <p className="text-[11px] text-slate-300 mt-0.5">
+            <p className="text-xs text-slate-300 mt-0.5">
               A newer version of the school portal is ready. Refresh now for the latest features.
             </p>
           </div>

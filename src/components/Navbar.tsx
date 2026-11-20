@@ -116,13 +116,13 @@ export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule })
                     {currentSchool?.name || 'School Management PWA'}
                   </span>
                   <span
-                    className="hidden sm:inline-block shrink-0 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest text-[#EDE7C7] border border-[#D4AF37]/60 shadow-xs font-['Cinzel',serif]"
+                    className="hidden sm:inline-block shrink-0 px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-widest text-[#EDE7C7] border border-[#D4AF37]/60 shadow-xs font-['Cinzel',serif]"
                     style={{ backgroundColor: secondaryColor }}
                   >
                     Est. 1928
                   </span>
                 </div>
-                <p className="text-[11px] text-[#EDE7C7]/80 truncate font-medium hidden sm:block tracking-wide">
+                <p className="text-xs text-[#EDE7C7]/80 truncate font-medium hidden sm:block tracking-wide">
                   {currentSchool?.motto || 'Perseverantia et Virtus • Knowledge is Light'}
                 </p>
               </div>
@@ -166,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule })
                 }`}
               >
                 <Database className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span className="text-[11px]">{isSupabaseActive ? 'Cloud Live' : 'Demo DB'}</span>
+                <span className="text-xs">{isSupabaseActive ? 'Cloud Live' : 'Demo DB'}</span>
                 <span
                   className={`w-2 h-2 rounded-full ${
                     isSupabaseActive ? 'bg-emerald-400 animate-pulse' : 'bg-[#D4AF37]'
@@ -191,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule })
                 key={item.id}
                 onClick={() => go(item.id)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 text-[10px] font-bold transition active:scale-95 ${
+                className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 text-xs font-bold transition active:scale-95 ${
                   isActive ? 'text-[#8B0000]' : 'text-[#5B0202]/60'
                 }`}
               >
@@ -210,7 +210,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule })
               onClick={() => setMoreOpen(true)}
               aria-haspopup="dialog"
               aria-expanded={moreOpen}
-              className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 text-[10px] font-bold transition active:scale-95 ${
+              className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-0.5 text-xs font-bold transition active:scale-95 ${
                 moreActive ? 'text-[#8B0000]' : 'text-[#5B0202]/60'
               }`}
             >
@@ -280,7 +280,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeModule, setActiveModule })
                 <Database className="w-5 h-5 text-[#D4AF37]" />
                 <span>Database status</span>
                 <span
-                  className={`ml-auto text-[11px] font-semibold ${
+                  className={`ml-auto text-xs font-semibold ${
                     isSupabaseActive ? 'text-emerald-300' : 'text-[#EDE7C7]/60'
                   }`}
                 >

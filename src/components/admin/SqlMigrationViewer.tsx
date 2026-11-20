@@ -348,7 +348,7 @@ export const SqlMigrationViewer: React.FC = () => {
             <Shield className="w-4 h-4 text-blue-600" />
             <span>Strict Multi-Tenancy</span>
           </div>
-          <p className="text-[11px] text-blue-800/80">
+          <p className="text-xs text-blue-800/80">
             Every table enforces tenant isolation via <code className="font-mono font-semibold">get_current_user_school_id()</code>. Schools cannot access each other's records.
           </p>
         </div>
@@ -358,7 +358,7 @@ export const SqlMigrationViewer: React.FC = () => {
             <Terminal className="w-4 h-4 text-purple-600" />
             <span>Role-Based Access (RBAC)</span>
           </div>
-          <p className="text-[11px] text-purple-800/80">
+          <p className="text-xs text-purple-800/80">
             Admins have full CRUD; faculty teachers can record attendance and marks; parents can only view their own children.
           </p>
         </div>
@@ -368,7 +368,7 @@ export const SqlMigrationViewer: React.FC = () => {
             <FileCode className="w-4 h-4 text-emerald-600" />
             <span>Soft-Delete & Triggers</span>
           </div>
-          <p className="text-[11px] text-emerald-800/80">
+          <p className="text-xs text-emerald-800/80">
             Includes <code className="font-mono font-semibold">is_deleted</code> boolean for safe student lifecycle management and automated fee timestamp triggers.
           </p>
         </div>
@@ -376,11 +376,11 @@ export const SqlMigrationViewer: React.FC = () => {
 
       {/* Code Block */}
       <div className="relative rounded-2xl bg-slate-950 text-slate-200 p-4 border border-slate-800 overflow-hidden font-mono text-xs">
-        <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800 text-[11px] text-slate-400">
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800 text-xs text-slate-400">
           <span>/supabase/migrations/20250101000000_school_management_schema.sql</span>
           <span>PostgreSQL 15+</span>
         </div>
-        <pre className="overflow-x-auto max-h-96 leading-relaxed text-[11px] text-emerald-400">
+        <pre className="overflow-x-auto max-h-96 leading-relaxed text-xs text-emerald-400">
           {SQL_MIGRATION_SCRIPT}
         </pre>
       </div>

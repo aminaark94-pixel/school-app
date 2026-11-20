@@ -251,9 +251,9 @@ export function skinToJson(id: SkinId, colors?: Record<string, string>): string 
  */
 export function applySkinTokens(skin: SkinDefinition): void {
   const root = document.documentElement;
-  root.style.setProperty('--t-font-sans', skin.fonts.sans);
-  root.style.setProperty('--t-font-display', skin.fonts.display);
-  root.style.setProperty('--t-radius-card', skin.radius === 'soft' ? '1.5rem' : '0.75rem');
+  root.style.setProperty('--t-font-sans', 'system-ui, sans-serif');
+  root.style.setProperty('--t-font-display', 'system-ui, sans-serif');
+  root.style.setProperty('--t-radius-card', skin.radius === 'soft' ? '14px' : '0.75rem');
   root.style.setProperty('--t-radius-pill', skin.radius === 'soft' ? '9999px' : '0.5rem');
   root.setAttribute('data-skin', skin.id);
 }

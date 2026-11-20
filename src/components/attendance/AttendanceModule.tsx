@@ -4,9 +4,9 @@ import { useSchoolData } from '../../hooks/useSchoolData';
 import type { AttendanceStatus } from '../../types';
 
 const statuses: { value: AttendanceStatus; label: string; active: string }[] = [
-  { value: 'present', label: 'Present', active: 'border-emerald-800 bg-emerald-100 text-emerald-950' },
-  { value: 'absent', label: 'Absent', active: 'border-rose-800 bg-rose-100 text-rose-950' },
-  { value: 'late', label: 'Late', active: 'border-amber-800 bg-amber-100 text-amber-950' },
+  { value: 'present', label: 'Present', active: 'border-[var(--school-success)] bg-[var(--school-success-bg)] text-[var(--school-success)]' },
+  { value: 'absent', label: 'Absent', active: 'border-[var(--school-danger)] bg-[var(--school-danger-bg)] text-[var(--school-danger)]' },
+  { value: 'late', label: 'Late', active: 'border-[var(--school-warning)] bg-[var(--school-warning-bg)] text-[var(--school-warning)]' },
 ];
 
 const field = 'mt-1 block min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-base text-slate-900';
@@ -110,7 +110,7 @@ export function AttendanceModule() {
 
   return (
     <div className="space-y-5">
-      <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5" aria-labelledby="attendance-filters-title">
+      <section className="school-card" aria-labelledby="attendance-filters-title">
         <h2 id="attendance-filters-title" className="text-xl font-bold">Choose a date and class</h2>
         <fieldset disabled={saving} data-tour="attendance-filters" className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           <label className="col-span-2 text-sm font-semibold sm:col-span-1">Date
@@ -195,7 +195,7 @@ export function AttendanceModule() {
         <div className="sticky bottom-16 z-30 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:bottom-4">
           <p role="status" className={saveState === 'error' ? 'text-sm text-rose-800' : 'text-sm text-slate-700'}>{saveMessage || 'Choose a status for each student.'}</p>
           <button type="button" data-tour="attendance-save" disabled={saving || changes.length === 0 || saveState === 'saved'} onClick={save}
-            className="min-h-11 rounded-lg bg-[var(--t-primary)] px-4 text-sm font-semibold text-white disabled:bg-slate-200 disabled:text-slate-700">
+            className="school-button">
             {saving ? 'Saving…' : 'Save attendance'}
           </button>
         </div>

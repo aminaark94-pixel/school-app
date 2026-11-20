@@ -121,7 +121,7 @@ export const SupabaseConfigModal: React.FC<SupabaseConfigModalProps> = ({ isOpen
                   className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-hidden"
                 />
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Found in Supabase Dashboard → Project Settings → API → Project URL
               </p>
             </div>
@@ -139,7 +139,7 @@ export const SupabaseConfigModal: React.FC<SupabaseConfigModalProps> = ({ isOpen
                   className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-hidden"
                 />
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-xs text-slate-400 mt-1">
                 Found in Supabase Dashboard → Project Settings → API → anon public key
               </p>
             </div>
