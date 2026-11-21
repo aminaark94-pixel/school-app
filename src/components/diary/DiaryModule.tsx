@@ -313,21 +313,21 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
     <div className="space-y-6">
 
       {/* 2. Top Control & Action Bar */}
-      <div className="bg-white p-5 sm:p-6 rounded-[28px] border border-[#EDE7C7] shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="bg-white p-5 sm:p-6 rounded-[var(--t-radius-card,1.5rem)] border border-[var(--t-sand)] shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-[#8B0000] text-[#EDE7C7] flex items-center justify-center font-black shadow-md border border-[#D4AF37]/40">
-            <BookOpen className="w-6 h-6 text-[#D4AF37]" />
+          <div className="w-12 h-12 rounded-2xl bg-[var(--t-primary)] text-[var(--t-on-primary,#fff)] flex items-center justify-center font-black shadow-xs border border-[var(--t-accent)]/40">
+            <BookOpen className="w-6 h-6 text-[var(--t-accent)]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-lg sm:text-xl font-bold text-[#200E01] tracking-tight font-['Cormorant_Garamond',serif] italic">
+              <h3 className="text-lg sm:text-xl font-bold text-[var(--t-ink)] tracking-tight font-[family-name:var(--t-font-display)]">
                 Active Curriculum &amp; Planner Feed
               </h3>
-              <span className="hidden sm:inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EDE7C7] text-[#8B0000] border border-[#D4AF37]/40 font-['Cinzel',serif]">
+              <span className="hidden sm:inline-block text-xs font-bold px-2.5 py-0.5 rounded-full bg-[var(--t-sand)] text-[var(--t-primary)] border border-[var(--t-accent)]/40 font-[family-name:var(--t-font-sans)]">
                 Digital Roster
               </span>
             </div>
-            <p className="text-xs text-[#5B0202]/70 mt-0.5 font-medium">
+            <p className="text-xs text-[var(--t-ink)]/70 mt-0.5 font-medium">
               Review assigned homework, work planner PDFs, and class work derivations.
             </p>
           </div>
@@ -340,24 +340,24 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               data-tour="diary-post"
               id="btn-new-diary-entry"
               onClick={() => setIsComposeOpen(true)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs text-white bg-[#8B0000] hover:opacity-90 shadow-sm shadow-[#8B0000]/20 transition active:scale-95"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs text-white bg-[var(--t-primary)] hover:opacity-90 shadow-xs transition active:scale-95"
             >
               <Upload className="w-4 h-4" />
               <span>Post homework</span>
             </button>
           ) : (
-            <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs font-bold text-[#8B0000] bg-[#FAF8F2] border border-[#D4AF37]/40">
-              <span>Parent View (Switch to Teacher/Admin above to post)</span>
+            <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-[var(--t-primary)] bg-[var(--t-bg)] border border-[var(--t-sand)]">
+              <span>Parent View</span>
             </div>
           )}
 
           {/* Sub Tab Switcher */}
-          <div className="flex items-center p-1 bg-[#F4F4F4] rounded-2xl border border-slate-200/80 text-xs font-bold">
+          <div className="flex items-center p-1 bg-[var(--t-bg)] rounded-xl border border-[var(--t-sand)] text-xs font-bold">
             <button
               onClick={() => setActiveTab('feed')}
-              className={`px-3.5 py-1.5 rounded-xl transition ${
+              className={`px-3.5 py-1.5 rounded-lg transition ${
                 activeTab === 'feed'
-                  ? 'bg-white text-[#8B0000] shadow-xs font-extrabold'
+                  ? 'bg-white text-[var(--t-primary)] shadow-xs font-extrabold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -365,7 +365,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
             </button>
             <button
               onClick={() => setActiveTab('absent_catchup')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl transition ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition ${
                 activeTab === 'absent_catchup'
                   ? 'bg-amber-500 text-white shadow-xs font-extrabold'
                   : 'text-slate-600 hover:text-slate-900'
@@ -380,13 +380,13 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
 
       {/* Parent Persona Context Bar */}
       {isParent && (
-        <div className="bg-[#FAF8F2] border border-[#E7E0EE] rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-2xs">
+        <div className="bg-[var(--t-bg)] border border-[var(--t-sand)] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-2xs">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-[#8B0000] text-white flex items-center justify-center font-black text-sm shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-[var(--t-primary)] text-white flex items-center justify-center font-black text-sm shadow-xs">
               {currentStudentObj?.name.charAt(0) || 'S'}
             </div>
             <div>
-              <p className="text-xs text-[#8B0000] font-extrabold uppercase tracking-wider">
+              <p className="text-xs text-[var(--t-primary)] font-extrabold uppercase tracking-wider">
                 Viewing Diary As Guardian of:
               </p>
               <div className="flex items-center gap-2 mt-0.5">
@@ -394,7 +394,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                   id="select-parent-student"
                   value={selectedStudentId}
                   onChange={(e) => setSelectedStudentId(e.target.value)}
-                  className="bg-white border border-[#D4AF37]/40 text-slate-900 font-extrabold text-sm rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-[#8B0000]"
+                  className="bg-white border border-[var(--t-sand)] text-slate-900 font-extrabold text-sm rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-[var(--t-primary)]"
                 >
                   {parentStudents.length > 0 ? (
                     parentStudents.map((s) => (
@@ -415,15 +415,15 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
             </div>
           </div>
 
-          <div className="text-xs text-[#8B0000] bg-white/90 px-3.5 py-2 rounded-2xl border border-[#D4AF37]/40 font-medium">
-            <span className="font-bold">Verifiable Signatures:</span> Review your child's daily work planner PDF, check
+          <div className="text-xs text-[var(--t-ink)] bg-white/90 px-3.5 py-2 rounded-xl border border-[var(--t-sand)] font-medium">
+            <span className="font-bold text-[var(--t-primary)]">Work Planner & Notes:</span> Review your child's daily work planner PDF, check
             class work notes, and tap "Sign &amp; Mark as Read" to timestamp acknowledgment.
           </div>
         </div>
       )}
 
       {/* Class & Subject Filter Bar */}
-      <div data-tour="diary-filters" className="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div data-tour="diary-filters" className="bg-white p-4 rounded-2xl border border-[var(--t-sand)] shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-3">
           {!isParent && (
             <div className="flex items-center gap-2">
@@ -432,7 +432,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
                 id="select-diary-class"
                 value={selectedClass}
                 onChange={(e) => setSelectedClass(e.target.value)}
-                className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 font-bold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#8B0000]"
+                className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 font-bold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[var(--t-primary)]"
               >
                 <option value="All">All classes</option>
                 {availableClasses.map((cls) => (
@@ -450,7 +450,7 @@ export const DiaryModule: React.FC<{ initialSubject?: string }> = ({ initialSubj
               id="select-diary-subject"
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 font-bold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[#8B0000]"
+              className="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 font-bold text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-[var(--t-primary)]"
             >
               {subjectsList.map((sub) => (
                 <option key={sub} value={sub}>

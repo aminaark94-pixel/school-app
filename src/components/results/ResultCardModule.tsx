@@ -70,9 +70,15 @@ export const ResultCardModule: React.FC = () => {
     (r) => r.student_id === activeStudent?.id && r.term === selectedTerm
   );
 
+  const canPrintReport = Boolean(isFeePaid && studentResult && activeStudent && currentSchool);
+
+  const handlePrintReport = () => {
+    if (canPrintReport && reportRef.current) window.print();
+  };
+
   // PDF Export using html2pdf.js or print fallback
   const handleDownloadPDF = async () => {
-    if (!isFeePaid) return;
+    if (!canPrintReport) return;
     if (!reportRef.current || !activeStudent || !currentSchool) return;
 
     setIsExporting(true);
@@ -97,7 +103,7 @@ export const ResultCardModule: React.FC = () => {
       await html2pdf(reportRef.current).set(opt).from(reportRef.current).save();
     } catch (err) {
       console.warn('html2pdf export fallback to browser print dialog:', err);
-      window.print();
+      handlePrintReport();
     } finally {
       setIsExporting(false);
     }
@@ -131,18 +137,18 @@ export const ResultCardModule: React.FC = () => {
     <div className="space-y-6">
 
       {/* Top Bar: Student Selector & Exam Term Toggle */}
-      <div className="bg-white p-4 sm:p-6 rounded-[28px] shadow-sm border border-[#EDE7C7]">
+      <div className="bg-white p-4 sm:p-6 rounded-[var(--t-radius-card,1.5rem)] shadow-xs border border-[var(--t-sand)]">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[var(--t-ink)] mb-1 font-[family-name:var(--t-font-sans)]">
                 Select Scholar
               </label>
               <select data-tour="results-student"
                 id="select-student-report"
                 value={activeStudent.id}
                 onChange={(e) => setSelectedStudentId(e.target.value)}
-                className="bg-[#FAF8F2] border border-[#EDE7C7] text-[#200E01] text-sm font-semibold rounded-xl px-3.5 py-2 focus:ring-2 focus:ring-[#8B0000] focus:outline-hidden cursor-pointer"
+                className="bg-[var(--t-bg)] border border-[var(--t-sand)] text-[var(--t-ink)] text-sm font-semibold rounded-xl px-3.5 py-2 focus:ring-2 focus:ring-[var(--t-primary)] focus:outline-hidden cursor-pointer"
               >
                 {availableStudents.map((s) => {
                   const sFee = fees.find((f) => f.student_id === s.id);
@@ -157,16 +163,16 @@ export const ResultCardModule: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#5B0202] mb-1 font-['Cinzel',serif]">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[var(--t-ink)] mb-1 font-[family-name:var(--t-font-sans)]">
                 Examination Term
               </label>
-              <div className="flex items-center bg-[#FAF8F2] p-1 rounded-xl border border-[#EDE7C7]">
+              <div className="flex items-center bg-[var(--t-bg)] p-1 rounded-xl border border-[var(--t-sand)]">
                 <button
                   onClick={() => setSelectedTerm('mid_term')}
                   className={`px-3 py-1.5 text-xs font-bold rounded-lg transition ${
                     selectedTerm === 'mid_term'
-                      ? 'bg-[#8B0000] text-[#EDE7C7] shadow-sm'
-                      : 'text-[#5B0202] hover:text-[#200E01]'
+                      ? 'bg-[var(--t-primary)] text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Mid-Term Exam
@@ -175,8 +181,8 @@ export const ResultCardModule: React.FC = () => {
                   onClick={() => setSelectedTerm('final')}
                   className={`px-3 py-1.5 text-xs font-bold rounded-lg transition ${
                     selectedTerm === 'final'
-                      ? 'bg-[#8B0000] text-[#EDE7C7] shadow-sm'
-                      : 'text-[#5B0202] hover:text-[#200E01]'
+                      ? 'bg-[var(--t-primary)] text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Final Term Exam
@@ -213,26 +219,35 @@ export const ResultCardModule: React.FC = () => {
               data-tour="results-export"
               id="export-pdf-button"
               onClick={handleDownloadPDF}
-              disabled={!isFeePaid || isExporting}
+              disabled={!canPrintReport || isExporting}
               title={
                 isFeePaid
                   ? 'Download Official Branded PDF'
                   : 'Report Card locked: Clear pending fees to enable PDF download'
               }
-              className={`flex items-center gap-2 px-5 py-2.5 text-xs font-bold rounded-2xl shadow-sm transition active:scale-95 border ${
+              className={`flex items-center gap-2 px-5 py-2.5 text-xs font-bold rounded-xl shadow-xs transition active:scale-95 border ${
                 isFeePaid
-                  ? 'bg-[#8B0000] hover:bg-[#700000] text-[#EDE7C7] cursor-pointer border-[#D4AF37]/50 shadow-md'
-                  : 'bg-[#FAF8F2] text-[#200E01]/40 cursor-not-allowed border-[#EDE7C7]'
+                  ? 'bg-[var(--t-primary)] hover:opacity-90 text-white cursor-pointer border-[var(--t-accent)]/50 shadow-sm'
+                  : 'bg-[var(--t-bg)] text-slate-400 cursor-not-allowed border-[var(--t-sand)]'
               }`}
             >
               {isExporting ? (
                 <span>Generating PDF...</span>
               ) : (
                 <>
-                  <Download className="w-4 h-4 text-[#D4AF37]" />
+                  <Download className="w-4 h-4 text-[var(--t-accent)]" />
                   <span>1-Click PDF Export</span>
                 </>
               )}
+            </button>
+            <button
+              type="button"
+              onClick={handlePrintReport}
+              disabled={!canPrintReport || isExporting}
+              className="flex items-center gap-2 rounded-xl border border-[var(--t-sand)] bg-[var(--t-bg)] px-4 py-2.5 text-xs font-bold text-[var(--t-ink)] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Printer className="h-4 w-4" />
+              Print report card
             </button>
 
             {/* Quick Demo Pay / Re-lock Action */}
@@ -245,9 +260,9 @@ export const ResultCardModule: React.FC = () => {
                 }
               }}
               title="Toggle fee status to test locked vs unlocked report card"
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs font-bold border border-[#EDE7C7] hover:bg-[#FAF8F2] text-[#5B0202] transition"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border border-[var(--t-sand)] hover:bg-[var(--t-bg)] text-[var(--t-ink)] transition"
             >
-              <DollarSign className="w-3.5 h-3.5 text-[#8B0000]" />
+              <DollarSign className="w-3.5 h-3.5 text-[var(--t-primary)]" />
               <span>{isFeePaid ? 'Simulate Unpaid' : 'Clear Dues (Unlock)'}</span>
             </button>
           </div>

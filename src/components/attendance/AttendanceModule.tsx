@@ -111,7 +111,21 @@ export function AttendanceModule() {
   return (
     <div className="space-y-5">
       <section className="school-card" aria-labelledby="attendance-filters-title">
-        <h2 id="attendance-filters-title" className="text-xl font-bold">Choose a date and class</h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 id="attendance-filters-title" className="text-xl font-bold">
+            {currentUser?.role === 'parent' ? 'Child attendance record' : 'Choose a date and class'}
+          </h2>
+          {currentUser?.role === 'parent' && (
+            <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-0.5 text-xs font-bold text-slate-700">
+              Read-Only
+            </span>
+          )}
+        </div>
+        {currentUser?.role === 'parent' && (
+          <p className="mt-1 text-sm text-slate-600">
+            Viewing attendance records for your child. Only school teachers and administrators can record or update daily attendance.
+          </p>
+        )}
         <fieldset disabled={saving} data-tour="attendance-filters" className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           <label className="col-span-2 text-sm font-semibold sm:col-span-1">Date
             <input type="date" className={field} value={selectedDate} onChange={(event) => {
@@ -144,18 +158,32 @@ export function AttendanceModule() {
       <section className="rounded-xl border border-slate-200 bg-white" aria-labelledby="attendance-students-title">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-4">
           <div>
-            <h2 id="attendance-students-title" className="text-xl font-bold">Students</h2>
-            <p className="mt-1 text-sm text-slate-600">{rows.length} students · {unmarked} {canEditAttendance ? 'unmarked' : 'awaiting attendance'}</p>
+            <h2 id="attendance-students-title" className="text-xl font-bold">
+              {currentUser?.role === 'parent' ? 'Attendance Status' : 'Students'}
+            </h2>
+            <p className="mt-1 text-sm text-slate-600">
+              {currentUser?.role === 'parent'
+                ? `${rows.length} ${rows.length === 1 ? 'child' : 'children'} enrolled`
+                : `${rows.length} students · ${unmarked} ${canEditAttendance ? 'unmarked' : 'awaiting attendance'}`}
+            </p>
           </div>
-          {canEditAttendance && Boolean(unmarked) && <button type="button" disabled={saving || !selectedDate}
-            onClick={() => {
-              const unmarkedStudents = rows.filter(({ status }) => !status);
-              setDraft((current) => ({ ...current, ...Object.fromEntries(unmarkedStudents.map(({ student }) => [student.id, 'present' as const])) }));
-              setSaveState('idle');
-            }}
-            className="min-h-11 rounded-lg border border-slate-300 px-3 text-sm font-semibold hover:bg-slate-50">
-            Mark remaining present
-          </button>}
+          {canEditAttendance && Boolean(unmarked) && (
+            <button
+              type="button"
+              disabled={saving || !selectedDate}
+              onClick={() => {
+                const unmarkedStudents = rows.filter(({ status }) => !status);
+                setDraft((current) => ({
+                  ...current,
+                  ...Object.fromEntries(unmarkedStudents.map(({ student }) => [student.id, 'present' as const])),
+                }));
+                setSaveState('idle');
+              }}
+              className="min-h-11 rounded-lg border border-slate-300 px-3 text-sm font-semibold hover:bg-slate-50 transition active:scale-95"
+            >
+              Mark remaining present
+            </button>
+          )}
         </div>
         {!selectedDate || dataState === 'loading' || dataState === 'remote_error' || !rows.length ? (
           <p className="p-4 text-slate-700" role="status">{!selectedDate ? 'Choose a date to see attendance.'
@@ -165,29 +193,42 @@ export function AttendanceModule() {
             : 'No students in this class and section.'}</p>
         ) : (
           <ul className="divide-y divide-slate-200">
-            {rows.map(({ student, status }, index) => (
-              <li key={student.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <p className="font-semibold">{student.name}</p>
-                  <p className="text-sm text-slate-600">{student.roll_number} · Section {student.section}</p>
-                </div>
-                {canEditAttendance ? (
-                  <div role="group" aria-label={`Attendance for ${student.name}`} data-tour={index === 0 ? 'attendance-roster' : undefined}
-                    className="grid grid-cols-3 gap-2">
-                    {statuses.map(({ value, label, active }) => <button key={value} type="button" disabled={saving}
-                      aria-pressed={status === value} onClick={() => chooseStatus(student.id, value)}
-                      className={`min-h-11 rounded-lg border px-2 text-sm font-semibold ${status === value ? active : 'border-slate-300 text-slate-700 hover:bg-slate-50'}`}>
-                      {label}
-                    </button>)}
+            {rows.map(({ student, status }, index) => {
+              const matchedStatus = statuses.find(({ value }) => value === status);
+              return (
+                <li key={student.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="font-semibold text-slate-900">{student.name}</p>
+                    <p className="text-sm text-slate-600">{student.roll_number} · Section {student.section}</p>
                   </div>
-                ) : (
-                  <span data-tour={index === 0 ? 'attendance-roster' : undefined}
-                    className={`self-start rounded-lg border px-3 py-2 text-sm font-semibold ${statuses.find(({ value }) => value === status)?.active ?? 'border-slate-200 bg-slate-50 text-slate-700'}`}>
-                    {statuses.find(({ value }) => value === status)?.label ?? 'Not recorded'}
-                  </span>
-                )}
-              </li>
-            ))}
+                  {canEditAttendance ? (
+                    <div role="group" aria-label={`Attendance for ${student.name}`} data-tour={index === 0 ? 'attendance-roster' : undefined}
+                      className="grid grid-cols-3 gap-2 w-full sm:w-auto">
+                      {statuses.map(({ value, label, active }) => (
+                        <button key={value} type="button" disabled={saving}
+                          aria-pressed={status === value} onClick={() => chooseStatus(student.id, value)}
+                          className={`min-h-11 rounded-lg border px-3 text-sm font-semibold transition active:scale-95 ${status === value ? active : 'border-slate-300 text-slate-700 hover:bg-slate-50'}`}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <span data-tour={index === 0 ? 'attendance-roster' : undefined}
+                      className={`inline-flex items-center self-start rounded-lg border px-3.5 py-1.5 text-sm font-bold ${
+                        status === 'present'
+                          ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
+                          : status === 'absent'
+                            ? 'border-rose-300 bg-rose-50 text-rose-800'
+                            : status === 'late'
+                              ? 'border-amber-300 bg-amber-50 text-amber-800'
+                              : 'border-slate-200 bg-slate-50 text-slate-600'
+                      }`}>
+                      {matchedStatus ? matchedStatus.label : 'Not recorded'}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>

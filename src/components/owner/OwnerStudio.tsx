@@ -388,9 +388,12 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
   return (
-    <div className="fixed z-[100] bottom-0 left-0 right-0 md:left-auto md:top-0 md:w-[400px] max-h-[78vh] md:max-h-none flex flex-col bg-white text-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.25)] md:shadow-[-10px_0_40px_rgba(0,0,0,0.2)] rounded-t-3xl md:rounded-none border-t md:border-t-0 md:border-l border-slate-200">
+    <div className="fixed z-[100] bottom-0 left-0 right-0 md:left-auto md:top-0 md:w-[420px] max-h-[88dvh] md:max-h-none md:h-screen flex flex-col bg-white text-slate-800 shadow-[0_-10px_40px_rgba(0,0,0,0.25)] md:shadow-[-10px_0_40px_rgba(0,0,0,0.2)] rounded-t-3xl md:rounded-none border-t md:border-t-0 md:border-l border-slate-200">
+      {/* Mobile Drawer Grab Bar */}
+      <div className="w-12 h-1.5 rounded-full bg-slate-300 mx-auto mt-2.5 mb-0.5 md:hidden" />
+
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center">
             <Palette className="w-4.5 h-4.5" />
@@ -542,16 +545,36 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           {customSkins.length > 0 && (
             <div className="space-y-1.5 pt-1">
               <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Saved custom skins</p>
-              {customSkins.map((custom) => (
-                <button
-                  key={custom.id}
-                  onClick={() => activateCustomSkin(custom)}
-                  className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-left text-xs font-bold text-slate-700 hover:border-slate-400"
-                >
-                  <span className="flex -space-x-1">{[custom.colors.primary, custom.colors.accent, custom.colors.bg].map((color) => <span key={color} className="h-3.5 w-3.5 rounded-full border border-white" style={{ backgroundColor: color }} />)}</span>
-                  <span className="truncate">{custom.name}</span>
-                </button>
-              ))}
+              {customSkins.map((custom) => {
+                const isSelected = customName === custom.name && skinId === custom.baseSkin;
+                return (
+                  <button
+                    key={custom.id}
+                    onClick={() => activateCustomSkin(custom)}
+                    className={`flex w-full items-center justify-between gap-2 rounded-xl border p-2 text-left text-xs font-bold transition ${
+                      isSelected
+                        ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900 text-slate-900'
+                        : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="flex -space-x-1 shrink-0">
+                        {[custom.colors.primary, custom.colors.accent, custom.colors.bg].map((color) => (
+                          <span
+                            key={color}
+                            className="h-3.5 w-3.5 rounded-full border border-white shadow-2xs"
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </span>
+                      <span className="truncate">{custom.name}</span>
+                    </div>
+                    <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 shrink-0">
+                      {SKINS[custom.baseSkin]?.name.split(' ')[0] || custom.baseSkin}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           )}
         </section>
@@ -559,12 +582,12 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         {/* Presets */}
         <section className="space-y-2">
           <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Ready-made palettes</h3>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {PRESETS.map((p) => (
               <button
                 key={p.id}
                 onClick={() => usePreset(p.colors)}
-                className="flex items-center gap-2 px-2.5 py-2 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 text-left transition"
+                className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 text-left transition"
               >
                 <span className="flex -space-x-1 shrink-0">
                   {[p.colors.primary, p.colors.accent, p.colors.sand].map((c, i) => (
@@ -575,34 +598,34 @@ const StudioPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     />
                   ))}
                 </span>
-                <span className="text-xs font-bold leading-tight">{p.name}</span>
+                <span className="text-xs font-bold leading-tight truncate">{p.name}</span>
               </button>
             ))}
           </div>
         </section>
 
         {/* Individual colours */}
-        <section className="space-y-3">
+        <section className="space-y-2.5">
           <h3 className="text-xs font-black uppercase tracking-wider text-slate-500">Fine-tune colours</h3>
           {THEME_KEYS.map((k) => (
-            <div key={k} className="flex items-center gap-3">
+            <div key={k} className="flex items-center gap-2.5 sm:gap-3 p-1 rounded-xl hover:bg-slate-50/80 transition">
               <input
                 type="color"
                 value={colors[k]}
                 onChange={(e) => pickColor(k, e.target.value)}
-                className="w-10 h-10 rounded-lg border border-slate-300 p-0.5 cursor-pointer bg-white shrink-0"
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg border border-slate-300 p-0.5 cursor-pointer bg-white shrink-0"
                 aria-label={COLOR_LABELS[k].label}
               />
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-slate-800">{COLOR_LABELS[k].label}</p>
-                <p className="text-xs text-slate-500 leading-tight">{COLOR_LABELS[k].hint}</p>
+                <p className="text-xs font-bold text-slate-800 truncate">{COLOR_LABELS[k].label}</p>
+                <p className="text-[11px] text-slate-500 leading-tight truncate">{COLOR_LABELS[k].hint}</p>
               </div>
               <input
                 type="text"
                 value={drafts[k]}
                 onChange={(e) => typeColor(k, e.target.value)}
                 spellCheck={false}
-                className="w-24 rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-mono uppercase focus:outline-hidden focus:ring-2 focus:ring-slate-400"
+                className="w-20 sm:w-24 rounded-lg border border-slate-300 px-2 py-1.5 text-xs font-mono uppercase focus:outline-hidden focus:ring-2 focus:ring-slate-400 shrink-0"
               />
             </div>
           ))}
