@@ -63,7 +63,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
       />
 
       {/* Background Watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none">
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none opacity-[0.03] select-none">
         <div
           className="text-center font-bold text-5xl sm:text-7xl md:text-8xl tracking-widest rotate-[-25deg] uppercase"
           style={{ color: primaryColor }}
@@ -109,7 +109,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
 
         {/* Official Seal Badge */}
         <div
-          className="flex sm:flex flex-col items-center justify-center px-4 py-2 rounded-2xl border bg-slate-50/80 text-center shadow-xs shrink-0"
+          className="flex flex-col items-center justify-center px-4 py-2 rounded-2xl border bg-slate-50/80 text-center shadow-xs sm:max-w-[35%]"
           style={{ borderColor: accentColor }}
         >
           <Award className="w-5 h-5 mb-0.5" style={{ color: accentColor }} />

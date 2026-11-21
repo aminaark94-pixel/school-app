@@ -182,6 +182,16 @@ html[data-skin] [class*="to-[#200E01"] { --tw-gradient-to: var(--t-ink) var(--tw
     overflow: visible !important;
   }
 
+  #printable-report-card .report-marks-scroll table {
+    min-width: 0;
+  }
+
+  #printable-report-card th,
+  #printable-report-card td {
+    padding: 1.5mm;
+    overflow-wrap: anywhere;
+  }
+
   #printable-report-card tr {
     break-inside: avoid;
   }
