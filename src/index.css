@@ -135,9 +135,56 @@ html[data-skin] [class*="to-[#5B0202"] { --tw-gradient-to: var(--t-primary-deep)
 html[data-skin] [class*="to-[#200E01"] { --tw-gradient-to: var(--t-ink) var(--tw-gradient-to-position) !important; }
 
 /* Shape, density and elevation are part of a skin too—not just its palette. */
-.skin-content-highstar,
-html[data-skin="highstar"] {
+.skin-content-highstar {
   max-width: 76rem;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  #printable-report-card:not([data-print-ready]) {
+    display: none !important;
+  }
+
+  body:has(#printable-report-card[data-print-ready]) {
+    background: white !important;
+    margin: 0 !important;
+  }
+
+  body:has(#printable-report-card[data-print-ready])
+    :not(:has(#printable-report-card), #printable-report-card, #printable-report-card *) {
+    display: none !important;
+  }
+
+  body :has(#printable-report-card[data-print-ready]) {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  #printable-report-card[data-print-ready] {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  #printable-report-card .report-marks-scroll {
+    overflow: visible !important;
+  }
+
+  #printable-report-card tr {
+    break-inside: avoid;
+  }
 }
 .skin-content-highstar [class*="rounded-3xl"],
 .skin-content-highstar [class*="rounded-[32px]"],

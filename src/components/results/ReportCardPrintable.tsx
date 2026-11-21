@@ -36,6 +36,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
     <div
       ref={reportRef}
       id="printable-report-card"
+      data-print-ready={fee?.status === 'paid' ? '' : undefined}
       className="bg-white text-[var(--t-ink)] p-4 sm:p-8 md:p-12 rounded-3xl shadow-lg border-2 max-w-3xl mx-auto font-sans relative overflow-hidden print:p-0 print:shadow-none print:border-none print:m-0 print:max-w-none print:text-black print:rounded-none"
       style={{
         borderColor: accentColor,
@@ -166,7 +167,7 @@ export const ReportCardPrintable: React.FC<ReportCardPrintableProps> = ({
 
       {/* Academic Marks Breakdown Table */}
       <div
-        className="overflow-x-auto rounded-2xl border mb-5 sm:mb-6 shadow-xs"
+        className="report-marks-scroll overflow-x-auto rounded-2xl border mb-5 sm:mb-6 shadow-xs"
         style={{ borderColor: sandColor }}
       >
         <table className="w-full text-left text-xs border-collapse min-w-[540px]">

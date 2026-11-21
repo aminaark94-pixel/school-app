@@ -70,9 +70,15 @@ export const ResultCardModule: React.FC = () => {
     (r) => r.student_id === activeStudent?.id && r.term === selectedTerm
   );
 
+  const canPrintReport = Boolean(isFeePaid && studentResult && activeStudent && currentSchool);
+
+  const handlePrintReport = () => {
+    if (canPrintReport && reportRef.current) window.print();
+  };
+
   // PDF Export using html2pdf.js or print fallback
   const handleDownloadPDF = async () => {
-    if (!isFeePaid) return;
+    if (!canPrintReport) return;
     if (!reportRef.current || !activeStudent || !currentSchool) return;
 
     setIsExporting(true);
@@ -97,7 +103,7 @@ export const ResultCardModule: React.FC = () => {
       await html2pdf(reportRef.current).set(opt).from(reportRef.current).save();
     } catch (err) {
       console.warn('html2pdf export fallback to browser print dialog:', err);
-      window.print();
+      handlePrintReport();
     } finally {
       setIsExporting(false);
     }
@@ -213,7 +219,7 @@ export const ResultCardModule: React.FC = () => {
               data-tour="results-export"
               id="export-pdf-button"
               onClick={handleDownloadPDF}
-              disabled={!isFeePaid || isExporting}
+              disabled={!canPrintReport || isExporting}
               title={
                 isFeePaid
                   ? 'Download Official Branded PDF'
@@ -233,6 +239,15 @@ export const ResultCardModule: React.FC = () => {
                   <span>1-Click PDF Export</span>
                 </>
               )}
+            </button>
+            <button
+              type="button"
+              onClick={handlePrintReport}
+              disabled={!canPrintReport || isExporting}
+              className="flex items-center gap-2 rounded-xl border border-[var(--t-sand)] bg-[var(--t-bg)] px-4 py-2.5 text-xs font-bold text-[var(--t-ink)] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Printer className="h-4 w-4" />
+              Print report card
             </button>
 
             {/* Quick Demo Pay / Re-lock Action */}
